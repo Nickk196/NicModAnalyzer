@@ -1,24 +1,28 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Clear-Host
 
- $Banner = @"
-    _   _ _   _ _____ _____ ____  
-   | | | | \ | |_   _| ____/ ___| 
-   | | | |  \| | | | |  _| \___ \ 
-   | |_| | |\  | | | | |___ ___) |
-    \___/|_| \_| |_| |_____|____/ 
+# ═══════════════════════════════════════════════════════════
+#  BANNER
+# ═══════════════════════════════════════════════════════════
+Write-Host ""
+Write-Host " ███╗   ██╗██╗ ██████╗    ███╗   ███╗ ██████╗ ██████╗      █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗ " -ForegroundColor Magenta
+Write-Host " ████╗  ██║██║██╔════╝    ████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗" -ForegroundColor Magenta
+Write-Host " ██╔██╗ ██║██║██║         ██╔████╔██║██║   ██║██║  ██║    ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝" -ForegroundColor DarkMagenta
+Write-Host " ██║╚██╗██║██║██║         ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkMagenta
+Write-Host " ██║ ╚████║██║╚██████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Magenta
+Write-Host " ╚═╝  ╚═══╝╚═╝ ╚═════╝   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Magenta
+Write-Host ""
+Write-Host "                          [ V4.0 - MOD ANALYZER ]" -ForegroundColor Magenta
+Write-Host "   ─────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host ""
 
-         M O D   A N A L Y Z E R
-                V 4.0
-"@
-Write-Host $Banner -ForegroundColor Magenta
-Write-Host "  ─────────────────────────────────────" -ForegroundColor DarkMagenta
-Write-Host ''
-
+# ═══════════════════════════════════════════════════════════
+#  PATH INPUT
+# ═══════════════════════════════════════════════════════════
 Write-Host '  Path ' -ForegroundColor DarkGray -NoNewline
 Write-Host '(Enter = default)' -ForegroundColor DarkMagenta
 Write-Host '  > ' -ForegroundColor Magenta -NoNewline
- $modsPath = Read-Host
+$modsPath = Read-Host
 
 if ([string]::IsNullOrWhiteSpace($modsPath)) {
     $modsPath = "$env:USERPROFILE\AppData\Roaming\.minecraft\mods"
@@ -30,8 +34,31 @@ if (-not (Test-Path $modsPath -PathType Container)) {
     exit 1
 }
 
+# ═══════════════════════════════════════════════════════════
+#  DEEP SCAN PROMPT
+# ═══════════════════════════════════════════════════════════
+Write-Host ""
+Write-Host '  Scan mode: ' -ForegroundColor DarkGray -NoNewline
+Write-Host '[1]' -ForegroundColor Magenta -NoNewline
+Write-Host ' Standard  ' -ForegroundColor White -NoNewline
+Write-Host '[2]' -ForegroundColor Magenta -NoNewline
+Write-Host ' Deep (slower, checks all file types + entropy)' -ForegroundColor White
+Write-Host '  > ' -ForegroundColor Magenta -NoNewline
+$scanModeInput = Read-Host
+$deepScan = ($scanModeInput.Trim() -eq '2')
+
+if ($deepScan) {
+    Write-Host '  Deep scan enabled.' -ForegroundColor DarkMagenta
+} else {
+    Write-Host '  Standard scan enabled.' -ForegroundColor DarkGray
+}
+
 Add-Type -AssemblyName System.IO.Compression.FileSystem
- $suspiciousPatterns = @(
+
+# ═══════════════════════════════════════════════════════════
+#  SUSPICIOUS PATTERNS (filename/class path matching)
+# ═══════════════════════════════════════════════════════════
+$suspiciousPatterns = @(
     'AimAssist', 'AnchorTweaks', 'AutoAnchor', 'AutoCrystal', 'AutoDoubleHand',
     'AutoHitCrystal', 'AutoPot', 'AutoTotem', 'AutoArmor', 'InventoryTotem',
     'JumpReset', 'LegitTotem', 'PingSpoof', 'SelfDestruct',
@@ -41,7 +68,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     'ShieldDisabler', 'SilentAim', 'Totem Hit', 'Wtap', 'FakeLag',
     'BlockESP', 'dev.krypton', 'Virgin', 'AntiMissClick',
     'LagReach', 'PopSwitch', 'SprintReset', 'ChestSteal', 'AntiBot',
-    'ElytraSwap', 'FastXP', 'FastExp', 'Refill',  'AirAnchor',
+    'ElytraSwap', 'FastXP', 'FastExp', 'Refill', 'AirAnchor',
     'jnativehook', 'FakeInv', 'HoverTotem', 'AutoClicker', 'AutoFirework',
     'PackSpoof', 'Antiknockback', 'catlean', 'Argon',
     'AuthBypass', 'Asteria', 'Prestige', 'AutoEat', 'AutoMine',
@@ -71,7 +98,10 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "と.class", "み.class", "び.class", "す.class", "の.class"
 )
 
- $cheatStrings = @(
+# ═══════════════════════════════════════════════════════════
+#  CHEAT STRING SIGNATURES
+# ═══════════════════════════════════════════════════════════
+$cheatStrings = @(
     'AutoCrystal', 'autocrystal', 'auto crystal', 'cw crystal',
     'dontPlaceCrystal', 'dontBreakCrystal',
     'AutoHitCrystal', 'autohitcrystal', 'canPlaceCrystalServer', 'healPotSlot',
@@ -84,7 +114,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "AutoTotem", "autototem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
     "ＡｕｔｏＴｏｔｅｭ", "Ａｕｔｏ Ｔｏｔｅｍ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｅｍ", "Ｈｏｖｴｰﾘ oｴｪｪ",
-    "ＩｎｖｅｎｔｏﾞｙＴｏｔｅｍ", "Ａｕｔｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｍ", "Ａｕｔｏ Ｔｏｔｅｍ Ｈｉｴ",
+    "ＩｎｖｅｎｔｏﾞｙＴｏｔｅｍ", "Ａｕｔｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｍ", "Ａｕｔｏ Ｔｏｔｅｭ Ｈｉｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
     "ＡｕｔｏＰｏﾄ", "Ａｕｔｏ Ｐｏﾄ", "Ａｕｔｏ Ｐｏｔ Ｒｅﾌｉﾞ", "AutoPotRefill", "ＡｕｔｏＡｒｾﾞ", "Ａｕｔｏ Ａｒｮﾞ",
@@ -106,52 +136,113 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay", "ＥｌｙﾞＳＷａｵ", "Ｅｌｙﾄﾗａ Ｓｗｱﾞ",
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
-    "BaseFinder", "invsee", "ItemExploit", "NoFall", "nofall", "FreezePlayer", "Ｆｲｅｅｃ｡ﾞ", "Ｍｏｖｪ ｆﾞｵｅｙ ｔｈﾞｰｵｇ ｗａｬｌｽ", "Ｎｏ Ｃﾞｲﾞ", "Ｆｲｵｪｪﾞｽﾞ Ｐｌｱｴﾙｅｲ",
+    "BaseFinder", "invsee", "ItemExploit", "NoFall", "nofall", "FreezePlayer", "Ｆｲｅｅｃ｡ﾞ", "Ｍｏｖｪ ｆﾞｵｅｙ ｔｈﾞｰｵｇ ｗａｬｌｽ", "Ｎｏ Ｃﾞｲﾞ", "Ｆｲｵｪｪﾞｚﾞ Ｐｌｱｴﾙｅｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽｿ｡ﾞ", "KeyPearl", "LootYeeter", "ＫｅｙＰｅａｒｌ", "Ｌｏｏｵ Ｙｅｅﾄｪﾞ",
-    "FastPlace", "Ｆ｡ｽﾄ Ｐｌ｡ｾｵ", "Ｐｌａｾｅ ｂｌｏｃｋｓ ｆ｡ｽｿｅﾞ", "AutoBreach", "Ａｕｔｏ Ｂﾚｾ｡ｃｷ",
+    "FastPlace", "Ｆ｡ｽﾄ Ｐｌ｡ｾｵ", "Ｐｌａｾｅ ｂｌｏｃｋｓ ｆ｡ｽｿｅﾞ", "AutoBreach", "Ａｕｔｏ Ｂﾚｾａｃｷ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
     "Activate Key", "Ａｃﾞｲｲﾞａｴｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｋ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
-    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｪｵｼｴ",
-    "Ｒｪﾑｵｮｖｵｽ ｔｈｪ ｃｲｲｽｳｕｌ ｂｏｵｮｃｪ ｡ｮｲﾑ｡ﾞｵｮ", "Place Delay", "Ｐｌ｡ｾｵ Ｄｪﾙｱ", "Break Delay", "Ｂﾚｪ｡ｋ Ｄｪﾙｱ",
-    "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌ｡ｾｵ Ｃｈ｡ﾝｃｪ", "Break Chance", "Ｂﾚｪ｡ｋ Ｃｈ｡ﾝｽｪ",
-    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｋ", "damagetick", "Anti Weakness", "Ａｮﾞｨｉ Ｗｪ｡ｋﾞｪｽｽ",
-    "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｪ", "Trigger Key", "Ｔﾞｨｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｪｃｨ Ｄｪﾙｱ",
-    "Totem Slot", "Ｔｏｔｪｭ ｽｬｯ｡", "Smooth Rotations", "Ｓｭｵｵｔｈ ﾝｰｵｔ｡ｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｪｰｰｄ",
-    "Use Easing", "Ｕｾｵ Ｅ｡ｽｲﾝｸ", "Easing Strength", "Ｅ｡ｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｬｪ Ｕｽｪ",
-    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｲﾙｬ", "Glowstone Delay", "Ｇｮｵｳｽﾄｰｮｪ Ｄｪﾬｱ", "Glowstone Chance", "Ｇｮｵｽｳｯｮｪ Ｃｈ｡ﾝｼｪ",
-    "Explode Delay", "Ｅｘｰｬﾞｵﾄｪ Ｄｪﾬｱ", "Explode Chance", "Ｅｘｰｬﾞｵﾄｪ Ｃｈ｡ﾝｽｼｪ", "Explode Slot", "Ｅｘｰｬﾞｵﾄｪ Ｓｬｯｱ",
-    "Only Charge", "Ｏｮｬｙ Ｃｈ｡ｶﾞ", "Anchor Macro", "Ａｮｃｈｏﾞ Ｍ｡ｃﾞｏ", "Reach Distance", "ﾛｪｱ｡ ﾄｨｽ｡ﾝｾｃｪ",
-    "Min Height", "Ｍｉｮ Ｈｪｲｲﾞﾈ", "Min Fall Speed", "Ｍｉｵ Ｆ｡ｬｬ Ｓｰｵｪﾄ", "Attack Delay", "Ａｴｴ｡ｃｷ Ｄｪﾬｱ",
-    "Breach Delay", "Ｂﾚｪｵ｡ｃｨ Ｄｪﾬｱ", "Require Elytra", "ﾛｪｸｵｲｵｲｪ Ｅｬｹﾞｱ", "Auto Switch Back", "Ａｕｴｏ Ｓｗｲｵ｡ｷ Ｂ｡ｮｸ",
-    "Check Line of Sight", "Ｃｈｪｃｋ Ｌｉﾇｪ ｏｆ Ｓｉｸﾞｈｴ", "Only When Falling", "Ｏｮｬｙ Ｗｈｪｮ Ｆ｡ｬｬｉｮｸ",
-    "Require Crit", "ﾛｪｸｵｲｵｲｪ Ｃﾞｲｪ", "Show Status Display", "Ｓｈｏｗ Ｓｴ｡ｴｕｽ Ｄｉｽﾞｬ｡ｷｪ",
-    "Stop On Crystal", "Ｓｴｏｐ Ｏｮ Ｃﾞｲｽｏ｡", "Check Shield", "Ｃｈｪｃｋ Ｓｈｉｪｬﾞ", "On Pop", "Ｏｮ Ｐｏｐ",
-    "Predict Damage", "ﾌﾚｪﾄｪｾﾄｪ ﾄｳﾞ｡ﾞｪ", "On Ground", "Ｏｮ Ｇﾞｏｕｮﾞ", "Check Players", "Ｃｈｪｃｋ Ｐｬ｡ｹｪﾞｽ",
-    "Predict Crystals", "ﾌﾚｪｃﾞｼｸｪ ﾄﾞｽｏ｡ﾞ", "Check Aim", "Ｃｈｪｃｋ Ａｉｭ", "Check Items", "Ｃｈｪｃｋ Ｉｴｪｭｽ",
-    "Activates Above", "Ａｃｴｉｴ｡ｴｪｽ Ａｂｏｖｪ", "Blatant", "Ｂｬ｡ﾀ﾿ﾀﾝ", "Force Totem", "ﾌｵﾞｏｾ ｴｏｴｪｭ",
-    "Stay Open For", "Ｓｴ｡ｷｪ Ｏｐｪｮ Ｆｵｰ", "Auto Inventory Totem", "Ａｕｕｏ Ｉｮｖｪｮｵｮｙ Ｔｏｴｪｭ", "Only On Pop", "Ｏｮｬｙ Ｏｮ Ｐｏｐ",
-    "Vertical Speed", "Ｖｪｲｼｶﾬｾﾞ Ｓｰ｡ｰﾄ", "Hover Totem", "Ｈｏｖｰﾘﾞ ﾄｵｴｪｭ", "Swap Speed", "Ｓｗｱﾞ ﾄﾐｰｵﾄ",
-    "Strict One-Tick", "Ｓﾄｲｲｵﾄ Ｏｮｪ－ﾃｨｯ", "Mace Priority", "Ｍ｡ｃｪ Ｐﾞｉｏﾞｉｉｙ", "Min Totems", "Ｍｉｮ Ｔｏｴｪｭｽ",
-    "Min Pearls", "Ｍｉｮ Ｐｪ｡ﾞｬｪｽ", "Totem First", "Ｔｏｴｪｭ Ｆｲｽｪ", "Drop Interval", "Ｄﾞｵｐ Ｉﾀｴﾞｖ｡ｙ",
-    "Random Pattern", "ﾛ｡ﾝﾄｵｮ Ｐ｡ﾀﾀﾝﾞ", "Loot Yeeter", "ﾛｏｕｕ Ｙｪｪｪﾞ", "Horizontal Aim Speed", "ﾈｵﾞｉｚｏﾞｱｰｲｵｬ Ａｲｭ ﾞｰｽｰｪｴﾄ",
-    "Vertical Aim Speed", "Ｖｪｲｼｶﾬ Ａｲｭ ﾞｰｽｰｪｴﾄ", "Include Head", "Ｉｮｸﾞｵﾄｪ Ｈ｡ｱｳ", "Web Delay", "Ｗｪｂ Ｄｪﾬｱ",
-    "Holding Web", "ﾎｵﾞﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｪ Ｗｈｪｮ ｡ｆﾂｃｪｕｽ Ｐｬ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
-    "Ｓｗｲｲｃｈ Ｂ｡ｃｷ", "Require Hold Axe", "ﾛｪｸｵｲｵｲｪ ﾛｵﾬﾄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｋｪ Ｐｕﾝｰﾞﾞ",
+    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
+    "Ｒｅﾑｵｮｖｵｽ ｔｈｅ ｃｲｲｽｳｕｌ ｂｏｵｮｃｴ ａｎｲﾑａﾞｵｮ", "Place Delay", "Ｐｌａｾｵ Ｄｅﾙｱ", "Break Delay", "Ｂﾚｅａｋ Ｄｅﾙｱ",
+    "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌａｾｵ Ｃｈ｡ﾝｃｴ", "Break Chance", "Ｂﾚｅａｋ Ｃｈ｡ﾝｽｴ",
+    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｸ", "damagetick", "Anti Weakness", "Ａｎﾞｨｉ Ｗｅａｋﾝｅｓｽ",
+    "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｴ", "Trigger Key", "Ｔｒｉｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｴｃｨ Ｄｅｌｱ",
+    "Totem Slot", "Ｔｏｔｅｵ ｽｬｯ｡", "Smooth Rotations", "Ｓｍｵｵｔｈ ﾝｰｵｔａｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｴｰｰｄ",
+    "Use Easing", "Ｕｾｵ Ｅａｽｲﾝｸ", "Easing Strength", "Ｅａｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｉｌｅ Ｕｽｪ",
+    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｲﾙｌ", "Glowstone Delay", "Ｇｮｵｳｽﾄｰｮｅ Ｄｅｬｱ", "Glowstone Chance", "Ｇｮｵｽｳｯｮｅ Ｃｈ｡ﾝｼｴ",
+    "Explode Delay", "Ｅｘｰｌﾞｵｄｅ Ｄｅｬｱ", "Explode Chance", "Ｅｘｰｌﾞｵｄｅ Ｃｈ｡ﾝｽｼｴ", "Explode Slot", "Ｅｘｰｌﾞｵｄｅ Ｓｌｯｱ",
+    "Only Charge", "Ｏｎｌｙ Ｃｈａｶﾞ", "Anchor Macro", "Ａｎｃｈｏﾞ Ｍ｡ｃﾞｏ", "Reach Distance", "ﾛｅｱａﾞ Ｄｨｽｱﾝｾｃｴ",
+    "Min Height", "Ｍｉｎ Ｈｅｉｲﾞﾈ", "Min Fall Speed", "Ｍｉｵ Ｆａｬｌ Ｓｰｵｅｄ", "Attack Delay", "Ａｔｔａｃｷ Ｄｅｬｱ",
+    "Breach Delay", "Ｂﾚｵ｡ｃｨ Ｄｅｌｱ", "Require Elytra", "ﾛｅｸｵｲｵｲｪ Ｅｌｙｔﾞｱ", "Auto Switch Back", "Ａｕｔｏ Ｓｗｲｵａｷ Ｂ｡ｮｸ",
+    "Check Line of Sight", "Ｃｈｅｃｷ Ｌｉﾇｅ ｏｆ Ｓｉｇﾞｈｔ", "Only When Falling", "Ｏｎｌｙ Ｗｈｅｎ Ｆａｬｌｉｎｇ",
+    "Require Crit", "ﾛｅｸｵｲｵｲｪ Ｃﾞｲｴ", "Show Status Display", "Ｓｈｏｗ Ｓｔａｔｕｓ Ｄｉｽﾞｌｱｹ",
+    "Stop On Crystal", "Ｓｔｏｐ Ｏｎ Ｃｒｙｽｿ｡", "Check Shield", "Ｃｈｅｃｋ Ｓｈｉｅｌｄ", "On Pop", "Ｏｎ Ｐｏｐ",
+    "Predict Damage", "ﾌﾚｴﾃﾞｾﾄｾ ﾄｳﾞｧｪ", "On Ground", "Ｏｎ Ｇﾛｵｳﾝ", "Check Players", "Ｃｈｅｃｋ Ｐｌａｙｅｒｽ",
+    "Predict Crystals", "ﾌﾚｴｃﾞｼｸｴ ﾄﾞｽｿ｡ﾞ", "Check Aim", "Ｃｈｅｃｋ Ａｉｭ", "Check Items", "Ｃｈｅｃｋ Ｉｔｅｍｽ",
+    "Activates Above", "Ａｃﾄｲﾀﾄｅｽ Ａｂｏｖｅ", "Blatant", "Ｂｌａﾀ﾿ﾀﾝ", "Force Totem", "ﾌｵﾛｾ ｔｏｔｅｭ",
+    "Stay Open For", "Ｓｔｱｸｅ Ｏｐｅｎ Ｆｵｰ", "Auto Inventory Totem", "Ａｕｕｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｭ", "Only On Pop", "Ｏｎｌｙ Ｏｎ Ｐｏｐ",
+    "Vertical Speed", "Ｖｅｲｼｶﾬｾﾞ Ｓｰ｡ｰｄ", "Hover Totem", "Ｈｏｖｰﾘﾞ ﾄｵｔｅｭ", "Swap Speed", "Ｓｗｱﾙ ﾄﾐｰｵｄ",
+    "Strict One-Tick", "Ｓﾄｲｲｵﾄ Ｏｎｅ－ﾃｨｯ", "Mace Priority", "Ｍ｡ｃｅ Ｐｒｉｏﾘｉｲｙ", "Min Totems", "Ｍｉｎ Ｔｏﾄｪｭｽ",
+    "Min Pearls", "Ｍｉｎ Ｐｅａﾒﾞｌｽ", "Totem First", "Ｔｏｔｅｭ Ｆｲｽｴ", "Drop Interval", "Ｄﾞｵｐ Ｉﾀｔｪﾞｖ｡ｙ",
+    "Random Pattern", "ﾛ｡ﾝﾄｵｮ Ｐ｡ﾀﾀﾝﾞ", "Loot Yeeter", "ﾛｏｕｕ Ｙｅｅｪｪﾞ", "Horizontal Aim Speed", "ﾈｵﾘｲｚｏﾝｱｰｲｵｌ Ａｲｭ ﾞｰｽｰｅｴﾄ",
+    "Vertical Aim Speed", "Ｖｅｲｼｶﾬ Ａｲｭ ﾞｰｽｰｅｴﾄ", "Include Head", "Ｉｎｸﾞｵﾄｪ Ｈ｡ｱｳ", "Web Delay", "Ｗｅｂ Ｄｅｬｱ",
+    "Holding Web", "ﾎｵﾙﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｴ Ｗｈｅﾝ ａｆﾂｃｴｕｽ Ｐｌ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
+    "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "ｐﾟ｡ｾｪＩﾝｴﾞｲｖ｡ｙ", "ｂﾞｪ｡ｋＩｮｴﾞﾞｲｖ｡ｙ", "ｓｴｵｐＯＯｮＫｋｬﾞ", "｡ｃﾞｲ｡ｴｪＯｮＲｉｃｋ",
-    "ｄ｡ｾｶﾞｇﾞｴｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｋｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｋｪＰＰｕＰｮ", "Ｐｬ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｴｉｏｮｽ",
-    "Ｐｬ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｋｵ， ｡ｮﾄﾞ ｪｘｰｬｵﾄｪｽ", "Ａｕｴｏ ｽｗ｡ｐ ｴｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴ｡ｃｋ",
-    "Macro Key", "Ａｕｴｏ Ｐｏｴ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
+    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
+    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｋｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｋｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
+    "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｋｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
+    "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
- $patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
- $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
-foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
- $fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
+# Deep scan extra strings — broader mixin hooks, suspicious reflection, config keys
+$deepCheatStrings = @(
+    # Mixin hooks that legit mods don't typically use
+    "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
+    "callAttackEntity", "callUseItem",
+    "getReachDistance", "setReachDistance",
+    "networkHandler.sendPacket", "sendPacket(new Hand",
+    "getAttackCooldownProgress", "resetLastAttackedTicks",
+    "setSprinting", "setVelocity", "addVelocity",
+    # Reflection/dynamic class loading abuse
+    "Class.forName(", "getDeclaredMethod(", "setAccessible(true)",
+    "MethodHandles.lookup", "Unsafe.getUnsafe",
+    # Config / GUI strings common in clients
+    "cheat", "hack", "esp", "wallhack", "killaura", "kill aura",
+    "bhop", "bunnyhop", "bunny hop", "speedhack", "speed hack",
+    "xray", "x-ray", "freecam", "free cam", "noclip", "no clip",
+    "scaffold", "tower", "towerplace", "tower place",
+    "velocity", "antikb", "anti kb", "reach", "hitbox",
+    "tracers", "cave finder", "cavefinder", "ore esp",
+    "fullbright", "full bright", "nuker", "anti-afk", "antiafk",
+    # Network-level manipulation
+    "C03PacketPlayer", "C09PacketHeldItemChange", "CPacketPlayer",
+    "CPacketHeldItemChange", "ServerboundMovePlayerPacket",
+    "spoofPacket", "cancelPacket", "dropPacket",
+    # Obfuscation/evasion patterns
+    "System.exit(0)", "Runtime.getRuntime().exec(",
+    "ProcessBuilder", "shutdownNow(", "deleteOnExit(",
+    # Timer manipulation
+    "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
+    # Module/feature registration patterns from known clients
+    "ModuleManager", "FeatureManager", "HackList",
+    "getModules()", "isEnabled()", "toggle()",
+    "CommandManager.register", "EventBus.subscribe",
+    # Screen / GUI injection
+    "GuiHacks", "ClickGui", "AltManager", "SessionStealer"
+)
 
+$patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+$cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
+
+$deepCheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+foreach ($s in $deepCheatStrings) { [void]$deepCheatStringSet.Add($s) }
+
+$fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
+
+# ═══════════════════════════════════════════════════════════
+#  ENTROPY CALCULATION (deep scan)
+# ═══════════════════════════════════════════════════════════
+function Get-ShannonEntropy {
+    param([byte[]]$Data)
+    if ($Data.Length -eq 0) { return 0.0 }
+    $freq = @{}
+    foreach ($b in $Data) { $freq[$b] = ($freq[$b] -as [int]) + 1 }
+    $entropy = 0.0
+    $len = $Data.Length
+    foreach ($count in $freq.Values) {
+        $p = $count / $len
+        if ($p -gt 0) { $entropy -= $p * [Math]::Log($p, 2) }
+    }
+    return [Math]::Round($entropy, 4)
+}
+
+# ═══════════════════════════════════════════════════════════
+#  MINECRAFT PROCESS STATUS
+# ═══════════════════════════════════════════════════════════
 function Get-MinecraftStatus {
     $mcProc = $null
     $javaProcs = @(Get-Process javaw -ErrorAction SilentlyContinue) + @(Get-Process java -ErrorAction SilentlyContinue)
@@ -170,47 +261,65 @@ function Get-MinecraftStatus {
     return [PSCustomObject]@{ Running = $false; PID = 0; Uptime = "-"; RAM = "-" }
 }
 
+# ═══════════════════════════════════════════════════════════
+#  JVM INTEGRITY CHECK (expanded)
+# ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
-    param([int]$Pid)
     $findings = [System.Collections.Generic.List[PSObject]]::new()
-    $javaProc = Get-Process -Id $Pid -ErrorAction SilentlyContinue
+    $javaProc = Get-Process javaw -ErrorAction SilentlyContinue
+    if (-not $javaProc) { $javaProc = Get-Process java -ErrorAction SilentlyContinue }
     if (-not $javaProc) { return $findings }
+    $javaPid = ($javaProc | Select-Object -First 1).Id
     try {
-        $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $Pid" -ErrorAction Stop
+        $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
         $cmd = $wmi.CommandLine
         if ($cmd) {
+            # ----- Java Agents -----
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
-            $nativeAgentMatches = [regex]::Matches($cmd, '-agentpath:([^\s"]+)')
             $whitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus")
-            
             foreach ($m in $agentMatches) {
                 $path = $m.Groups[1].Value.Trim('"').Trim("'")
                 $name = [System.IO.Path]::GetFileName($path)
                 $safe = $false
                 foreach ($w in $whitelist) { if ($name -match $w) { $safe = $true; break } }
-                if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "JAVA_AGENT"; Detail = $name; Severity = "HIGH" }) }
+                if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "AGENT"; Detail = $name; Severity = "HIGH" }) }
             }
 
-            foreach ($m in $nativeAgentMatches) {
-                $path = $m.Groups[1].Value.Trim('"').Trim("'")
-                $name = [System.IO.Path]::GetFileName($path)
-                $findings.Add([PSCustomObject]@{ Type = "NATIVE_AGENT"; Detail = $name; Severity = "CRITICAL" })
-            }
-
+            # ----- Extended JVM Flag Checks -----
             $flags = @(
-                @{ F = "-Xbootclasspath/p:"; T = "BOOTCLASS_PREPEND"; S = "HIGH" },
-                @{ F = "-Xbootclasspath/a:"; T = "BOOTCLASS_APPEND";  S = "MEDIUM" },
-                @{ F = "-Dfabric.addMods=";  T = "FABRIC_INJECT";    S = "HIGH" },
-                @{ F = "-Dfabric.loadMods="; T = "FABRIC_MANIPULATE"; S = "MEDIUM" },
-                @{ F = "-Djava.security.manager="; T = "SEC_BYPASS";  S = "HIGH" },
-                @{ F = "-Dclient.brand=";   T = "BRAND_SPOOF";      S = "LOW" },
-                @{ F = "-Djdk.attach.allowAttachSelf"; T = "SELF_ATTACH"; S = "HIGH" },
-                @{ F = "--add-opens java.base/java.lang.reflect"; T = "DEEP_REFLECT_BYPASS"; S = "MEDIUM" },
-                @{ F = "--add-opens java.base/sun.misc"; T = "UNSAFE_ACCESS"; S = "HIGH" }
+                # Original flags
+                @{ F = "-Xbootclasspath/p:";        T = "BOOTCLASS_PREPEND";      S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader" },
+                @{ F = "-Xbootclasspath/a:";        T = "BOOTCLASS_APPEND";       S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
+                @{ F = "-Dfabric.addMods=";         T = "FABRIC_INJECT";          S = "HIGH";   D = "Injects extra mods via Fabric property" },
+                @{ F = "-Dfabric.loadMods=";        T = "FABRIC_MANIPULATE";      S = "MEDIUM"; D = "Overrides Fabric mod loading" },
+                @{ F = "-Djava.security.manager=";  T = "SEC_BYPASS";             S = "HIGH";   D = "Disables or replaces Java Security Manager" },
+                @{ F = "-Dclient.brand=";           T = "BRAND_SPOOF";            S = "LOW";    D = "Spoofs client brand string" },
+                # New flags
+                @{ F = "-Xverify:none";             T = "BYTECODE_VERIFY_OFF";    S = "HIGH";   D = "Disables JVM bytecode verification — allows tampered classes" },
+                @{ F = "-noverify";                 T = "NOVERIFY";               S = "HIGH";   D = "Alias for -Xverify:none, disables class verification" },
+                @{ F = "-XX:+DisableAttachMechanism"; T = "ATTACH_DISABLED";      S = "LOW";    D = "Blocks JVM attach (uncommon, can hide debugging)" },
+                @{ F = "-XX:-OmitStackTraceInFastThrow"; T = "STACK_TRACE_FORCED"; S = "LOW";   D = "Minor flag, sometimes used in obfuscated builds" },
+                @{ F = "-Djava.class.path=";        T = "CLASSPATH_OVERRIDE";     S = "MEDIUM"; D = "Manually overrides classpath — can inject classes" },
+                @{ F = "-Djava.ext.dirs=";          T = "EXT_DIR_OVERRIDE";       S = "HIGH";   D = "Overrides JVM extension directory — deprecated injection vector" },
+                @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader — severe injection risk" },
+                @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent library — can hook anything" },
+                @{ F = "-agentpath:";               T = "NATIVE_AGENT_PATH";      S = "HIGH";   D = "Loads native agent by path — deep JVM access" },
+                @{ F = "-Xshare:off";               T = "CDS_DISABLED";           S = "LOW";    D = "Disables class-data sharing, sometimes used to avoid detection" },
+                @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path — can load malicious .dll/.so" },
+                @{ F = "-Dsun.misc.URLClassPath.disableJarChecking=true"; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" },
+                @{ F = "-Dlog4j.configurationFile="; T = "LOG4J_CONFIG";          S = "MEDIUM"; D = "Custom log4j config — historical exploit vector" },
+                @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "Enables JNDI RMI codebase — Log4Shell-style attack vector" },
+                @{ F = "-Dcom.sun.jndi.ldap.object.trustURLCodebase=true"; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "Enables JNDI LDAP codebase — Log4Shell variant" },
+                @{ F = "-XX:+UnlockDiagnosticVMOptions"; T = "DIAGNOSTIC_UNLOCK"; S = "LOW";   D = "Unlocks diagnostic JVM options — rarely needed in legit clients" },
+                @{ F = "-XX:CompileCommand=exclude"; T = "JIT_EXCLUDE";           S = "MEDIUM"; D = "Excludes methods from JIT — can hide code from analysis" },
+                @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode — suspicious in packaged clients" },
+                @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Enables remote debugging — allows arbitrary code injection" },
+                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "Java Debug Wire Protocol agent — remote code execution risk" },
+                @{ F = "-Djdk.attach.allowAttachSelf=true"; T = "SELF_ATTACH";    S = "MEDIUM"; D = "Allows JVM to attach to itself — used by some injection tools" }
             )
             foreach ($fl in $flags) {
                 if ($cmd -match [regex]::Escape($fl.F)) {
-                    $findings.Add([PSCustomObject]@{ Type = $fl.T; Detail = $fl.F; Severity = $fl.S })
+                    $findings.Add([PSCustomObject]@{ Type = $fl.T; Detail = $fl.D; Severity = $fl.S })
                 }
             }
         }
@@ -218,37 +327,13 @@ function Test-JvmIntegrity {
     return $findings
 }
 
-function Get-DeepMemoryScan {
-    param([int]$Pid)
-    $findings = [System.Collections.Generic.List[PSObject]]::new()
-    try {
-        $proc = Get-Process -Id $Pid -ErrorAction Stop
-        $suspiciousMods = @("jnativehook", "imgui", "dwm_overlay", "GameOverlay", " cheat", " hack", "inject")
-        $standardMods = @("jimage", "msvcr", "msvcp", "jvm", "java", "windowscodecs", "ntdll", "kernel32", "ADVAPI32", "SECDLL", "CRYPTBASE", "clr", "coreclr", " SYSTEM32", " SysWOW64", "OpenCL", "opengl32", "vcruntime", "ucrtbase", "dxgi", "d3d", "igdumdim", "nvoglv", "atio", "wlanapi", "ws2_32", "wininet", "secur32", "SspiCli", "RpcRtRemote", "dbgeng", "gdi32", "user32", "shell32", "ole32", "mswsock", "DNSAPI", "IPHLPAPI", "NSI", "winnsi", "MPR", "credssp", "winhttp", "webio", "rasapi32", "rtutils", "wsdapi", "umpdc", "ncrypt", "ntmarta", "wevtapi", "tdh", "fastprox", "wbemcomn", "wbemsvc", "WMICNTFY", "framedyn", "clbcatq", "MMDevApi", "AudioSes", "devenum", "msdmo", "wdmaud", "ksuser", "AVRT", "powrprof", "profapi", "umpdc", "devobj", "setupapi", "cfgmgr32", "bcrypt", "bcryptprimitives", "KernelBase", "msasn1", "crypt32", "dpapi", "userenv", "imm32", "inputhost", "CoreUIComponents", "CoreMessaging", "procthread", "shcore", "uxtheme", "dwmapi", "propsys", "combase", "taskschd", "mssprx", "ntasn1", "ncryptsslp", "sspicli", "kernelbase", "apphelp", "acgenral", "dbghelp", "psapi", "version", "bcryptprimitives")
-        
-        foreach ($mod in $proc.Modules) {
-            $modName = $mod.ModuleName.ToLower()
-            $isStandard = $false
-            foreach ($std in $standardMods) { if ($modName -match $std) { $isStandard = $true; break } }
-            
-            if (-not $isStandard) {
-                foreach ($sus in $suspiciousMods) {
-                    if ($modName -match $sus) {
-                        $findings.Add([PSCustomObject]@{ Type = "MEMORY_INJECTION"; Detail = $mod.ModuleName; Severity = "CRITICAL" })
-                        break
-                    }
-                }
-            }
-        }
-    } catch {
-        $findings.Add([PSCustomObject]@{ Type = "MEMORY_SCAN"; Detail = "Failed (Run as Admin?)"; Severity = "LOW" })
-    }
-    return $findings
-}
-
+# ═══════════════════════════════════════════════════════════
+#  MOD SIGNATURE SCAN
+# ═══════════════════════════════════════════════════════════
 function Get-ModSignature {
-    param([string]$Path)
+    param([string]$Path, [bool]$Deep = $false)
     $hits = [System.Collections.Generic.HashSet[string]]::new()
+    $entropyWarnings = [System.Collections.Generic.List[string]]::new()
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
         foreach ($e in $zip.Entries) { foreach ($m in $patternRegex.Matches($e.FullName)) { [void]$hits.Add("P|$($m.Value)") } }
@@ -264,26 +349,51 @@ function Get-ModSignature {
                 foreach ($ie in $iz.Entries) { $flat.Add($ie) }
             } catch { }
         }
+
+        # Determine which extensions to scan
+        $scanExtensions = '\.(class|json)$|MANIFEST\.MF'
+        if ($Deep) { $scanExtensions = '\.(class|json|toml|yml|yaml|txt|cfg|properties|xml|html|js|ts|kt|groovy)$|MANIFEST\.MF' }
+
         foreach ($entry in $flat) {
-            if ($entry.FullName -match '\.(class|json)$' -or $entry.FullName -match 'MANIFEST\.MF') {
+            if ($entry.FullName -match $scanExtensions) {
                 try {
                     $st = $entry.Open(); $buf = New-Object System.IO.MemoryStream
                     $st.CopyTo($buf); $st.Close()
                     $raw = $buf.ToArray(); $buf.Dispose()
                     $a = [System.Text.Encoding]::ASCII.GetString($raw)
                     $u = [System.Text.Encoding]::UTF8.GetString($raw)
+
+                    # Standard patterns
                     foreach ($m in $patternRegex.Matches($a)) { [void]$hits.Add("P|$($m.Value)") }
                     foreach ($cs in $cheatStringSet) {
                         if ($a.Contains($cs)) { [void]$hits.Add("S|$cs"); continue }
                         if ($u.Contains($cs))  { [void]$hits.Add("S|$cs") }
                     }
-                    foreach ($m in $fullwidthRegex.Matches($u)) { [Void]$hits.Add("F|$($m.Value)") }
+                    foreach ($m in $fullwidthRegex.Matches($u)) { [void]$hits.Add("F|$($m.Value)") }
+
+                    # Deep scan extras
+                    if ($Deep) {
+                        foreach ($ds in $deepCheatStringSet) {
+                            if ($a.Contains($ds)) { [void]$hits.Add("D|$ds"); continue }
+                            if ($u.Contains($ds))  { [void]$hits.Add("D|$ds") }
+                        }
+                        # Entropy check on .class files only (packed/encrypted = high entropy)
+                        if ($entry.FullName -match '\.class$' -and $raw.Length -gt 512) {
+                            $ent = Get-ShannonEntropy -Data $raw
+                            if ($ent -gt 7.2) {
+                                $shortName = [System.IO.Path]::GetFileName($entry.FullName)
+                                $entropyWarnings.Add("HIGH_ENTROPY:$shortName($ent)")
+                            }
+                        }
+                    }
                 } catch { }
             }
         }
         foreach ($n in $nested) { try { $n.Dispose() } catch { } }
         $zip.Dispose()
     } catch { }
+
+    # Fullwidth deduplication
     $fwPool = @($script:cheatStrings | Where-Object { $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]" })
     foreach ($h in @($hits)) {
         if ($h -match '^F\|') {
@@ -291,21 +401,17 @@ function Get-ModSignature {
             if ($fw.Length -lt 3) { continue }
             $best = $null
             foreach ($cs in $fwPool) {
-                if ($cs.Contains($fw)) {
-                    if ($null -eq $best -or $cs.Length -lt $best.Length) { $best = $cs }
-                }
+                if ($cs.Contains($fw)) { if ($null -eq $best -or $cs.Length -lt $best.Length) { $best = $cs } }
             }
             $final = if ($best) { $best } elseif ($fw.Length -ge 6) { $fw } else { $null }
             if ($final) { $hits.Remove($h); [void]$hits.Add("F|$final") }
         }
     }
-    $fwFinal = @($hits | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+    $fwFinal  = @($hits | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
     $fwUnique = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($fw in $fwFinal) {
         $redundant = $false
-        foreach ($other in $fwFinal) {
-            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) { $redundant = $true; break }
-        }
+        foreach ($other in $fwFinal) { if ($fw.Length -lt $other.Length -and $other.Contains($fw)) { $redundant = $true; break } }
         if (-not $redundant) { [void]$fwUnique.Add($fw) }
     }
     $cleaned = [System.Collections.Generic.HashSet[string]]::new()
@@ -313,9 +419,14 @@ function Get-ModSignature {
         if ($h -match '^F\|') { if ($fwUnique.Contains($h.Substring(2))) { [void]$cleaned.Add($h) } }
         else { [void]$cleaned.Add($h) }
     }
+    # Add entropy warnings as hits
+    foreach ($ew in $entropyWarnings) { [void]$cleaned.Add("E|$ew") }
     return $cleaned
 }
 
+# ═══════════════════════════════════════════════════════════
+#  URL SOURCE EXTRACTION
+# ═══════════════════════════════════════════════════════════
 function Get-ModSources {
     param([string]$Path)
     $urls = [System.Collections.Generic.List[string]]::new()
@@ -343,6 +454,9 @@ function Get-ModSources {
     return @($urls | Select-Object -Unique)
 }
 
+# ═══════════════════════════════════════════════════════════
+#  MAIN SCAN LOOP
+# ═══════════════════════════════════════════════════════════
 try { $jars = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop }
 catch {
     Write-Host "  Cannot read directory." -ForegroundColor Red
@@ -356,13 +470,13 @@ if ($jars.Count -eq 0) {
     exit 0
 }
 
- $scanTimestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
- $mcStatus = Get-MinecraftStatus
+$scanTimestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$mcStatus      = Get-MinecraftStatus
 
-Write-Host "  ─────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host "  $scanTimestamp" -ForegroundColor DarkGray
 Write-Host "  $modsPath" -ForegroundColor DarkGray
-Write-Host "  $($jars.Count) files" -ForegroundColor DarkGray
+Write-Host "  $($jars.Count) files  |  Mode: $(if ($deepScan) { 'DEEP' } else { 'STANDARD' })" -ForegroundColor DarkGray
 Write-Host ""
 
 if ($mcStatus.Running) {
@@ -377,31 +491,23 @@ if ($mcStatus.Running) {
 }
 
 Write-Host ""
-Write-Host "  [JVM ARGS]..." -ForegroundColor DarkMagenta -NoNewline
- $jvmResults = if ($mcStatus.Running) { Test-JvmIntegrity -Pid $mcStatus.PID } else { @() }
+Write-Host "  JVM..." -ForegroundColor DarkMagenta -NoNewline
+$jvmResults = Test-JvmIntegrity
 if ($jvmResults.Count -gt 0) {
-    Write-Host " issues" -ForegroundColor Red
-    foreach ($j in $jvmResults) { Write-Host "    ! [$($j.Severity)] $($j.Type) -> $($j.Detail)" -ForegroundColor DarkRed }
-} else {
-    Write-Host " clean" -ForegroundColor DarkCyan
-}
-
-Write-Host "  [DEEP SCAN]..." -ForegroundColor DarkMagenta -NoNewline
- $memResults = if ($mcStatus.Running) { Get-DeepMemoryScan -Pid $mcStatus.PID } else { @() }
-if ($memResults.Count -gt 0) {
-    Write-Host " issues" -ForegroundColor Red
-    foreach ($m in $memResults) { 
-        if ($m.Severity -eq "LOW") { Write-Host "    ~ $($m.Detail)" -ForegroundColor DarkYellow }
-        else { Write-Host "    ! [$($m.Severity)] $($m.Type) -> $($m.Detail)" -ForegroundColor DarkRed }
+    Write-Host " issues found" -ForegroundColor Red
+    foreach ($j in $jvmResults) {
+        $col = switch ($j.Severity) { "HIGH" { "Red" } "MEDIUM" { "Yellow" } default { "DarkGray" } }
+        Write-Host "    [$($j.Severity)] $($j.Type)" -ForegroundColor $col -NoNewline
+        Write-Host " — $($j.Detail)" -ForegroundColor DarkGray
     }
 } else {
     Write-Host " clean" -ForegroundColor DarkCyan
 }
 
 Write-Host ""
- $total = $jars.Count; $i = 0
- $flagged = [System.Collections.Generic.List[PSObject]]::new()
- $clean   = [System.Collections.Generic.List[string]]::new()
+$total   = $jars.Count; $i = 0
+$flagged = [System.Collections.Generic.List[PSObject]]::new()
+$clean   = [System.Collections.Generic.List[string]]::new()
 
 foreach ($jar in $jars) {
     $i++
@@ -410,105 +516,147 @@ foreach ($jar in $jars) {
     Write-Host "$($jar.Name)" -ForegroundColor DarkGray -NoNewline
     Write-Host "`r" -NoNewline
 
-    $sig = Get-ModSignature -Path $jar.FullName
+    $sig = Get-ModSignature -Path $jar.FullName -Deep $deepScan
     if ($sig.Count -gt 0) {
-        $pats = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
-        $strs = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
-        $fws  = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+        $pats    = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
+        $strs    = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
+        $fws     = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+        $deep_s  = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
+        $entrp   = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
         $sources = Get-ModSources -Path $jar.FullName
-        
         $flagged.Add([PSCustomObject]@{
-            Name = $jar.Name; Size = [math]::Round($jar.Length / 1KB, 1)
-            Patterns = $pats; Strings = $strs; Fullwidth = $fws; HitCount = $sig.Count
-            Sources = $sources
+            Name     = $jar.Name
+            Size     = [math]::Round($jar.Length / 1KB, 1)
+            Patterns = $pats
+            Strings  = $strs
+            Fullwidth= $fws
+            DeepHits = $deep_s
+            Entropy  = $entrp
+            HitCount = $sig.Count
+            Sources  = $sources
         })
     } else { $clean.Add($jar.Name) }
 }
-Write-Host "  done." -ForegroundColor DarkMagenta
+Write-Host "  done.              " -ForegroundColor DarkMagenta
 Start-Sleep -Milliseconds 300
 Clear-Host
 
- $criticalThreats = [System.Collections.Generic.List[PSObject]]::new()
- $suspiciousFiles = [System.Collections.Generic.List[PSObject]]::new()
+# ═══════════════════════════════════════════════════════════
+#  CLASSIFICATION
+# ═══════════════════════════════════════════════════════════
+$criticalThreats = [System.Collections.Generic.List[PSObject]]::new()
+$suspiciousFiles = [System.Collections.Generic.List[PSObject]]::new()
 
 foreach ($mod in $flagged) {
     $isBlatant = $false
     if ($mod.HitCount -ge 15) { $isBlatant = $true }
     foreach ($str in $mod.Strings) {
-        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｬ｡ﾀ﾿ﾀ|AutoCrystal|ＡｕｴｏＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｮｃｈｏﾞ") {
+        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿ﾀ|AutoCrystal|ＡｕｔｏＣｒｙｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｎｃｈｏﾞ") {
             $isBlatant = $true; break
         }
     }
     if ($isBlatant) { $criticalThreats.Add($mod) } else { $suspiciousFiles.Add($mod) }
 }
 
+# ═══════════════════════════════════════════════════════════
+#  REPORT BANNER
+# ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
-Write-Host "  ║       Nic Mod Analyzer V4.0 - Scan Report                ║" -ForegroundColor Magenta
-Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Magenta
+Write-Host " ███╗   ██╗██╗ ██████╗    ███╗   ███╗ ██████╗ ██████╗      █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗ " -ForegroundColor Magenta
+Write-Host " ████╗  ██║██║██╔════╝    ████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗" -ForegroundColor Magenta
+Write-Host " ██╔██╗ ██║██║██║         ██╔████╔██║██║   ██║██║  ██║    ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝" -ForegroundColor DarkMagenta
+Write-Host " ██║╚██╗██║██║██║         ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkMagenta
+Write-Host " ██║ ╚████║██║╚██████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Magenta
+Write-Host " ╚═╝  ╚═══╝╚═╝ ╚═════╝   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Magenta
+Write-Host "   ─────────────────── SCAN REPORT ────────────────────" -ForegroundColor DarkMagenta
 Write-Host ""
 
 Write-Host "  $scanTimestamp  |  $($jars.Count) scanned  |  $($clean.Count) clean  |  " -ForegroundColor DarkGray -NoNewline
 Write-Host "$($flagged.Count) flagged" -ForegroundColor $(if ($flagged.Count -gt 0) { "Red" } else { "DarkCyan" })
+Write-Host "  Mode: $(if ($deepScan) { 'DEEP SCAN' } else { 'STANDARD SCAN' })" -ForegroundColor DarkMagenta
 
- $allRunChecks = @($jvmResults) + @($memResults)
-if ($allRunChecks.Count -gt 0) {
+# ═══════════════════════════════════════════════════════════
+#  JVM FINDINGS
+# ═══════════════════════════════════════════════════════════
+if ($jvmResults.Count -gt 0) {
     Write-Host ""
-    foreach ($j in $allRunChecks) { 
-        if ($j.Severity -eq "LOW") { Write-Host "  [RUNTIME] ~ $($j.Detail)" -ForegroundColor DarkYellow }
-        else { Write-Host "  [RUNTIME] ! [$($j.Severity)] $($j.Type) -> $($j.Detail)" -ForegroundColor Red }
+    Write-Host "  ┌─ JVM ISSUES ──────────────────────────────────────────" -ForegroundColor Red
+    foreach ($j in $jvmResults) {
+        $col = switch ($j.Severity) { "HIGH" { "Red" } "MEDIUM" { "Yellow" } default { "DarkGray" } }
+        Write-Host "  │  [$($j.Severity)] $($j.Type)" -ForegroundColor $col -NoNewline
+        Write-Host " — $($j.Detail)" -ForegroundColor DarkGray
     }
+    Write-Host "  └──────────────────────────────────────────────────────" -ForegroundColor Red
 }
 
+# ═══════════════════════════════════════════════════════════
+#  CRITICAL THREATS
+# ═══════════════════════════════════════════════════════════
 if ($criticalThreats.Count -gt 0) {
     Write-Host ""
     foreach ($mod in $criticalThreats) {
         Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Red
-        Write-Host "  ║      !!! CHEAT DETECTED !!!                                ║" -ForegroundColor White
-        Write-Host "  ║      FILE: $($mod.Name)" -ForegroundColor Yellow
-        Write-Host "  ║      SIZE: $($mod.Size) KB  |  HITS: $($mod.HitCount)" -ForegroundColor DarkGray
-        
+        Write-Host "  ║      !!! CHEAT DETECTED !!!                               ║" -ForegroundColor White
+        Write-Host "  ║      FILE : $($mod.Name)" -ForegroundColor Yellow
+        Write-Host "  ║      SIZE : $($mod.Size) KB  |  HITS: $($mod.HitCount)" -ForegroundColor DarkGray
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Host "  ║      SOURCE: $($mod.Sources[0])" -ForegroundColor DarkGray
+            Write-Host "  ║      URL  : $($mod.Sources[0])" -ForegroundColor DarkGray
         }
-
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
             Write-Host "  ║      SIGNATURES:" -ForegroundColor Red
             $show = $allHits | Select-Object -First 4
             foreach ($h in $show) { Write-Host "  ║        >> $h" -ForegroundColor Red }
-            if ($allHits.Count -gt 4) { Write-Host "  ║        +$($allHits.Count - 4) more" -ForegroundColor DarkRed }
+            if ($allHits.Count -gt 4) { Write-Host "  ║        + $($allHits.Count - 4) more" -ForegroundColor DarkRed }
         }
-
+        if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
+            Write-Host "  ║      DEEP HITS:" -ForegroundColor DarkRed
+            foreach ($d in ($mod.DeepHits | Select-Object -First 3)) { Write-Host "  ║        ~~ $d" -ForegroundColor DarkRed }
+        }
+        if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
+            Write-Host "  ║      HIGH ENTROPY FILES:" -ForegroundColor DarkRed
+            foreach ($e in $mod.Entropy) { Write-Host "  ║        !! $e" -ForegroundColor DarkRed }
+        }
         Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Red
         Write-Host ""
     }
 }
 
+# ═══════════════════════════════════════════════════════════
+#  SUSPICIOUS FILES
+# ═══════════════════════════════════════════════════════════
 if ($suspiciousFiles.Count -gt 0) {
     foreach ($mod in $suspiciousFiles) {
         Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Yellow
-        Write-Host "  ║      !!! SUSPICIOUS FILE DETECTED !!!                      ║" -ForegroundColor DarkYellow
-        Write-Host "  ║      FILE: $($mod.Name)" -ForegroundColor White
-        Write-Host "  ║      HITS: $($mod.HitCount)" -ForegroundColor DarkYellow
-        
+        Write-Host "  ║      !!! SUSPICIOUS FILE DETECTED !!!                     ║" -ForegroundColor DarkYellow
+        Write-Host "  ║      FILE : $($mod.Name)" -ForegroundColor White
+        Write-Host "  ║      HITS : $($mod.HitCount)" -ForegroundColor DarkYellow
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Host "  ║      SOURCE: $($mod.Sources[0])" -ForegroundColor DarkGray
+            Write-Host "  ║      URL  : $($mod.Sources[0])" -ForegroundColor DarkGray
         }
-
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
             Write-Host "  ║      SIGNATURES:" -ForegroundColor Yellow
             $show = $allHits | Select-Object -First 3
             foreach ($h in $show) { Write-Host "  ║        >> $h" -ForegroundColor Yellow }
         }
-
-        Write-Host "  ║      >> THIS MOD MUST BE DECOMPILED TO VERIFY              ║" -ForegroundColor White
-        Write-Host "  ╚═════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
+        if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
+            Write-Host "  ║      DEEP HITS:" -ForegroundColor DarkYellow
+            foreach ($d in ($mod.DeepHits | Select-Object -First 2)) { Write-Host "  ║        ~~ $d" -ForegroundColor DarkYellow }
+        }
+        if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
+            Write-Host "  ║      HIGH ENTROPY:" -ForegroundColor DarkYellow
+            foreach ($e in $mod.Entropy) { Write-Host "  ║        !! $e" -ForegroundColor DarkYellow }
+        }
+        Write-Host "  ║      >> THIS MOD MUST BE DECOMPILED TO VERIFY            ║" -ForegroundColor White
+        Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
         Write-Host ""
     }
 }
 
+# ═══════════════════════════════════════════════════════════
+#  CLEAN MODS
+# ═══════════════════════════════════════════════════════════
 Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor DarkGray
 Write-Host "  ║   CLEAN MODS ($($clean.Count))" -ForegroundColor DarkCyan
 Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor DarkGray
@@ -530,10 +678,13 @@ if ($clean.Count -gt 0) {
     }
 } else { Write-Host "  (none)" -ForegroundColor DarkGray }
 
+# ═══════════════════════════════════════════════════════════
+#  FOOTER
+# ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host "  ═══════════════════════════════════════════════════════════" -ForegroundColor DarkMagenta
 Write-Host "  Special thanks to Tonynoh" -ForegroundColor DarkMagenta
 Write-Host "  Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
 Write-Host ""
 Write-Host "  Press any key..." -ForegroundColor DarkGray
- $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
