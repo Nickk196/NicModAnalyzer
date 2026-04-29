@@ -1,8 +1,20 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Clear-Host
 
-Write-Host '  Nic Mod Analyzer V3.0' -ForegroundColor Magenta
+ $Banner = @"
+    _   _ _   _ _____ _____ ____  
+   | | | | \ | |_   _| ____/ ___| 
+   | | | |  \| | | | |  _| \___ \ 
+   | |_| | |\  | | | | |___ ___) |
+    \___/|_| \_| |_| |_____|____/ 
+
+         M O D   A N A L Y Z E R
+                V 4.0
+"@
+Write-Host $Banner -ForegroundColor Magenta
+Write-Host "  ─────────────────────────────────────" -ForegroundColor DarkMagenta
 Write-Host ''
+
 Write-Host '  Path ' -ForegroundColor DarkGray -NoNewline
 Write-Host '(Enter = default)' -ForegroundColor DarkMagenta
 Write-Host '  > ' -ForegroundColor Magenta -NoNewline
@@ -94,45 +106,45 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay", "ＥｌｙﾞＳＷａｵ", "Ｅｌｙﾄﾗａ Ｓｗｱﾞ",
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
-    "BaseFinder", "invsee", "ItemExploit", "NoFall", "nofall", "FreezePlayer", "Ｆｲｅｅｃ｡ﾞ", "Ｍｏｖｪ ｆﾞｵｅｙ ｔｈﾞｰｵｇ ｗａｬｌｽ", "Ｎｏ Ｃﾞｲﾞ", "Ｆｲｵｪｪﾞｚﾞ Ｐｌｱｴﾙｅｲ",
+    "BaseFinder", "invsee", "ItemExploit", "NoFall", "nofall", "FreezePlayer", "Ｆｲｅｅｃ｡ﾞ", "Ｍｏｖｪ ｆﾞｵｅｙ ｔｈﾞｰｵｇ ｗａｬｌｽ", "Ｎｏ Ｃﾞｲﾞ", "Ｆｲｵｪｪﾞｽﾞ Ｐｌｱｴﾙｅｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽｿ｡ﾞ", "KeyPearl", "LootYeeter", "ＫｅｙＰｅａｒｌ", "Ｌｏｏｵ Ｙｅｅﾄｪﾞ",
-    "FastPlace", "Ｆ｡ｽﾄ Ｐｌ｡ｾｵ", "Ｐｌａｾｅ ｂｌｏｃｋｓ ｆ｡ｽｿｅﾞ", "AutoBreach", "Ａｕｔｏ Ｂﾚｾａｃｷ",
+    "FastPlace", "Ｆ｡ｽﾄ Ｐｌ｡ｾｵ", "Ｐｌａｾｅ ｂｌｏｃｋｓ ｆ｡ｽｿｅﾞ", "AutoBreach", "Ａｕｔｏ Ｂﾚｾ｡ｃｷ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
     "Activate Key", "Ａｃﾞｲｲﾞａｴｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｋ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
-    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
-    "Ｒｅﾑｵｮｖｵｽ ｔｈｅ ｃｲｲｽｳｕｌ ｂｏｵｮｃｴ ａｎｲﾑａﾞｵｮ", "Place Delay", "Ｐｌａｾｵ Ｄｅﾙｱ", "Break Delay", "Ｂﾚｅａｋ Ｄｅﾙｱ",
-    "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌａｾｵ Ｃｈ｡ﾝｃｴ", "Break Chance", "Ｂﾚｅａｋ Ｃｈ｡ﾝｽｴ",
-    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｋ", "damagetick", "Anti Weakness", "Ａｎﾞｨｉ Ｗｅａｋﾝｅｓｽ",
-    "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｴ", "Trigger Key", "Ｔｒｉｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｴｃｨ Ｄｅｌｱ",
-    "Totem Slot", "Ｔｏｔｅｵ ｽｬｯ｡", "Smooth Rotations", "Ｓｍｵｵｔｈ ﾝｰｵｔａｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｴｰｰｄ",
-    "Use Easing", "Ｕｾｵ Ｅａｽｲﾝｸ", "Easing Strength", "Ｅａｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｉｌｅ Ｕｽｪ",
-    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｲﾙｌ", "Glowstone Delay", "Ｇｮｵｳｽﾄｰｮｅ Ｄｅｬｱ", "Glowstone Chance", "Ｇｮｵｽｳｯｮｅ Ｃｈ｡ﾝｼｴ",
-    "Explode Delay", "Ｅｘｰｌﾞｵｄｅ Ｄｅｬｱ", "Explode Chance", "Ｅｘｰｌﾞｵｄｅ Ｃｈ｡ﾝｽｼｴ", "Explode Slot", "Ｅｘｰｌﾞｵｄｅ Ｓｌｯｱ",
-    "Only Charge", "Ｏｎｌｙ Ｃｈａｶﾞ", "Anchor Macro", "Ａｎｃｈｏﾞ Ｍ｡ｃﾞｏ", "Reach Distance", "ﾛｅｱａﾞ Ｄｨｽｱﾝｾｃｴ",
-    "Min Height", "Ｍｉｎ Ｈｅｲｲﾞﾈ", "Min Fall Speed", "Ｍｉｵ Ｆａｬｌ Ｓｰｵｅｄ", "Attack Delay", "Ａｔｔａｃｷ Ｄｅｬｱ",
-    "Breach Delay", "Ｂﾚｵ｡ｃｨ Ｄｅｌｱ", "Require Elytra", "ﾛｅｸｵｲｵｲｪ Ｅｌｙｔﾞｱ", "Auto Switch Back", "Ａｕｔｏ Ｓｗｲｵａｷ Ｂ｡ｮｸ",
-    "Check Line of Sight", "Ｃｈｅｃｷ Ｌｉﾇｅ ｏｆ Ｓｉｇﾞｈｔ", "Only When Falling", "Ｏｎｌｙ Ｗｈｅｎ Ｆａｬｌｉｎｇ",
-    "Require Crit", "ﾛｅｸｵｲｵｲｪ Ｃﾞｲｴ", "Show Status Display", "Ｓｈｏｗ Ｓｔａｔｕｓ Ｄｉｽﾞｌｱｹ",
-    "Stop On Crystal", "Ｓｔｏｐ Ｏｎ Ｃｒｙｽｿ｡", "Check Shield", "Ｃｈｅｃｋ Ｓｈｉｅｌｄ", "On Pop", "Ｏｎ Ｐｏｐ",
-    "Predict Damage", "ﾌﾚｴﾃﾞｾﾄｾ ﾄｳﾞｧｪ", "On Ground", "Ｏｎ Ｇﾛｵｳﾝ", "Check Players", "Ｃｈｅｃｋ Ｐｌａｙｅｒｽ",
-    "Predict Crystals", "ﾌﾚｴｃﾞｼｸｴ ﾄﾞｽｿ｡ﾞ", "Check Aim", "Ｃｈｅｃｋ Ａｉｭ", "Check Items", "Ｃｈｅｃｋ Ｉｔｅｍｽ",
-    "Activates Above", "Ａｃﾄｲﾀﾄｅｽ Ａｂｏｖｅ", "Blatant", "Ｂｌａﾀ﾿ﾀﾝ", "Force Totem", "ﾌｵﾛｾ ｔｏｔｅｭ",
-    "Stay Open For", "Ｓｔｱｋｅ Ｏｐｅｎ Ｆｵｰ", "Auto Inventory Totem", "Ａｕｕｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｭ", "Only On Pop", "Ｏｎｌｙ Ｏｎ Ｐｏｐ",
-    "Vertical Speed", "Ｖｅｲｼｶﾬｾﾞ Ｓｰ｡ｰｄ", "Hover Totem", "Ｈｏｖｰﾘﾞ ﾄｵｔｅｭ", "Swap Speed", "Ｓｗｱﾙ ﾄﾐｰｵｄ",
-    "Strict One-Tick", "Ｓﾄｲｲｵﾄ Ｏｎｅ－ﾃｨｯ", "Mace Priority", "Ｍ｡ｃｅ Ｐｒｉｏﾘｉｲｙ", "Min Totems", "Ｍｉｎ Ｔｏﾄｪｭｽ",
-    "Min Pearls", "Ｍｉｎ Ｐｅａﾒﾞｌｽ", "Totem First", "Ｔｏｔｅｭ Ｆｲｽｴ", "Drop Interval", "Ｄﾞｵｐ Ｉﾀｔｪﾞｖ｡ｙ",
-    "Random Pattern", "ﾛ｡ﾝﾄｵｮ Ｐ｡ﾀﾀﾝﾞ", "Loot Yeeter", "ﾛｏｕｕ Ｙｅｅｪｪﾞ", "Horizontal Aim Speed", "ﾈｵﾘｲｚｏﾝｱｰｲｵｌ Ａｲｭ ﾞｰｽｰｅｴﾄ",
-    "Vertical Aim Speed", "Ｖｅｲｼｶﾬ Ａｲｭ ﾞｰｽｰｅｴﾄ", "Include Head", "Ｉｎｸﾞｵﾄｪ Ｈ｡ｱｳ", "Web Delay", "Ｗｅｂ Ｄｅｬｱ",
-    "Holding Web", "ﾎｵﾙﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｴ Ｗｈｅﾝ ａｆﾂｃｴｕｽ Ｐｌ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
-    "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
+    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｪｵｼｴ",
+    "Ｒｪﾑｵｮｖｵｽ ｔｈｪ ｃｲｲｽｳｕｌ ｂｏｵｮｃｪ ｡ｮｲﾑ｡ﾞｵｮ", "Place Delay", "Ｐｌ｡ｾｵ Ｄｪﾙｱ", "Break Delay", "Ｂﾚｪ｡ｋ Ｄｪﾙｱ",
+    "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌ｡ｾｵ Ｃｈ｡ﾝｃｪ", "Break Chance", "Ｂﾚｪ｡ｋ Ｃｈ｡ﾝｽｪ",
+    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｋ", "damagetick", "Anti Weakness", "Ａｮﾞｨｉ Ｗｪ｡ｋﾞｪｽｽ",
+    "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｪ", "Trigger Key", "Ｔﾞｨｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｪｃｨ Ｄｪﾙｱ",
+    "Totem Slot", "Ｔｏｔｪｭ ｽｬｯ｡", "Smooth Rotations", "Ｓｭｵｵｔｈ ﾝｰｵｔ｡ｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｪｰｰｄ",
+    "Use Easing", "Ｕｾｵ Ｅ｡ｽｲﾝｸ", "Easing Strength", "Ｅ｡ｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｬｪ Ｕｽｪ",
+    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｲﾙｬ", "Glowstone Delay", "Ｇｮｵｳｽﾄｰｮｪ Ｄｪﾬｱ", "Glowstone Chance", "Ｇｮｵｽｳｯｮｪ Ｃｈ｡ﾝｼｪ",
+    "Explode Delay", "Ｅｘｰｬﾞｵﾄｪ Ｄｪﾬｱ", "Explode Chance", "Ｅｘｰｬﾞｵﾄｪ Ｃｈ｡ﾝｽｼｪ", "Explode Slot", "Ｅｘｰｬﾞｵﾄｪ Ｓｬｯｱ",
+    "Only Charge", "Ｏｮｬｙ Ｃｈ｡ｶﾞ", "Anchor Macro", "Ａｮｃｈｏﾞ Ｍ｡ｃﾞｏ", "Reach Distance", "ﾛｪｱ｡ ﾄｨｽ｡ﾝｾｃｪ",
+    "Min Height", "Ｍｉｮ Ｈｪｲｲﾞﾈ", "Min Fall Speed", "Ｍｉｵ Ｆ｡ｬｬ Ｓｰｵｪﾄ", "Attack Delay", "Ａｴｴ｡ｃｷ Ｄｪﾬｱ",
+    "Breach Delay", "Ｂﾚｪｵ｡ｃｨ Ｄｪﾬｱ", "Require Elytra", "ﾛｪｸｵｲｵｲｪ Ｅｬｹﾞｱ", "Auto Switch Back", "Ａｕｴｏ Ｓｗｲｵ｡ｷ Ｂ｡ｮｸ",
+    "Check Line of Sight", "Ｃｈｪｃｋ Ｌｉﾇｪ ｏｆ Ｓｉｸﾞｈｴ", "Only When Falling", "Ｏｮｬｙ Ｗｈｪｮ Ｆ｡ｬｬｉｮｸ",
+    "Require Crit", "ﾛｪｸｵｲｵｲｪ Ｃﾞｲｪ", "Show Status Display", "Ｓｈｏｗ Ｓｴ｡ｴｕｽ Ｄｉｽﾞｬ｡ｷｪ",
+    "Stop On Crystal", "Ｓｴｏｐ Ｏｮ Ｃﾞｲｽｏ｡", "Check Shield", "Ｃｈｪｃｋ Ｓｈｉｪｬﾞ", "On Pop", "Ｏｮ Ｐｏｐ",
+    "Predict Damage", "ﾌﾚｪﾄｪｾﾄｪ ﾄｳﾞ｡ﾞｪ", "On Ground", "Ｏｮ Ｇﾞｏｕｮﾞ", "Check Players", "Ｃｈｪｃｋ Ｐｬ｡ｹｪﾞｽ",
+    "Predict Crystals", "ﾌﾚｪｃﾞｼｸｪ ﾄﾞｽｏ｡ﾞ", "Check Aim", "Ｃｈｪｃｋ Ａｉｭ", "Check Items", "Ｃｈｪｃｋ Ｉｴｪｭｽ",
+    "Activates Above", "Ａｃｴｉｴ｡ｴｪｽ Ａｂｏｖｪ", "Blatant", "Ｂｬ｡ﾀ﾿ﾀﾝ", "Force Totem", "ﾌｵﾞｏｾ ｴｏｴｪｭ",
+    "Stay Open For", "Ｓｴ｡ｷｪ Ｏｐｪｮ Ｆｵｰ", "Auto Inventory Totem", "Ａｕｕｏ Ｉｮｖｪｮｵｮｙ Ｔｏｴｪｭ", "Only On Pop", "Ｏｮｬｙ Ｏｮ Ｐｏｐ",
+    "Vertical Speed", "Ｖｪｲｼｶﾬｾﾞ Ｓｰ｡ｰﾄ", "Hover Totem", "Ｈｏｖｰﾘﾞ ﾄｵｴｪｭ", "Swap Speed", "Ｓｗｱﾞ ﾄﾐｰｵﾄ",
+    "Strict One-Tick", "Ｓﾄｲｲｵﾄ Ｏｮｪ－ﾃｨｯ", "Mace Priority", "Ｍ｡ｃｪ Ｐﾞｉｏﾞｉｉｙ", "Min Totems", "Ｍｉｮ Ｔｏｴｪｭｽ",
+    "Min Pearls", "Ｍｉｮ Ｐｪ｡ﾞｬｪｽ", "Totem First", "Ｔｏｴｪｭ Ｆｲｽｪ", "Drop Interval", "Ｄﾞｵｐ Ｉﾀｴﾞｖ｡ｙ",
+    "Random Pattern", "ﾛ｡ﾝﾄｵｮ Ｐ｡ﾀﾀﾝﾞ", "Loot Yeeter", "ﾛｏｕｕ Ｙｪｪｪﾞ", "Horizontal Aim Speed", "ﾈｵﾞｉｚｏﾞｱｰｲｵｬ Ａｲｭ ﾞｰｽｰｪｴﾄ",
+    "Vertical Aim Speed", "Ｖｪｲｼｶﾬ Ａｲｭ ﾞｰｽｰｪｴﾄ", "Include Head", "Ｉｮｸﾞｵﾄｪ Ｈ｡ｱｳ", "Web Delay", "Ｗｪｂ Ｄｪﾬｱ",
+    "Holding Web", "ﾎｵﾞﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｪ Ｗｈｪｮ ｡ｆﾂｃｪｕｽ Ｐｬ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
+    "Ｓｗｲｲｃｈ Ｂ｡ｃｷ", "Require Hold Axe", "ﾛｪｸｵｲｵｲｪ ﾛｵﾬﾄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｋｪ Ｐｕﾝｰﾞﾞ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
-    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｋｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｋｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
-    "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｋｵ， ｡ｮﾄﾞ ｪｘｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｔｴ｡ｃｋ",
-    "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
+    "ｐﾟ｡ｾｪＩﾝｴﾞｲｖ｡ｙ", "ｂﾞｪ｡ｋＩｮｴﾞﾞｲｖ｡ｙ", "ｓｴｵｐＯＯｮＫｋｬﾞ", "｡ｃﾞｲ｡ｴｪＯｮＲｉｃｋ",
+    "ｄ｡ｾｶﾞｇﾞｴｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｋｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｋｪＰＰｕＰｮ", "Ｐｬ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｴｉｏｮｽ",
+    "Ｐｬ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｋｵ， ｡ｮﾄﾞ ｪｘｰｬｵﾄｪｽ", "Ａｕｴｏ ｽｗ｡ｐ ｴｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴ｡ｃｋ",
+    "Macro Key", "Ａｕｴｏ Ｐｏｴ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
  $patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
@@ -159,31 +171,42 @@ function Get-MinecraftStatus {
 }
 
 function Test-JvmIntegrity {
+    param([int]$Pid)
     $findings = [System.Collections.Generic.List[PSObject]]::new()
-    $javaProc = Get-Process javaw -ErrorAction SilentlyContinue
-    if (-not $javaProc) { $javaProc = Get-Process java -ErrorAction SilentlyContinue }
+    $javaProc = Get-Process -Id $Pid -ErrorAction SilentlyContinue
     if (-not $javaProc) { return $findings }
-    $javaPid = ($javaProc | Select-Object -First 1).Id
     try {
-        $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
+        $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $Pid" -ErrorAction Stop
         $cmd = $wmi.CommandLine
         if ($cmd) {
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
+            $nativeAgentMatches = [regex]::Matches($cmd, '-agentpath:([^\s"]+)')
             $whitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus")
+            
             foreach ($m in $agentMatches) {
                 $path = $m.Groups[1].Value.Trim('"').Trim("'")
                 $name = [System.IO.Path]::GetFileName($path)
                 $safe = $false
                 foreach ($w in $whitelist) { if ($name -match $w) { $safe = $true; break } }
-                if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "AGENT"; Detail = $name; Severity = "HIGH" }) }
+                if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "JAVA_AGENT"; Detail = $name; Severity = "HIGH" }) }
             }
+
+            foreach ($m in $nativeAgentMatches) {
+                $path = $m.Groups[1].Value.Trim('"').Trim("'")
+                $name = [System.IO.Path]::GetFileName($path)
+                $findings.Add([PSCustomObject]@{ Type = "NATIVE_AGENT"; Detail = $name; Severity = "CRITICAL" })
+            }
+
             $flags = @(
                 @{ F = "-Xbootclasspath/p:"; T = "BOOTCLASS_PREPEND"; S = "HIGH" },
                 @{ F = "-Xbootclasspath/a:"; T = "BOOTCLASS_APPEND";  S = "MEDIUM" },
                 @{ F = "-Dfabric.addMods=";  T = "FABRIC_INJECT";    S = "HIGH" },
                 @{ F = "-Dfabric.loadMods="; T = "FABRIC_MANIPULATE"; S = "MEDIUM" },
                 @{ F = "-Djava.security.manager="; T = "SEC_BYPASS";  S = "HIGH" },
-                @{ F = "-Dclient.brand=";   T = "BRAND_SPOOF";      S = "LOW" }
+                @{ F = "-Dclient.brand=";   T = "BRAND_SPOOF";      S = "LOW" },
+                @{ F = "-Djdk.attach.allowAttachSelf"; T = "SELF_ATTACH"; S = "HIGH" },
+                @{ F = "--add-opens java.base/java.lang.reflect"; T = "DEEP_REFLECT_BYPASS"; S = "MEDIUM" },
+                @{ F = "--add-opens java.base/sun.misc"; T = "UNSAFE_ACCESS"; S = "HIGH" }
             )
             foreach ($fl in $flags) {
                 if ($cmd -match [regex]::Escape($fl.F)) {
@@ -192,6 +215,34 @@ function Test-JvmIntegrity {
             }
         }
     } catch { }
+    return $findings
+}
+
+function Get-DeepMemoryScan {
+    param([int]$Pid)
+    $findings = [System.Collections.Generic.List[PSObject]]::new()
+    try {
+        $proc = Get-Process -Id $Pid -ErrorAction Stop
+        $suspiciousMods = @("jnativehook", "imgui", "dwm_overlay", "GameOverlay", " cheat", " hack", "inject")
+        $standardMods = @("jimage", "msvcr", "msvcp", "jvm", "java", "windowscodecs", "ntdll", "kernel32", "ADVAPI32", "SECDLL", "CRYPTBASE", "clr", "coreclr", " SYSTEM32", " SysWOW64", "OpenCL", "opengl32", "vcruntime", "ucrtbase", "dxgi", "d3d", "igdumdim", "nvoglv", "atio", "wlanapi", "ws2_32", "wininet", "secur32", "SspiCli", "RpcRtRemote", "dbgeng", "gdi32", "user32", "shell32", "ole32", "mswsock", "DNSAPI", "IPHLPAPI", "NSI", "winnsi", "MPR", "credssp", "winhttp", "webio", "rasapi32", "rtutils", "wsdapi", "umpdc", "ncrypt", "ntmarta", "wevtapi", "tdh", "fastprox", "wbemcomn", "wbemsvc", "WMICNTFY", "framedyn", "clbcatq", "MMDevApi", "AudioSes", "devenum", "msdmo", "wdmaud", "ksuser", "AVRT", "powrprof", "profapi", "umpdc", "devobj", "setupapi", "cfgmgr32", "bcrypt", "bcryptprimitives", "KernelBase", "msasn1", "crypt32", "dpapi", "userenv", "imm32", "inputhost", "CoreUIComponents", "CoreMessaging", "procthread", "shcore", "uxtheme", "dwmapi", "propsys", "combase", "taskschd", "mssprx", "ntasn1", "ncryptsslp", "sspicli", "kernelbase", "apphelp", "acgenral", "dbghelp", "psapi", "version", "bcryptprimitives")
+        
+        foreach ($mod in $proc.Modules) {
+            $modName = $mod.ModuleName.ToLower()
+            $isStandard = $false
+            foreach ($std in $standardMods) { if ($modName -match $std) { $isStandard = $true; break } }
+            
+            if (-not $isStandard) {
+                foreach ($sus in $suspiciousMods) {
+                    if ($modName -match $sus) {
+                        $findings.Add([PSCustomObject]@{ Type = "MEMORY_INJECTION"; Detail = $mod.ModuleName; Severity = "CRITICAL" })
+                        break
+                    }
+                }
+            }
+        }
+    } catch {
+        $findings.Add([PSCustomObject]@{ Type = "MEMORY_SCAN"; Detail = "Failed (Run as Admin?)"; Severity = "LOW" })
+    }
     return $findings
 }
 
@@ -308,7 +359,7 @@ if ($jars.Count -eq 0) {
  $scanTimestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
  $mcStatus = Get-MinecraftStatus
 
-Write-Host ""
+Write-Host "  ─────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host "  $scanTimestamp" -ForegroundColor DarkGray
 Write-Host "  $modsPath" -ForegroundColor DarkGray
 Write-Host "  $($jars.Count) files" -ForegroundColor DarkGray
@@ -326,11 +377,23 @@ if ($mcStatus.Running) {
 }
 
 Write-Host ""
-Write-Host "  JVM..." -ForegroundColor DarkMagenta -NoNewline
- $jvmResults = Test-JvmIntegrity
+Write-Host "  [JVM ARGS]..." -ForegroundColor DarkMagenta -NoNewline
+ $jvmResults = if ($mcStatus.Running) { Test-JvmIntegrity -Pid $mcStatus.PID } else { @() }
 if ($jvmResults.Count -gt 0) {
     Write-Host " issues" -ForegroundColor Red
-    foreach ($j in $jvmResults) { Write-Host "    ! $($j.Type) -> $($j.Detail)" -ForegroundColor DarkRed }
+    foreach ($j in $jvmResults) { Write-Host "    ! [$($j.Severity)] $($j.Type) -> $($j.Detail)" -ForegroundColor DarkRed }
+} else {
+    Write-Host " clean" -ForegroundColor DarkCyan
+}
+
+Write-Host "  [DEEP SCAN]..." -ForegroundColor DarkMagenta -NoNewline
+ $memResults = if ($mcStatus.Running) { Get-DeepMemoryScan -Pid $mcStatus.PID } else { @() }
+if ($memResults.Count -gt 0) {
+    Write-Host " issues" -ForegroundColor Red
+    foreach ($m in $memResults) { 
+        if ($m.Severity -eq "LOW") { Write-Host "    ~ $($m.Detail)" -ForegroundColor DarkYellow }
+        else { Write-Host "    ! [$($m.Severity)] $($m.Type) -> $($m.Detail)" -ForegroundColor DarkRed }
+    }
 } else {
     Write-Host " clean" -ForegroundColor DarkCyan
 }
@@ -372,7 +435,7 @@ foreach ($mod in $flagged) {
     $isBlatant = $false
     if ($mod.HitCount -ge 15) { $isBlatant = $true }
     foreach ($str in $mod.Strings) {
-        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿ﾀ|AutoCrystal|ＡｕｔｏＣｒｙｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｎｃｈｏﾞ") {
+        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｬ｡ﾀ﾿ﾀ|AutoCrystal|ＡｕｴｏＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｮｃｈｏﾞ") {
             $isBlatant = $true; break
         }
     }
@@ -381,16 +444,20 @@ foreach ($mod in $flagged) {
 
 Write-Host ""
 Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
-Write-Host "  ║       Nic Mod Analyzer V3.0 - Scan Report                ║" -ForegroundColor Magenta
+Write-Host "  ║       Nic Mod Analyzer V4.0 - Scan Report                ║" -ForegroundColor Magenta
 Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Magenta
 Write-Host ""
 
 Write-Host "  $scanTimestamp  |  $($jars.Count) scanned  |  $($clean.Count) clean  |  " -ForegroundColor DarkGray -NoNewline
 Write-Host "$($flagged.Count) flagged" -ForegroundColor $(if ($flagged.Count -gt 0) { "Red" } else { "DarkCyan" })
 
-if ($jvmResults.Count -gt 0) {
+ $allRunChecks = @($jvmResults) + @($memResults)
+if ($allRunChecks.Count -gt 0) {
     Write-Host ""
-    foreach ($j in $jvmResults) { Write-Host "  [JVM] ! $($j.Type) -> $($j.Detail)" -ForegroundColor Red }
+    foreach ($j in $allRunChecks) { 
+        if ($j.Severity -eq "LOW") { Write-Host "  [RUNTIME] ~ $($j.Detail)" -ForegroundColor DarkYellow }
+        else { Write-Host "  [RUNTIME] ! [$($j.Severity)] $($j.Type) -> $($j.Detail)" -ForegroundColor Red }
+    }
 }
 
 if ($criticalThreats.Count -gt 0) {
