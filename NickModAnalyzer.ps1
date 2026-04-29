@@ -19,9 +19,9 @@ Write-Host ""
 # ═══════════════════════════════════════════════════════════
 #  PATH INPUT
 # ═══════════════════════════════════════════════════════════
-Write-Host '  Path ' -ForegroundColor DarkGray -NoNewline
-Write-Host '(Enter = default)' -ForegroundColor DarkMagenta
-Write-Host '  > ' -ForegroundColor Magenta -NoNewline
+Write-Host "  Path " -ForegroundColor DarkGray -NoNewline
+Write-Host "(leave blank for default)" -ForegroundColor DarkMagenta
+Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $modsPath = Read-Host
 
 if ([string]::IsNullOrWhiteSpace($modsPath)) {
@@ -38,19 +38,22 @@ if (-not (Test-Path $modsPath -PathType Container)) {
 #  DEEP SCAN PROMPT
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host '  Scan mode: ' -ForegroundColor DarkGray -NoNewline
-Write-Host '[1]' -ForegroundColor Magenta -NoNewline
-Write-Host ' Standard  ' -ForegroundColor White -NoNewline
-Write-Host '[2]' -ForegroundColor Magenta -NoNewline
-Write-Host ' Deep (slower, checks all file types + entropy)' -ForegroundColor White
-Write-Host '  > ' -ForegroundColor Magenta -NoNewline
+Write-Host "  Scan mode " -ForegroundColor DarkGray -NoNewline
+Write-Host "[1]" -ForegroundColor Magenta -NoNewline
+Write-Host " Standard   " -ForegroundColor Gray -NoNewline
+Write-Host "[2]" -ForegroundColor Magenta -NoNewline
+Write-Host " Deep  (all file types + entropy analysis)" -ForegroundColor Gray
+Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $scanModeInput = Read-Host
 $deepScan = ($scanModeInput.Trim() -eq '2')
 
+Write-Host ""
 if ($deepScan) {
-    Write-Host '  Deep scan enabled.' -ForegroundColor DarkMagenta
+    Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
+    Write-Host "DEEP SCAN" -ForegroundColor Magenta
 } else {
-    Write-Host '  Standard scan enabled.' -ForegroundColor DarkGray
+    Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
+    Write-Host "STANDARD SCAN" -ForegroundColor DarkMagenta
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -476,32 +479,27 @@ $mcStatus      = Get-MinecraftStatus
 Write-Host ""
 Write-Host "  $scanTimestamp" -ForegroundColor DarkGray
 Write-Host "  $modsPath" -ForegroundColor DarkGray
-Write-Host "  $($jars.Count) files  |  Mode: $(if ($deepScan) { 'DEEP' } else { 'STANDARD' })" -ForegroundColor DarkGray
+Write-Host "  $($jars.Count) file(s) found" -ForegroundColor DarkGray
 Write-Host ""
 
 if ($mcStatus.Running) {
-    Write-Host "  Minecraft " -ForegroundColor DarkGray -NoNewline
+    Write-Host "  Minecraft  " -ForegroundColor DarkGray -NoNewline
     Write-Host "● " -ForegroundColor Magenta -NoNewline
     Write-Host "Running  " -ForegroundColor White -NoNewline
-    Write-Host "PID $($mcStatus.PID)  |  $($mcStatus.Uptime)  |  $($mcStatus.RAM) RAM" -ForegroundColor DarkCyan
+    Write-Host "PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" -ForegroundColor DarkGray
 } else {
-    Write-Host "  Minecraft " -ForegroundColor DarkGray -NoNewline
+    Write-Host "  Minecraft  " -ForegroundColor DarkGray -NoNewline
     Write-Host "○ " -ForegroundColor DarkGray -NoNewline
     Write-Host "Not running" -ForegroundColor DarkGray
 }
 
 Write-Host ""
-Write-Host "  JVM..." -ForegroundColor DarkMagenta -NoNewline
+Write-Host "  JVM check  " -ForegroundColor DarkGray -NoNewline
 $jvmResults = Test-JvmIntegrity
 if ($jvmResults.Count -gt 0) {
-    Write-Host " issues found" -ForegroundColor Red
-    foreach ($j in $jvmResults) {
-        $col = switch ($j.Severity) { "HIGH" { "Red" } "MEDIUM" { "Yellow" } default { "DarkGray" } }
-        Write-Host "    [$($j.Severity)] $($j.Type)" -ForegroundColor $col -NoNewline
-        Write-Host " — $($j.Detail)" -ForegroundColor DarkGray
-    }
+    Write-Host "$($jvmResults.Count) issue(s) found" -ForegroundColor Red
 } else {
-    Write-Host " clean" -ForegroundColor DarkCyan
+    Write-Host "clean" -ForegroundColor Cyan
 }
 
 Write-Host ""
@@ -559,6 +557,52 @@ foreach ($mod in $flagged) {
 }
 
 # ═══════════════════════════════════════════════════════════
+#  HELPER — fixed-width box printer (no broken borders)
+# ═══════════════════════════════════════════════════════════
+$W = 72   # inner width (between │ and │)
+
+function Write-Border {
+    param([string]$Type, [System.ConsoleColor]$Color)
+    switch ($Type) {
+        'top'    { Write-Host ("  ╔" + ("═" * $W) + "╗") -ForegroundColor $Color }
+        'sep'    { Write-Host ("  ╠" + ("═" * $W) + "╣") -ForegroundColor $Color }
+        'bot'    { Write-Host ("  ╚" + ("═" * $W) + "╝") -ForegroundColor $Color }
+        'blank'  { Write-Host ("  ║" + (" " * $W) + "║") -ForegroundColor $Color }
+    }
+}
+
+function Write-Row {
+    param(
+        [string]$Label,
+        [string]$Value,
+        [System.ConsoleColor]$LabelColor  = [System.ConsoleColor]::DarkGray,
+        [System.ConsoleColor]$ValueColor  = [System.ConsoleColor]::White,
+        [System.ConsoleColor]$BorderColor = [System.ConsoleColor]::DarkGray
+    )
+    # truncate value so the row never overflows the box
+    $maxVal = $W - $Label.Length - 1
+    if ($Value.Length -gt $maxVal) { $Value = $Value.Substring(0, $maxVal - 3) + "..." }
+    $pad = $W - $Label.Length - $Value.Length
+    Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
+    Write-Host $Label -ForegroundColor $LabelColor -NoNewline
+    Write-Host $Value -ForegroundColor $ValueColor -NoNewline
+    Write-Host (" " * $pad + "║") -ForegroundColor $BorderColor
+}
+
+function Write-RowFull {
+    param(
+        [string]$Text,
+        [System.ConsoleColor]$TextColor   = [System.ConsoleColor]::White,
+        [System.ConsoleColor]$BorderColor = [System.ConsoleColor]::DarkGray
+    )
+    if ($Text.Length -gt $W) { $Text = $Text.Substring(0, $W - 3) + "..." }
+    $pad = $W - $Text.Length
+    Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
+    Write-Host $Text -ForegroundColor $TextColor -NoNewline
+    Write-Host (" " * $pad + "║") -ForegroundColor $BorderColor
+}
+
+# ═══════════════════════════════════════════════════════════
 #  REPORT BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
@@ -568,57 +612,91 @@ Write-Host " ██╔██╗ ██║██║██║         ██╔█
 Write-Host " ██║╚██╗██║██║██║         ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkMagenta
 Write-Host " ██║ ╚████║██║╚██████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Magenta
 Write-Host " ╚═╝  ╚═══╝╚═╝ ╚═════╝   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Magenta
-Write-Host "   ─────────────────── SCAN REPORT ────────────────────" -ForegroundColor DarkMagenta
 Write-Host ""
 
-Write-Host "  $scanTimestamp  |  $($jars.Count) scanned  |  $($clean.Count) clean  |  " -ForegroundColor DarkGray -NoNewline
-Write-Host "$($flagged.Count) flagged" -ForegroundColor $(if ($flagged.Count -gt 0) { "Red" } else { "DarkCyan" })
-Write-Host "  Mode: $(if ($deepScan) { 'DEEP SCAN' } else { 'STANDARD SCAN' })" -ForegroundColor DarkMagenta
+# ── Summary bar ──────────────────────────────────────────────────────────────
+$modeLabel    = if ($deepScan) { "DEEP" } else { "STANDARD" }
+$flaggedColor = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
+
+Write-Border 'top' DarkGray
+Write-RowFull ("  SCAN REPORT  ·  " + $scanTimestamp) Magenta DarkGray
+Write-Border 'sep' DarkGray
+Write-Row     "  Mode    : " $modeLabel                              Magenta    White    DarkGray
+Write-Row     "  Path    : " $modsPath                               DarkGray   Gray     DarkGray
+Write-Row     "  Files   : " "$($jars.Count) scanned"               DarkGray   White    DarkGray
+Write-Row     "  Clean   : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
+Write-Row     "  Flagged : " "$($flagged.Count)"                     DarkGray   $flaggedColor DarkGray
+
+# Minecraft status inline
+if ($mcStatus.Running) {
+    Write-Row "  Minecraft: " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
+} else {
+    Write-Row "  Minecraft: " "not running" DarkGray DarkGray DarkGray
+}
+Write-Border 'bot' DarkGray
 
 # ═══════════════════════════════════════════════════════════
 #  JVM FINDINGS
 # ═══════════════════════════════════════════════════════════
 if ($jvmResults.Count -gt 0) {
     Write-Host ""
-    Write-Host "  ┌─ JVM ISSUES ──────────────────────────────────────────" -ForegroundColor Red
+    Write-Border 'top' Red
+    Write-RowFull "  JVM INTEGRITY ISSUES" Red Red
+    Write-Border 'sep' Red
     foreach ($j in $jvmResults) {
-        $col = switch ($j.Severity) { "HIGH" { "Red" } "MEDIUM" { "Yellow" } default { "DarkGray" } }
-        Write-Host "  │  [$($j.Severity)] $($j.Type)" -ForegroundColor $col -NoNewline
-        Write-Host " — $($j.Detail)" -ForegroundColor DarkGray
+        $sev = $j.Severity.PadRight(6)
+        $lc  = switch ($j.Severity) { "HIGH" { [System.ConsoleColor]::Red } "MEDIUM" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
+        Write-Row "  [$sev]  $($j.Type.PadRight(26))" $j.Detail $lc DarkGray Red
     }
-    Write-Host "  └──────────────────────────────────────────────────────" -ForegroundColor Red
+    Write-Border 'bot' Red
 }
 
 # ═══════════════════════════════════════════════════════════
 #  CRITICAL THREATS
 # ═══════════════════════════════════════════════════════════
 if ($criticalThreats.Count -gt 0) {
-    Write-Host ""
     foreach ($mod in $criticalThreats) {
-        Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Red
-        Write-Host "  ║      !!! CHEAT DETECTED !!!                               ║" -ForegroundColor White
-        Write-Host "  ║      FILE : $($mod.Name)" -ForegroundColor Yellow
-        Write-Host "  ║      SIZE : $($mod.Size) KB  |  HITS: $($mod.HitCount)" -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Border 'top' Red
+        Write-RowFull "  CHEAT DETECTED" Red Red
+        Write-Border 'sep' Red
+        Write-Row     "  File     : " $mod.Name                    DarkGray Yellow Red
+        Write-Row     "  Size     : " "$($mod.Size) KB"            DarkGray Gray   Red
+        Write-Row     "  Hits     : " "$($mod.HitCount)"           DarkGray White  Red
+
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Host "  ║      URL  : $($mod.Sources[0])" -ForegroundColor DarkGray
+            Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Red
         }
+
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
-            Write-Host "  ║      SIGNATURES:" -ForegroundColor Red
-            $show = $allHits | Select-Object -First 4
-            foreach ($h in $show) { Write-Host "  ║        >> $h" -ForegroundColor Red }
-            if ($allHits.Count -gt 4) { Write-Host "  ║        + $($allHits.Count - 4) more" -ForegroundColor DarkRed }
+            Write-Border 'sep' Red
+            Write-RowFull "  Signatures" DarkGray Red
+            foreach ($h in ($allHits | Select-Object -First 5)) {
+                Write-Row "    · " $h DarkGray Red Red
+            }
+            if ($allHits.Count -gt 5) {
+                Write-RowFull "    + $($allHits.Count - 5) more matches" DarkGray Red
+            }
         }
+
         if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
-            Write-Host "  ║      DEEP HITS:" -ForegroundColor DarkRed
-            foreach ($d in ($mod.DeepHits | Select-Object -First 3)) { Write-Host "  ║        ~~ $d" -ForegroundColor DarkRed }
+            Write-Border 'sep' Red
+            Write-RowFull "  Deep Scan Hits" DarkGray Red
+            foreach ($d in ($mod.DeepHits | Select-Object -First 4)) {
+                Write-Row "    · " $d DarkGray DarkGray Red
+            }
         }
+
         if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
-            Write-Host "  ║      HIGH ENTROPY FILES:" -ForegroundColor DarkRed
-            foreach ($e in $mod.Entropy) { Write-Host "  ║        !! $e" -ForegroundColor DarkRed }
+            Write-Border 'sep' Red
+            Write-RowFull "  High Entropy Classes" DarkGray Red
+            foreach ($e in $mod.Entropy) {
+                Write-Row "    · " $e DarkGray DarkGray Red
+            }
         }
-        Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Red
-        Write-Host ""
+
+        Write-Border 'bot' Red
     }
 }
 
@@ -627,64 +705,79 @@ if ($criticalThreats.Count -gt 0) {
 # ═══════════════════════════════════════════════════════════
 if ($suspiciousFiles.Count -gt 0) {
     foreach ($mod in $suspiciousFiles) {
-        Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Yellow
-        Write-Host "  ║      !!! SUSPICIOUS FILE DETECTED !!!                     ║" -ForegroundColor DarkYellow
-        Write-Host "  ║      FILE : $($mod.Name)" -ForegroundColor White
-        Write-Host "  ║      HITS : $($mod.HitCount)" -ForegroundColor DarkYellow
+        Write-Host ""
+        Write-Border 'top' Yellow
+        Write-RowFull "  SUSPICIOUS — manual decompile recommended" Yellow Yellow
+        Write-Border 'sep' Yellow
+        Write-Row     "  File     : " $mod.Name                    DarkGray White  Yellow
+        Write-Row     "  Size     : " "$($mod.Size) KB"            DarkGray Gray   Yellow
+        Write-Row     "  Hits     : " "$($mod.HitCount)"           DarkGray White  Yellow
+
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Host "  ║      URL  : $($mod.Sources[0])" -ForegroundColor DarkGray
+            Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Yellow
         }
+
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
-            Write-Host "  ║      SIGNATURES:" -ForegroundColor Yellow
-            $show = $allHits | Select-Object -First 3
-            foreach ($h in $show) { Write-Host "  ║        >> $h" -ForegroundColor Yellow }
+            Write-Border 'sep' Yellow
+            Write-RowFull "  Signatures" DarkGray Yellow
+            foreach ($h in ($allHits | Select-Object -First 4)) {
+                Write-Row "    · " $h DarkGray Yellow Yellow
+            }
         }
+
         if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
-            Write-Host "  ║      DEEP HITS:" -ForegroundColor DarkYellow
-            foreach ($d in ($mod.DeepHits | Select-Object -First 2)) { Write-Host "  ║        ~~ $d" -ForegroundColor DarkYellow }
+            Write-Border 'sep' Yellow
+            Write-RowFull "  Deep Scan Hits" DarkGray Yellow
+            foreach ($d in ($mod.DeepHits | Select-Object -First 3)) {
+                Write-Row "    · " $d DarkGray DarkGray Yellow
+            }
         }
+
         if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
-            Write-Host "  ║      HIGH ENTROPY:" -ForegroundColor DarkYellow
-            foreach ($e in $mod.Entropy) { Write-Host "  ║        !! $e" -ForegroundColor DarkYellow }
+            Write-Border 'sep' Yellow
+            Write-RowFull "  High Entropy Classes" DarkGray Yellow
+            foreach ($e in $mod.Entropy) {
+                Write-Row "    · " $e DarkGray DarkGray Yellow
+            }
         }
-        Write-Host "  ║      >> THIS MOD MUST BE DECOMPILED TO VERIFY            ║" -ForegroundColor White
-        Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
-        Write-Host ""
+
+        Write-Border 'bot' Yellow
     }
 }
 
 # ═══════════════════════════════════════════════════════════
 #  CLEAN MODS
 # ═══════════════════════════════════════════════════════════
-Write-Host "  ╔═══════════════════════════════════════════════════════════╗" -ForegroundColor DarkGray
-Write-Host "  ║   CLEAN MODS ($($clean.Count))" -ForegroundColor DarkCyan
-Write-Host "  ╚═══════════════════════════════════════════════════════════╝" -ForegroundColor DarkGray
 Write-Host ""
+Write-Border 'top' DarkGray
+Write-RowFull "  CLEAN MODS  ($($clean.Count))" Cyan DarkGray
+Write-Border 'sep' DarkGray
 
 if ($clean.Count -gt 0) {
-    $col = 2; $rows = [math]::Ceiling($clean.Count / $col)
+    $colCount = 2
+    $rows = [math]::Ceiling($clean.Count / $colCount)
     for ($r = 0; $r -lt $rows; $r++) {
-        $line = "  "
-        for ($c = 0; $c -lt $col; $c++) {
-            $idx = $r + ($c * $rows)
-            if ($idx -lt $clean.Count) {
-                $n = $clean[$idx]
-                if ($n.Length -gt 40) { $n = $n.Substring(0, 37) + "..." }
-                $line += ("{0,-45}" -f $n)
-            }
-        }
-        Write-Host $line -ForegroundColor DarkGray
+        $left  = $clean[$r]
+        $right = if (($r + $rows) -lt $clean.Count) { $clean[$r + $rows] } else { "" }
+        if ($left.Length  -gt 33) { $left  = $left.Substring(0,30)  + "..." }
+        if ($right.Length -gt 33) { $right = $right.Substring(0,30) + "..." }
+        $cell  = ("  " + $left.PadRight(35) + $right).PadRight($W)
+        Write-RowFull $cell DarkGray DarkGray
     }
-} else { Write-Host "  (none)" -ForegroundColor DarkGray }
+} else {
+    Write-RowFull "  (none)" DarkGray DarkGray
+}
+
+Write-Border 'bot' DarkGray
 
 # ═══════════════════════════════════════════════════════════
 #  FOOTER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "  ═══════════════════════════════════════════════════════════" -ForegroundColor DarkMagenta
-Write-Host "  Special thanks to Tonynoh" -ForegroundColor DarkMagenta
-Write-Host "  Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
+Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
+Write-Host "  Special thanks to Tonynoh   ·   Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
+Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "  Press any key..." -ForegroundColor DarkGray
+Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
