@@ -15,7 +15,7 @@ Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  �
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ V4.1 - MOD ANALYZER ]" -ForegroundColor Magenta
+Write-Host "                                    [ V4.2 - MOD ANALYZER ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -45,11 +45,11 @@ if (-not (Test-Path $modsPath -PathType Container)) {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  SCAN MODE SELECTION
+#  SCAN MODE SELECTION  (multi-select: type any combo of 1-5)
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host "  Select scan modules " -ForegroundColor DarkGray -NoNewline
-Write-Host "(choose one or more)" -ForegroundColor DarkMagenta
+Write-Host "(combine digits, e.g. 13 = JVM + String, 5 = all)" -ForegroundColor DarkMagenta
 Write-Host ""
 Write-Host "  " -NoNewline
 Write-Host "[1]" -ForegroundColor Magenta -NoNewline
@@ -58,7 +58,7 @@ Write-Host "Checks Java process args for injected agents & dangerous flags" -For
 Write-Host "  " -NoNewline
 Write-Host "[2]" -ForegroundColor Magenta -NoNewline
 Write-Host " Bypass Detection         " -ForegroundColor Gray -NoNewline
-Write-Host "Scans for anti-cheat bypass patterns & spoofing strings" -ForegroundColor DarkGray
+Write-Host "Scans for anti-cheat bypass, version spoof & packet evasion" -ForegroundColor DarkGray
 Write-Host "  " -NoNewline
 Write-Host "[3]" -ForegroundColor Magenta -NoNewline
 Write-Host " String Analysis          " -ForegroundColor Gray -NoNewline
@@ -77,14 +77,35 @@ $scanModeInput = Read-Host
 
 $scanChoice = $scanModeInput.Trim()
 
-# Parse which modules are active
-$doJVM      = $scanChoice -eq '5' -or $scanChoice -eq '1'
-$doBypass   = $scanChoice -eq '5' -or $scanChoice -eq '2'
-$doStrings  = $scanChoice -eq '5' -or $scanChoice -eq '3'
-$doObf      = $scanChoice -eq '5' -or $scanChoice -eq '4'
+# ── Multi-digit parsing: each digit is treated as an independent module toggle ──
+# "5" triggers everything; any combination of 1-4 enables those modules.
+# Invalid/blank input defaults to everything.
+$doJVM      = $false
+$doBypass   = $false
+$doStrings  = $false
+$doObf      = $false
 
-# deepScan = string analysis extended mode (used by Get-ModSignature)
-$deepScan = $doStrings -or $scanChoice -eq '5'
+if ($scanChoice -match '5') {
+    $doJVM = $true; $doBypass = $true; $doStrings = $true; $doObf = $true
+} else {
+    foreach ($ch in $scanChoice.ToCharArray()) {
+        switch ($ch) {
+            '1' { $doJVM    = $true }
+            '2' { $doBypass = $true }
+            '3' { $doStrings = $true }
+            '4' { $doObf    = $true }
+        }
+    }
+}
+
+# Default to everything if nothing was selected
+if (-not ($doJVM -or $doBypass -or $doStrings -or $doObf)) {
+    $doJVM = $true; $doBypass = $true; $doStrings = $true; $doObf = $true
+    Write-Host "  Invalid input — running all modules" -ForegroundColor Yellow
+}
+
+# deepScan is ONLY triggered by module 3 (String Analysis)
+$deepScan = $doStrings
 
 Write-Host ""
 Write-Host "  Modules  : " -ForegroundColor DarkGray -NoNewline
@@ -93,14 +114,7 @@ if ($doJVM)     { $activeModules += "JVM Scan" }
 if ($doBypass)  { $activeModules += "Bypass Detection" }
 if ($doStrings) { $activeModules += "String Analysis" }
 if ($doObf)     { $activeModules += "Advanced Obfuscation" }
-if ($activeModules.Count -eq 0) {
-    # Default to everything if invalid input
-    $doJVM = $true; $doBypass = $true; $doStrings = $true; $doObf = $true; $deepScan = $true
-    $activeModules = @("JVM Scan", "Bypass Detection", "String Analysis", "Advanced Obfuscation")
-    Write-Host "Invalid input — running all modules" -ForegroundColor Yellow
-} else {
-    Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
-}
+Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
@@ -145,6 +159,89 @@ $suspiciousPatterns = @(
     "ね.class", "そ.class", "な.class", "ど.class", "ぐ.class",
     "ず.class", "で.class", "つ.class", "べ.class", "せ.class",
     "と.class", "み.class", "び.class", "す.class", "の.class"
+)
+
+# ═══════════════════════════════════════════════════════════
+#  BYPASS DETECTION PATTERNS  (Module 2 — dedicated set)
+# ═══════════════════════════════════════════════════════════
+$bypassStrings = @(
+    # ── Version / brand spoofing ──────────────────────────────────────────────
+    "setVersion", "fakeVersion", "spoofVersion", "clientVersion",
+    "getGameVersion", "brandOverride", "overrideBrand", "setBrand",
+    "fakeClientBrand", "brandSpoof", "versionSpoof",
+    "net.minecraft.client.ClientBrandRetriever",
+    "ServerboundCustomPayloadPacket",
+    "MC|Brand", "minecraft:brand",
+
+    # ── Packet manipulation / cancellation ───────────────────────────────────
+    "cancelPacket", "dropPacket", "suppressPacket", "blockPacket",
+    "spoofPacket", "injectPacket", "sendFakePacket", "sendSilentPacket",
+    "packetListener", "PacketListener", "onPacketSend", "onPacketReceive",
+    "PacketEvent", "PacketSendEvent", "PacketReceiveEvent",
+    "ClientConnection", "interceptPacket",
+    "NetworkHandler", "sendPacket", "receivePacket",
+
+    # ── Anti-cheat evasion strings ────────────────────────────────────────────
+    "bypassAC", "bypass_ac", "evadeAC", "evadeAnticheat",
+    "isGrimAC", "isNoCheat", "isAAC", "isSpartanAC", "isIntave",
+    "grimBypass", "ncpBypass", "aacBypass", "spartanBypass",
+    "checkAnticheat", "detectAnticheat", "getAnticheat",
+    "GrimBypass", "NCPBypass", "AACBypass", "IntaveBypass",
+
+    # ── Tick/timer manipulation ───────────────────────────────────────────────
+    "setTimerSpeed", "timerSpeed", "Timer.timerSpeed",
+    "tickRate", "setTickRate", "overrideTickRate",
+    "fakeTickCount", "tickBoost",
+
+    # ── Reach / hitbox exploits ───────────────────────────────────────────────
+    "reachDistance", "setReachDistance", "extendReach",
+    "attackRange", "setAttackRange", "hitboxExpand",
+    "expandHitbox", "getEntityReachDistance",
+
+    # ── Velocity / knockback suppression ──────────────────────────────────────
+    "suppressKnockback", "cancelKnockback", "noKnockback",
+    "setVelocity(0", "zeroVelocity", "ignoreKnockback",
+    "antiKnockback", "KnockbackModifier", "noVelocity",
+
+    # ── Render / ESP evasion ──────────────────────────────────────────────────
+    "renderPlayerSpoofed", "spoofRender", "hideFromRender",
+    "fakeGlowing", "setGlowing(false", "suppressGlow",
+    "GlowBypass", "glowBypass",
+
+    # ── Baritone / macro detection evasion ───────────────────────────────────
+    "baritone.bypass", "pathfindBypass", "suppressPathfind",
+
+    # ── Reflection-based bypasses ────────────────────────────────────────────
+    "getDeclaredMethod(", "setAccessible(true)",
+    "MethodHandles.lookup",
+    "sun.reflect.Reflection",
+    "unsafe.allocateInstance", "Unsafe.getUnsafe",
+    "jdk.internal.reflect",
+
+    # ── Mixin injection tampering ─────────────────────────────────────────────
+    "MixinEnvironment.getDefaultEnvironment",
+    "IMixinConfig", "MixinTransformer",
+    "SpongeAPI", "IMixinTransformer",
+    "setHardTarget", "mixinBypass",
+
+    # ── Known bypass client identifiers ──────────────────────────────────────
+    "dev.gambleclient", "xyz.greaj", "dev.krypton",
+    "org.chainlibs", "Dqrkis", "dqrkis", "lvstrng",
+    "Asteria", "Argon", "catlean",
+
+    # ── Cryptographic / license bypass ───────────────────────────────────────
+    "obfuscatedAuth", "LicenseCheckMixin", "bypassLicense",
+    "fakeAuth", "AuthBypass", "spoofSession",
+    "SessionStealer", "AltManager",
+
+    # ── Grim-specific evasion ─────────────────────────────────────────────────
+    "grimac", "GrimAC", "grim-api",
+    "ac.grim", "game.grim", "setGrimFlag",
+
+    # ── Interpolation / smooth bypass flags ───────────────────────────────────
+    "smoothRotations", "SmoothRotations", "rotationBypass",
+    "silentRotation", "SilentRotation", "fakeYaw", "fakePitch",
+    "setYaw(", "setPitch(", "spoofYaw", "spoofPitch"
 )
 
 # ═══════════════════════════════════════════════════════════
@@ -193,41 +290,13 @@ $cheatStrings = @(
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
     "Activate Key", "Ａｃﾞｲｲﾞａｴｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｋ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
-    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
-    "Ｒｅﾑｵｮｖｵｽ ｔｈｅ ｃｲｲｽｳｕｌ ｂｏｵｮｃｴ ａｎｲﾑａﾞｵｮ", "Place Delay", "Ｐｌａｾｵ Ｄｅﾙｱ", "Break Delay", "Ｂﾚｅａｋ Ｄｅﾙｱ",
-    "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌａｾｵ Ｃｈ｡ﾝｃｴ", "Break Chance", "Ｂﾚｅａｋ Ｃｈ｡ﾝｽｴ",
-    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｸ", "damagetick", "Anti Weakness", "Ａｎﾞｨｉ Ｗｅａｋﾝｅｓｓ",
-    "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｴ", "Trigger Key", "Ｔｒｉｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｴｃｨ Ｄｅｌｱ",
-    "Totem Slot", "Ｔｏｔｅｵ ｽｬｯ｡", "Smooth Rotations", "Ｓｍｵｵｔｈ ﾝｰｵｔａｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｴｰｰｄ",
-    "Use Easing", "Ｕｾｵ Ｅａｽｲﾝｸ", "Easing Strength", "Ｅａｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｉｌｅ Ｕｽｪ",
-    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｲﾙｌ", "Glowstone Delay", "Ｇｮｵｳｽﾄｰｮｅ Ｄｅｬｱ", "Glowstone Chance", "Ｇｮｵｽｳｯｮｅ Ｃｈ｡ﾝｼｴ",
-    "Explode Delay", "Ｅｘｰｌﾞｵｄｅ Ｄｅｬｱ", "Explode Chance", "Ｅｘｰｌﾞｵｄｅ Ｃｈ｡ﾝｽｼｴ", "Explode Slot", "Ｅｘｰｌﾞｵｄｅ Ｓｌｯｱ",
-    "Only Charge", "Ｏｎｌｙ Ｃｈａｶﾞ", "Anchor Macro", "Ａｎｃｈｏﾞ Ｍ｡ｃﾞｏ", "Reach Distance", "ﾛｅｱａﾞ Ｄｨｽｱﾝｾｃｴ",
-    "Min Height", "Ｍｉｎ Ｈｅｉｲﾞﾈ", "Min Fall Speed", "Ｍｉｵ Ｆａｬｌ Ｓｰｵｅｄ", "Attack Delay", "Ａｔｔａｃｷ Ｄｅｬｱ",
-    "Breach Delay", "Ｂﾚｵ｡ｃｨ Ｄｅｌｱ", "Require Elytra", "ﾛｅｸｵｲｵｲｪ Ｅｌｙｔﾞｱ", "Auto Switch Back", "Ａｕｔｏ Ｓｗｲｵａｷ Ｂ｡ｮｸ",
-    "Check Line of Sight", "Ｃｈｅｃｷ Ｌｉﾇｅ ｏｆ Ｓｉｇﾞｈｔ", "Only When Falling", "Ｏｎｌｙ Ｗｈｅｎ Ｆａｬｌｉｎｇ",
-    "Require Crit", "ﾛｅｸｵｲｵｲｪ Ｃﾞｲｴ", "Show Status Display", "Ｓｈｏｗ Ｓｔａｔｕｓ Ｄｉｽﾞｌｱｹ",
-    "Stop On Crystal", "Ｓｔｏｐ Ｏｎ Ｃｒｙｽｿ｡", "Check Shield", "Ｃｈｅｃｋ Ｓｈｉｅｌｄ", "On Pop", "Ｏｎ Ｐｏｐ",
-    "Predict Damage", "ﾌﾚｴﾃﾞｾﾄｾ ﾄｳﾞｧｪ", "On Ground", "Ｏｎ Ｇﾛｵｳﾝ", "Check Players", "Ｃｈｅｃｋ Ｐｌａｙｅｒｽ",
-    "Predict Crystals", "ﾌﾚｴｃﾞｼｸｴ ﾄﾞｽｿ｡ﾞ", "Check Aim", "Ｃｈｅｃｋ Ａｉｭ", "Check Items", "Ｃｈｅｃｋ Ｉｔｅｍｽ",
-    "Activates Above", "Ａｃﾄｲﾀﾄｅｽ Ａｂｏｖｅ", "Blatant", "Ｂｌａﾀ﾿ﾀﾝ", "Force Totem", "ﾌｵﾛｾ ｔｏｔｅｭ",
-    "Stay Open For", "Ｓｔｱｸｅ Ｏｐｅｎ Ｆｵｰ", "Auto Inventory Totem", "Ａｕｕｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｭ", "Only On Pop", "Ｏｎｌｙ Ｏｎ Ｐｏｐ",
-    "Vertical Speed", "Ｖｅｲｼｶﾬｾﾞ Ｓｰ｡ｰｄ", "Hover Totem", "Ｈｏｖｰﾘﾞ ﾄｵｔｅｭ", "Swap Speed", "Ｓｗｱﾙ ﾄﾐｰｵｄ",
-    "Strict One-Tick", "Ｓﾄｲｲｵﾄ Ｏｎｅ－ﾃｨｯ", "Mace Priority", "Ｍ｡ｃｅ Ｐｒｉｏﾘｉｲｙ", "Min Totems", "Ｍｉｎ Ｔｏﾄｪｭｽ",
-    "Min Pearls", "Ｍｉｎ Ｐｅａﾒﾞｌｽ", "Totem First", "Ｔｏｔｅｭ Ｆｲｽｴ", "Drop Interval", "Ｄﾞｵｐ Ｉﾀｔｪﾞｖ｡ｙ",
-    "Random Pattern", "ﾛ｡ﾝﾄｵｮ Ｐ｡ﾀﾀﾝﾞ", "Loot Yeeter", "ﾛｏｕｕ Ｙｅｅｪｪﾞ", "Horizontal Aim Speed", "ﾈｵﾘｲｚｏﾝｱｰｲｵｌ Ａｲｭ ﾞｰｽｰｅｴﾄ",
-    "Vertical Aim Speed", "Ｖｅｲｼｶﾬ Ａｲｭ ﾞｰｽｰｅｴﾄ", "Include Head", "Ｉｎｸﾞｵﾄｪ Ｈ｡ｱｳ", "Web Delay", "Ｗｅｂ Ｄｅｬｱ",
-    "Holding Web", "ﾎｵﾙﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｴ Ｗｈｅﾝ ａｆﾂｃｴｕｽ Ｐｌ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
-    "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
+    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｸＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
-    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｫｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｫｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
-    "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｷｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
 # ═══════════════════════════════════════════════════════════
-#  DEEP SCAN STRINGS
+#  DEEP SCAN STRINGS  (Module 3 — String Analysis only)
 # ═══════════════════════════════════════════════════════════
 $deepCheatStrings = @(
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
@@ -249,9 +318,14 @@ $deepCheatStrings = @(
     "dev.krypton", "Dqrkis", "dqrkis", "lvstrng"
 )
 
-$patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+# ── Compile pattern regex and lookup sets ─────────────────────────────────────
+$patternRegex      = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+
 $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
+
+$bypassStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+foreach ($s in $bypassStrings) { [void]$bypassStringSet.Add($s) }
 
 $deepCheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $deepCheatStrings) { [void]$deepCheatStringSet.Add($s) }
@@ -259,7 +333,7 @@ foreach ($s in $deepCheatStrings) { [void]$deepCheatStringSet.Add($s) }
 $fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
 # ═══════════════════════════════════════════════════════════
-#  ENTROPY CALCULATION (deep scan)
+#  ENTROPY CALCULATION
 # ═══════════════════════════════════════════════════════════
 function Get-ShannonEntropy {
     param([byte[]]$Data)
@@ -276,7 +350,7 @@ function Get-ShannonEntropy {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  OBFUSCATION ANALYSIS (deep scan)
+#  OBFUSCATION ANALYSIS (Module 4)
 # ═══════════════════════════════════════════════════════════
 function Get-ObfuscationScore {
     param([System.IO.Compression.ZipArchive]$Zip)
@@ -286,12 +360,11 @@ function Get-ObfuscationScore {
         ObfLevel     = "None"
     }
 
-    $classEntries  = @($Zip.Entries | Where-Object { $_.FullName -match '\.class$' })
-    $totalClasses  = $classEntries.Count
+    $classEntries = @($Zip.Entries | Where-Object { $_.FullName -match '\.class$' })
+    $totalClasses = $classEntries.Count
     if ($totalClasses -eq 0) { return $result }
 
-    # 1. Ratio of very short class names (1-2 chars = obfuscated)
-    # FIX 1: Raised thresholds from 60/30 to 75/50 to reduce false positives
+    # 1. Short class name ratio
     $shortNames = @($classEntries | Where-Object {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)
         $name.Length -le 2 -and $name -cmatch '^[a-zA-Z]+$'
@@ -305,17 +378,16 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Partial name obfuscation: $shortRatio% short class names")
     }
 
-    # 2. Known obfuscator markers in MANIFEST or config files
-    # FIX 2: Tightened Radon signature to require "Obfuscated-By: Radon" header
+    # 2. Known obfuscator markers
     $obfuscatorSigs = @{
-        "Allatori"    = "Allatori"
-        "Zelix"       = "Zelix"
-        "ProGuard"    = "Obfuscated-By: ProGuard"
-        "Stringer"    = "Stringer Java Obfuscator"
+        "Allatori"     = "Allatori"
+        "Zelix"        = "Zelix"
+        "ProGuard"     = "Obfuscated-By: ProGuard"
+        "Stringer"     = "Stringer Java Obfuscator"
         "Skidfuscator" = "skidfuscator"
-        "Radon"       = "Obfuscated-By: Radon"
-        "BisGuard"    = "BisGuard"
-        "QProtect"    = "QProtect"
+        "Radon"        = "Obfuscated-By: Radon"
+        "BisGuard"     = "BisGuard"
+        "QProtect"     = "QProtect"
         "Paramorphism" = "paramorphism"
     }
     foreach ($entry in ($Zip.Entries | Where-Object { $_.FullName -match 'MANIFEST\.MF$|\.json$|\.toml$' })) {
@@ -332,7 +404,7 @@ function Get-ObfuscationScore {
         } catch { }
     }
 
-    # 3. Alphabet soup package names (all single-char path segments)
+    # 3. Single-char package paths
     $deepPaths = @($classEntries | Where-Object {
         $parts = $_.FullName.Split('/')
         $parts.Count -ge 3 -and ($parts[0..($parts.Count-2)] | Where-Object { $_.Length -le 1 -and $_ -cmatch '^[a-z]$' }).Count -ge 2
@@ -343,7 +415,6 @@ function Get-ObfuscationScore {
     }
 
     # 4. Missing SourceFile attributes
-    # FIX 3: Raised thresholds from 70/40 to 90/65 — many release-build mods strip these legitimately
     $strippedCount = 0
     $sampleSize    = [math]::Min($totalClasses, 30)
     $sampled       = $classEntries | Select-Object -First $sampleSize
@@ -367,7 +438,7 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Partial SourceFile stripping: $strippedRatio% of sampled classes")
     }
 
-    # 5. Unicode/invisible identifier abuse in class names
+    # 5. Unicode/invisible identifiers
     $suspiciousUniRx = [regex]::new(
         '[\u00AD\u200B\u200C\u200D\u2060\uFEFF]|[\uE000-\uF8FF]|[\u0001-\u001F\u007F-\u009F]',
         [System.Text.RegularExpressions.RegexOptions]::Compiled
@@ -379,7 +450,6 @@ function Get-ObfuscationScore {
     }
 
     # 6. String encryption markers
-    # FIX 4: Raised thresholds from 3/1 to 5/3 — a single decrypt helper is common in legit mods
     $encryptedStringMarkers = @("decrypt", "deobf", "StringEncryption", "StringDecryptor",
                                  "decryptString", "stringPool", "StringPool", "\$\$decrypt")
     $encCount = 0
@@ -401,7 +471,6 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Possible string encryption in $encCount class(es)")
     }
 
-    # Classify
     $result.ObfLevel = switch ($true) {
         ($result.Score -ge 70) { "HEAVY" }
         ($result.Score -ge 35) { "MODERATE" }
@@ -425,15 +494,15 @@ function Get-MinecraftStatus {
     }
     if ($mcProc) {
         $uptime = (Get-Date) - $mcProc.StartTime
-        $mins = [math]::Floor($uptime.TotalMinutes)
-        $ramMB = [math]::Round(($mcProc.WorkingSet64 / 1MB), 0)
+        $mins   = [math]::Floor($uptime.TotalMinutes)
+        $ramMB  = [math]::Round(($mcProc.WorkingSet64 / 1MB), 0)
         return [PSCustomObject]@{ Running = $true; PID = $mcProc.Id; Uptime = "$mins min"; RAM = "$ramMB MB" }
     }
     return [PSCustomObject]@{ Running = $false; PID = 0; Uptime = "-"; RAM = "-" }
 }
 
 # ═══════════════════════════════════════════════════════════
-#  JVM INTEGRITY CHECK
+#  JVM INTEGRITY CHECK  (Module 1)
 # ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
@@ -462,18 +531,18 @@ function Test-JvmIntegrity {
                 @{ F = "-Dfabric.loadMods=";        T = "FABRIC_MANIPULATE";      S = "MEDIUM"; D = "Overrides Fabric mod loading" },
                 @{ F = "-Djava.security.manager=";  T = "SEC_BYPASS";             S = "HIGH";   D = "Disables or replaces Java Security Manager" },
                 @{ F = "-Dclient.brand=";           T = "BRAND_SPOOF";            S = "LOW";    D = "Spoofs client brand string" },
-                @{ F = "-Xverify:none";             T = "BYTECODE_VERIFY_OFF";    S = "HIGH";   D = "Disables JVM bytecode verification — allows tampered classes" },
+                @{ F = "-Xverify:none";             T = "BYTECODE_VERIFY_OFF";    S = "HIGH";   D = "Disables JVM bytecode verification" },
                 @{ F = "-noverify";                 T = "NOVERIFY";               S = "HIGH";   D = "Alias for -Xverify:none, disables class verification" },
-                @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader — severe injection risk" },
-                @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent library — can hook anything" },
+                @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader" },
+                @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent — can hook anything" },
                 @{ F = "-agentpath:";               T = "NATIVE_AGENT_PATH";      S = "HIGH";   D = "Loads native agent by path — deep JVM access" },
                 @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path" },
                 @{ F = "-Dsun.misc.URLClassPath.disableJarChecking=true"; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" },
-                @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "Enables JNDI RMI codebase — Log4Shell-style attack vector" },
+                @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "Enables JNDI RMI codebase — Log4Shell attack vector" },
                 @{ F = "-Dcom.sun.jndi.ldap.object.trustURLCodebase=true"; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "Enables JNDI LDAP codebase — Log4Shell variant" },
                 @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode" },
-                @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Enables remote debugging — allows arbitrary code injection" },
-                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "Java Debug Wire Protocol agent — remote code execution risk" }
+                @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Enables remote debugging — arbitrary code injection risk" },
+                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "JDWP agent — remote code execution risk" }
             )
             foreach ($fl in $flags) {
                 if ($cmd -match [regex]::Escape($fl.F)) {
@@ -487,15 +556,28 @@ function Test-JvmIntegrity {
 
 # ═══════════════════════════════════════════════════════════
 #  MOD SIGNATURE SCAN
+#  $ScanBypass  — activates bypass string set (Module 2)
+#  $ScanDeep    — activates deep strings + entropy (Module 3)
 # ═══════════════════════════════════════════════════════════
 function Get-ModSignature {
-    param([string]$Path, [bool]$Deep = $false)
-    $hits = [System.Collections.Generic.HashSet[string]]::new()
+    param(
+        [string]$Path,
+        [bool]$ScanBypass = $false,
+        [bool]$ScanDeep   = $false
+    )
+    $hits           = [System.Collections.Generic.HashSet[string]]::new()
     $entropyWarnings = [System.Collections.Generic.List[string]]::new()
+
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
-        foreach ($e in $zip.Entries) { foreach ($m in $patternRegex.Matches($e.FullName)) { [void]$hits.Add("P|$($m.Value)") } }
-        $flat = [System.Collections.Generic.List[object]]::new()
+
+        # ── Entry path pattern scan (always active when this function is called) ──
+        foreach ($e in $zip.Entries) {
+            foreach ($m in $patternRegex.Matches($e.FullName)) { [void]$hits.Add("P|$($m.Value)") }
+        }
+
+        # ── Build flat entry list including nested JARs ──────────────────────
+        $flat   = [System.Collections.Generic.List[object]]::new()
         $nested = [System.Collections.Generic.List[object]]::new()
         foreach ($e in $zip.Entries) { $flat.Add($e) }
         foreach ($nj in ($zip.Entries | Where-Object { $_.FullName -match "^META-INF/jars/.+\.jar$" })) {
@@ -508,50 +590,65 @@ function Get-ModSignature {
             } catch { }
         }
 
+        # ── File extension filter (broader when deep scan is active) ─────────
         $scanExtensions = '\.(class|json)$|MANIFEST\.MF'
-        if ($Deep) { $scanExtensions = '\.(class|json|toml|yml|yaml|txt|cfg|properties|xml|html|js|ts|kt|groovy)$|MANIFEST\.MF' }
+        if ($ScanDeep) {
+            $scanExtensions = '\.(class|json|toml|yml|yaml|txt|cfg|properties|xml|html|js|ts|kt|groovy)$|MANIFEST\.MF'
+        }
 
         foreach ($entry in $flat) {
-            if ($entry.FullName -match $scanExtensions) {
-                try {
-                    $st = $entry.Open(); $buf = New-Object System.IO.MemoryStream
-                    $st.CopyTo($buf); $st.Close()
-                    $raw = $buf.ToArray(); $buf.Dispose()
-                    $a = [System.Text.Encoding]::ASCII.GetString($raw)
-                    $u = [System.Text.Encoding]::UTF8.GetString($raw)
+            if ($entry.FullName -notmatch $scanExtensions) { continue }
+            try {
+                $st  = $entry.Open()
+                $buf = New-Object System.IO.MemoryStream
+                $st.CopyTo($buf); $st.Close()
+                $raw = $buf.ToArray(); $buf.Dispose()
+                $a   = [System.Text.Encoding]::ASCII.GetString($raw)
+                $u   = [System.Text.Encoding]::UTF8.GetString($raw)
 
-                    foreach ($m in $patternRegex.Matches($a)) { [void]$hits.Add("P|$($m.Value)") }
-                    foreach ($cs in $cheatStringSet) {
-                        if ($a.Contains($cs)) { [void]$hits.Add("S|$cs"); continue }
-                        if ($u.Contains($cs))  { [void]$hits.Add("S|$cs") }
-                    }
-                    foreach ($m in $fullwidthRegex.Matches($u)) { [void]$hits.Add("F|$($m.Value)") }
+                # Suspicious pattern names
+                foreach ($m in $patternRegex.Matches($a)) { [void]$hits.Add("P|$($m.Value)") }
 
-                    if ($Deep) {
-                        foreach ($ds in $deepCheatStringSet) {
-                            if ($a.Contains($ds)) { [void]$hits.Add("D|$ds"); continue }
-                            if ($u.Contains($ds))  { [void]$hits.Add("D|$ds") }
-                        }
-                        if ($entry.FullName -match '\.class$' -and $raw.Length -gt 512) {
-                            $ent = Get-ShannonEntropy -Data $raw
-                            if ($ent -gt 7.2) {
-                                $shortName = [System.IO.Path]::GetFileName($entry.FullName)
-                                $entropyWarnings.Add("HIGH_ENTROPY:$shortName($ent)")
-                            }
+                # Cheat string signatures (always scanned when function runs)
+                foreach ($cs in $cheatStringSet) {
+                    if ($a.Contains($cs) -or $u.Contains($cs)) { [void]$hits.Add("S|$cs") }
+                }
+
+                # Fullwidth unicode
+                foreach ($m in $fullwidthRegex.Matches($u)) { [void]$hits.Add("F|$($m.Value)") }
+
+                # ── Module 2: Bypass Detection ────────────────────────────────
+                if ($ScanBypass) {
+                    foreach ($bs in $bypassStringSet) {
+                        if ($a.Contains($bs) -or $u.Contains($bs)) { [void]$hits.Add("B|$bs") }
+                    }
+                }
+
+                # ── Module 3: Deep String Analysis + Entropy ──────────────────
+                if ($ScanDeep) {
+                    foreach ($ds in $deepCheatStringSet) {
+                        if ($a.Contains($ds) -or $u.Contains($ds)) { [void]$hits.Add("D|$ds") }
+                    }
+                    if ($entry.FullName -match '\.class$' -and $raw.Length -gt 512) {
+                        $ent = Get-ShannonEntropy -Data $raw
+                        if ($ent -gt 7.2) {
+                            $shortName = [System.IO.Path]::GetFileName($entry.FullName)
+                            $entropyWarnings.Add("HIGH_ENTROPY:$shortName($ent)")
                         }
                     }
-                } catch { }
-            }
+                }
+            } catch { }
         }
 
         foreach ($n in $nested) { try { $n.Dispose() } catch { } }
         $zip.Dispose()
     } catch { }
 
+    # ── Fullwidth dedup / consolidation ──────────────────────────────────────
     $fwPool = @($script:cheatStrings | Where-Object { $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]" })
     foreach ($h in @($hits)) {
         if ($h -match '^F\|') {
-            $fw = $h.Substring(2)
+            $fw   = $h.Substring(2)
             if ($fw.Length -lt 3) { continue }
             $best = $null
             foreach ($cs in $fwPool) {
@@ -582,7 +679,7 @@ function Get-ModSignature {
 # ═══════════════════════════════════════════════════════════
 function Get-ModSources {
     param([string]$Path)
-    $urls = [System.Collections.Generic.List[string]]::new()
+    $urls      = [System.Collections.Generic.List[string]]::new()
     $blacklist = @("w3\.org","jsonschema\.org","fabricmc\.net","quiltmc\.net","oracle\.com","mojang\.com","minecraft\.net")
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
@@ -666,7 +763,8 @@ if ($doJVM) {
 # ───────────────────────────────────────────────────────────
 #  PHASE 2 — Bypass Detection + String Analysis
 # ───────────────────────────────────────────────────────────
-$total   = $jars.Count; $i = 0
+$total   = $jars.Count
+$i       = 0
 $flagged = [System.Collections.Generic.List[PSObject]]::new()
 $clean   = [System.Collections.Generic.List[string]]::new()
 
@@ -676,7 +774,7 @@ if ($doBypass -or $doStrings) {
     Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
     $phaseModules = @()
     if ($doBypass)  { $phaseModules += "Bypass Detection" }
-    if ($doStrings) { $phaseModules += "String Analysis" }
+    if ($doStrings) { $phaseModules += "String Analysis (Deep)" }
     Write-Host (" · " + ($phaseModules -join " + ")) -ForegroundColor DarkGray
     Write-Host "  │" -ForegroundColor DarkMagenta
 
@@ -687,41 +785,36 @@ if ($doBypass -or $doStrings) {
         Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
         Write-Host "`r" -NoNewline
 
-        $sig = Get-ModSignature -Path $jar.FullName -Deep $doStrings
-
-        # If only bypass selected, strip out deep-string-only hits
-        if ($doBypass -and -not $doStrings) {
-            $sig = [System.Collections.Generic.HashSet[string]]::new(
-                ($sig | Where-Object { $_ -match '^P\|' -or $_ -match '^S\|' -or $_ -match '^F\|' })
-            )
-        }
+        # Call scanner with per-module flags
+        $sig = Get-ModSignature -Path $jar.FullName -ScanBypass $doBypass -ScanDeep $doStrings
 
         if ($sig.Count -gt 0) {
-            $pats   = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
-            $strs   = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
-            $fws    = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
-            $deep_s = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
-            $entrp  = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
+            $pats    = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
+            $strs    = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
+            $fws     = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+            $bypass  = @($sig | Where-Object { $_ -match '^B\|' } | ForEach-Object { $_.Substring(2) })
+            $deep_s  = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
+            $entrp   = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
             $sources = Get-ModSources -Path $jar.FullName
             $flagged.Add([PSCustomObject]@{
-                Name      = $jar.Name
-                Path      = $jar.FullName
-                Size      = [math]::Round($jar.Length / 1KB, 1)
-                Patterns  = $pats
-                Strings   = $strs
-                Fullwidth = $fws
-                DeepHits  = $deep_s
-                Entropy   = $entrp
-                HitCount  = $sig.Count
-                Sources   = $sources
-                ObfResult = $null
+                Name       = $jar.Name
+                Path       = $jar.FullName
+                Size       = [math]::Round($jar.Length / 1KB, 1)
+                Patterns   = $pats
+                Strings    = $strs
+                Fullwidth  = $fws
+                Bypass     = $bypass
+                DeepHits   = $deep_s
+                Entropy    = $entrp
+                HitCount   = $sig.Count
+                Sources    = $sources
+                ObfResult  = $null
             })
         } else { $clean.Add($jar.Name) }
     }
     Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
     Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 } else {
-    # Neither bypass nor string selected — still populate clean list
     foreach ($jar in $jars) { $clean.Add($jar.Name) }
 }
 
@@ -735,11 +828,8 @@ if ($doObf) {
     Write-Host " · Advanced Obfuscation Detection" -ForegroundColor DarkGray
     Write-Host "  │" -ForegroundColor DarkMagenta
 
-    $allJarPaths = @{}
-    foreach ($jar in $jars) { $allJarPaths[$jar.Name] = $jar.FullName }
-
     $obfMap = @{}
-    $oi = 0
+    $oi     = 0
     foreach ($jar in $jars) {
         $oi++
         $pct = [math]::Floor(($oi / $total) * 100)
@@ -770,6 +860,7 @@ if ($doObf) {
                     Patterns  = @()
                     Strings   = @()
                     Fullwidth = @()
+                    Bypass    = @()
                     DeepHits  = @()
                     Entropy   = @()
                     HitCount  = 0
@@ -801,6 +892,12 @@ foreach ($mod in $flagged) {
             $isBlatant = $true; break
         }
     }
+    # Bypass hits that are definitive (packet cancel, timer speed, brand spoof)
+    foreach ($b in $mod.Bypass) {
+        if ($b -match "cancelPacket|dropPacket|spoofPacket|setTimerSpeed|timerSpeed|fakeVersion|spoofVersion|grimBypass|ncpBypass|aacBypass|bypassAC") {
+            $isBlatant = $true; break
+        }
+    }
     if ($isBlatant) { $criticalThreats.Add($mod) } else { $suspiciousFiles.Add($mod) }
 }
 
@@ -812,10 +909,10 @@ $W = 72
 function Write-Border {
     param([string]$Type, [System.ConsoleColor]$Color)
     switch ($Type) {
-        'top'    { Write-Host ("  ╔" + ("═" * $W) + "╗") -ForegroundColor $Color }
-        'sep'    { Write-Host ("  ╠" + ("═" * $W) + "╣") -ForegroundColor $Color }
-        'bot'    { Write-Host ("  ╚" + ("═" * $W) + "╝") -ForegroundColor $Color }
-        'blank'  { Write-Host ("  ║" + (" " * $W) + "║") -ForegroundColor $Color }
+        'top'   { Write-Host ("  ╔" + ("═" * $W) + "╗") -ForegroundColor $Color }
+        'sep'   { Write-Host ("  ╠" + ("═" * $W) + "╣") -ForegroundColor $Color }
+        'bot'   { Write-Host ("  ╚" + ("═" * $W) + "╝") -ForegroundColor $Color }
+        'blank' { Write-Host ("  ║" + (" " * $W) + "║") -ForegroundColor $Color }
     }
 }
 
@@ -867,18 +964,18 @@ Write-Host "                                    [ SCAN RESULTS ]" -ForegroundCol
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
-# ── Summary bar ──────────────────────────────────────────────────────────────
+# ── Summary bar ───────────────────────────────────────────────────────────────
 $flaggedColor  = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
 $moduleSummary = ($activeModules -join "  ·  ")
 
 Write-Border 'top' DarkGray
 Write-RowFull ("  SCAN REPORT  ·  " + $scanTimestamp) Magenta DarkGray
 Write-Border 'sep' DarkGray
-Write-Row     "  Modules  : " $moduleSummary                          Magenta    White    DarkGray
-Write-Row     "  Path     : " $modsPath                               DarkGray   Gray     DarkGray
-Write-Row     "  Files    : " "$($jars.Count) scanned"               DarkGray   White    DarkGray
-Write-Row     "  Clean    : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
-Write-Row     "  Flagged  : " "$($flagged.Count)"                     DarkGray   $flaggedColor DarkGray
+Write-Row "  Modules  : " $moduleSummary                           Magenta    White         DarkGray
+Write-Row "  Path     : " $modsPath                                DarkGray   Gray          DarkGray
+Write-Row "  Files    : " "$($jars.Count) scanned"                DarkGray   White         DarkGray
+Write-Row "  Clean    : " "$($clean.Count)"                        DarkGray   Cyan          DarkGray
+Write-Row "  Flagged  : " "$($flagged.Count)"                      DarkGray   $flaggedColor DarkGray
 
 if ($mcStatus.Running) {
     Write-Row "  Minecraft: " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
@@ -912,9 +1009,9 @@ if ($criticalThreats.Count -gt 0) {
         Write-Border 'top' Red
         Write-RowFull "  CHEAT DETECTED" Red Red
         Write-Border 'sep' Red
-        Write-Row     "  File     : " $mod.Name                    DarkGray Yellow Red
-        Write-Row     "  Size     : " "$($mod.Size) KB"            DarkGray Gray   Red
-        Write-Row     "  Hits     : " "$($mod.HitCount)"           DarkGray White  Red
+        Write-Row "  File     : " $mod.Name                        DarkGray Yellow Red
+        Write-Row "  Size     : " "$($mod.Size) KB"                DarkGray Gray   Red
+        Write-Row "  Hits     : " "$($mod.HitCount)"               DarkGray White  Red
 
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
             Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Red
@@ -923,13 +1020,20 @@ if ($criticalThreats.Count -gt 0) {
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
             Write-Border 'sep' Red
-            Write-RowFull "  Signatures" DarkGray Red
+            Write-RowFull "  Cheat Signatures" DarkGray Red
             foreach ($h in ($allHits | Select-Object -First 5)) {
                 Write-Row "    · " $h DarkGray Red Red
             }
-            if ($allHits.Count -gt 5) {
-                Write-RowFull "    + $($allHits.Count - 5) more matches" DarkGray Red
+            if ($allHits.Count -gt 5) { Write-RowFull "    + $($allHits.Count - 5) more matches" DarkGray Red }
+        }
+
+        if ($mod.Bypass -and $mod.Bypass.Count -gt 0) {
+            Write-Border 'sep' Red
+            Write-RowFull "  Bypass Hits" DarkGray Red
+            foreach ($b in ($mod.Bypass | Select-Object -First 5)) {
+                Write-Row "    · " $b DarkGray Yellow Red
             }
+            if ($mod.Bypass.Count -gt 5) { Write-RowFull "    + $($mod.Bypass.Count - 5) more" DarkGray Red }
         }
 
         if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
@@ -970,9 +1074,9 @@ if ($suspiciousFiles.Count -gt 0) {
         Write-Border 'top' Yellow
         Write-RowFull "  SUSPICIOUS — manual decompile recommended" Yellow Yellow
         Write-Border 'sep' Yellow
-        Write-Row     "  File     : " $mod.Name                    DarkGray White  Yellow
-        Write-Row     "  Size     : " "$($mod.Size) KB"            DarkGray Gray   Yellow
-        Write-Row     "  Hits     : " "$($mod.HitCount)"           DarkGray White  Yellow
+        Write-Row "  File     : " $mod.Name                        DarkGray White  Yellow
+        Write-Row "  Size     : " "$($mod.Size) KB"                DarkGray Gray   Yellow
+        Write-Row "  Hits     : " "$($mod.HitCount)"               DarkGray White  Yellow
 
         if ($mod.Sources -and $mod.Sources.Count -gt 0) {
             Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Yellow
@@ -981,9 +1085,17 @@ if ($suspiciousFiles.Count -gt 0) {
         $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
         if ($allHits.Count -gt 0) {
             Write-Border 'sep' Yellow
-            Write-RowFull "  Signatures" DarkGray Yellow
+            Write-RowFull "  Cheat Signatures" DarkGray Yellow
             foreach ($h in ($allHits | Select-Object -First 4)) {
                 Write-Row "    · " $h DarkGray Yellow Yellow
+            }
+        }
+
+        if ($mod.Bypass -and $mod.Bypass.Count -gt 0) {
+            Write-Border 'sep' Yellow
+            Write-RowFull "  Bypass Hits" DarkGray Yellow
+            foreach ($b in ($mod.Bypass | Select-Object -First 4)) {
+                Write-Row "    · " $b DarkGray Cyan Yellow
             }
         }
 
