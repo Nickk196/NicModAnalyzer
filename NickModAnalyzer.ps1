@@ -333,12 +333,19 @@ function Get-ObfuscationScore {
     }
 
     # 5. Unicode/invisible identifier abuse in class names
-    $unicodeNames = @($classEntries | Where-Object {
-        $_.FullName -match '[\u0080-\uFFFF]' -and $_.FullName -notmatch '[\u3041-\u3096]'
-    })
+    # Only flag codepoints that have no legitimate use in Java identifiers:
+    #   - Zero-width / invisible glue chars (U+200B–U+200D, U+2060, U+FEFF, U+00AD)
+    #   - Private Use Area (U+E000–U+F8FF) — used by some obfuscators as fake chars
+    #   - Unicode control chars embedded in paths (U+0001–U+001F, U+007F–U+009F)
+    # Deliberately NOT flagging CJK, Cyrillic, accented Latin, etc. — all valid in package names.
+    $suspiciousUniRx = [regex]::new(
+        '[\u00AD\u200B\u200C\u200D\u2060\uFEFF]|[\uE000-\uF8FF]|[\u0001-\u001F\u007F-\u009F]',
+        [System.Text.RegularExpressions.RegexOptions]::Compiled
+    )
+    $unicodeNames = @($classEntries | Where-Object { $suspiciousUniRx.IsMatch($_.FullName) })
     if ($unicodeNames.Count -gt 0) {
         $result.Score += 35
-        $result.Indicators.Add("Unicode identifier obfuscation: $($unicodeNames.Count) class(es) with unusual characters")
+        $result.Indicators.Add("Invisible/PUA identifier chars: $($unicodeNames.Count) class(es) with zero-width or private-use codepoints")
     }
 
     # 6. String encryption markers (common in Skidfuscator / Stringer output)
@@ -454,7 +461,6 @@ function Get-ModSignature {
     param([string]$Path, [bool]$Deep = $false)
     $hits = [System.Collections.Generic.HashSet[string]]::new()
     $entropyWarnings = [System.Collections.Generic.List[string]]::new()
-    $obfResult = $null
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
         foreach ($e in $zip.Entries) { foreach ($m in $patternRegex.Matches($e.FullName)) { [void]$hits.Add("P|$($m.Value)") } }
@@ -507,11 +513,6 @@ function Get-ModSignature {
             }
         }
 
-        # Run obfuscation analysis in deep mode
-        if ($Deep) {
-            $obfResult = Get-ObfuscationScore -Zip $zip
-        }
-
         foreach ($n in $nested) { try { $n.Dispose() } catch { } }
         $zip.Dispose()
     } catch { }
@@ -543,8 +544,7 @@ function Get-ModSignature {
         else { [void]$cleaned.Add($h) }
     }
     foreach ($ew in $entropyWarnings) { [void]$cleaned.Add("E|$ew") }
-
-    return [PSCustomObject]@{ Hits = $cleaned; Obf = $obfResult }
+    return $cleaned
 }
 
 # ═══════════════════════════════════════════════════════════
@@ -613,16 +613,33 @@ if ($mcStatus.Running) {
     Write-Host "Not running" -ForegroundColor DarkGray
 }
 
+# ───────────────────────────────────────────────────────────
+#  PHASE 1 — JVM Arguments
+# ───────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "  JVM check  " -ForegroundColor DarkGray -NoNewline
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
+Write-Host " · JVM Arguments" -ForegroundColor DarkGray
+Write-Host "  │" -ForegroundColor DarkMagenta
+Write-Host "  │  checking... " -ForegroundColor DarkGray -NoNewline
 $jvmResults = Test-JvmIntegrity
 if ($jvmResults.Count -gt 0) {
     Write-Host "$($jvmResults.Count) issue(s) found" -ForegroundColor Red
 } else {
     Write-Host "clean" -ForegroundColor Cyan
 }
+Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
+# ───────────────────────────────────────────────────────────
+#  PHASE 2 — Mod Signatures
+# ───────────────────────────────────────────────────────────
 Write-Host ""
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
+$phaseLabel = if ($deepScan) { " · Mod Signatures + Deep Strings + Entropy" } else { " · Mod Signatures" }
+Write-Host $phaseLabel -ForegroundColor DarkGray
+Write-Host "  │" -ForegroundColor DarkMagenta
+
 $total   = $jars.Count; $i = 0
 $flagged = [System.Collections.Generic.List[PSObject]]::new()
 $clean   = [System.Collections.Generic.List[string]]::new()
@@ -630,36 +647,99 @@ $clean   = [System.Collections.Generic.List[string]]::new()
 foreach ($jar in $jars) {
     $i++
     $pct = [math]::Floor(($i / $total) * 100)
-    Write-Host "  scanning $pct% " -ForegroundColor DarkMagenta -NoNewline
-    Write-Host "$($jar.Name)" -ForegroundColor DarkGray -NoNewline
+    Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
     Write-Host "`r" -NoNewline
 
-    $scanResult = Get-ModSignature -Path $jar.FullName -Deep $deepScan
-    $sig        = $scanResult.Hits
-    $obf        = $scanResult.Obf
+    $sig = Get-ModSignature -Path $jar.FullName -Deep $deepScan
 
-    if ($sig.Count -gt 0 -or ($obf -and $obf.ObfLevel -ne "None")) {
-        $pats    = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
-        $strs    = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
-        $fws     = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
-        $deep_s  = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
-        $entrp   = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
+    if ($sig.Count -gt 0) {
+        $pats   = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
+        $strs   = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
+        $fws    = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+        $deep_s = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
+        $entrp  = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
         $sources = Get-ModSources -Path $jar.FullName
         $flagged.Add([PSCustomObject]@{
-            Name        = $jar.Name
-            Size        = [math]::Round($jar.Length / 1KB, 1)
-            Patterns    = $pats
-            Strings     = $strs
-            Fullwidth   = $fws
-            DeepHits    = $deep_s
-            Entropy     = $entrp
-            HitCount    = $sig.Count
-            Sources     = $sources
-            ObfResult   = $obf
+            Name      = $jar.Name
+            Path      = $jar.FullName
+            Size      = [math]::Round($jar.Length / 1KB, 1)
+            Patterns  = $pats
+            Strings   = $strs
+            Fullwidth = $fws
+            DeepHits  = $deep_s
+            Entropy   = $entrp
+            HitCount  = $sig.Count
+            Sources   = $sources
+            ObfResult = $null
         })
     } else { $clean.Add($jar.Name) }
 }
-Write-Host "  done.              " -ForegroundColor DarkMagenta
+Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
+
+# ───────────────────────────────────────────────────────────
+#  PHASE 3 — Obfuscation Analysis (deep mode only)
+# ───────────────────────────────────────────────────────────
+if ($deepScan) {
+    Write-Host ""
+    Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
+    Write-Host " · Obfuscation Analysis" -ForegroundColor DarkGray
+    Write-Host "  │" -ForegroundColor DarkMagenta
+
+    # Run over ALL jars (flagged + clean) so hidden-only-obfuscated ones surface
+    $allJarPaths = @{}
+    foreach ($jar in $jars) { $allJarPaths[$jar.Name] = $jar.FullName }
+
+    $obfMap = @{}
+    $oi = 0
+    foreach ($jar in $jars) {
+        $oi++
+        $pct = [math]::Floor(($oi / $total) * 100)
+        Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
+        Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
+        Write-Host "`r" -NoNewline
+        try {
+            $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
+            $obfResult = Get-ObfuscationScore -Zip $zip
+            $zip.Dispose()
+            $obfMap[$jar.Name] = $obfResult
+        } catch { $obfMap[$jar.Name] = $null }
+    }
+    Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+
+    # Merge obf results into flagged mods
+    foreach ($mod in $flagged) {
+        if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
+    }
+    # Promote clean-but-heavily-obfuscated mods to suspicious
+    foreach ($jar in $jars) {
+        if ($clean -contains $jar.Name) {
+            $obf = $obfMap[$jar.Name]
+            if ($obf -and $obf.ObfLevel -ne "None") {
+                $clean.Remove($jar.Name) | Out-Null
+                $flagged.Add([PSCustomObject]@{
+                    Name      = $jar.Name
+                    Path      = $jar.FullName
+                    Size      = [math]::Round($jar.Length / 1KB, 1)
+                    Patterns  = @()
+                    Strings   = @()
+                    Fullwidth = @()
+                    DeepHits  = @()
+                    Entropy   = @()
+                    HitCount  = 0
+                    Sources   = @()
+                    ObfResult = $obf
+                })
+            }
+        }
+    }
+
+    $obfHeavy = ($obfMap.Values | Where-Object { $_ -and $_.ObfLevel -eq "HEAVY" }).Count
+    Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundColor DarkMagenta
+}
+
 Start-Sleep -Milliseconds 300
 Clear-Host
 
