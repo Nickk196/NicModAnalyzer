@@ -14,9 +14,12 @@ try {
 Clear-Host
 
 # ═══════════════════════════════════════════════════════════
-#  BANNER (using [Console]::WriteLine to avoid padding glitches)
+#  BANNER
 # ═══════════════════════════════════════════════════════════
-function W($t, $c) { [Console]::ForegroundColor = $c; [Console]::WriteLine($t) }
+function W($t, $c) { 
+    [Console]::ForegroundColor = $c
+    [Console]::WriteLine($t)
+}
 
 [Console]::WriteLine("")
 W "██████   █████  ███              ██████   ██████              █████" ([System.ConsoleColor]::Magenta)
@@ -31,28 +34,24 @@ W "" ([System.ConsoleColor]::DarkGray)
 W "" ([System.ConsoleColor]::DarkGray)
 W "" ([System.ConsoleColor]::DarkGray)
 W "                              █████████                        ████                                           " ([System.ConsoleColor]::Magenta)
-W "                             ███░░░░░███                      ░░███                                           " ([SystemColor]::Magenta)
+W "                             ███░░░░░███                      ░░███                                           " ([System.ConsoleColor]::Magenta)
 W "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " ([System.ConsoleColor]::DarkMagenta)
 W "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" ([System.ConsoleColor]::DarkMagenta)
-W "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " ([System.ConsoleColor]::Magenta)
-W "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " ([SystemColor]::Magenta)
+W "                            ░███░░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " ([SystemColor]::Magenta)
+W "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " ([System.ConsoleColor]::Magenta)
 W "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " ([System.ConsoleColor]::DarkMagenta)
-W "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " ([System.ConsoleColor]::DarkMagenta)
+W "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░░  ░░░░░░  ░░░░░     " ([System.ConsoleColor]::DarkMagenta)
 W "                                                                      ███ ░███                                " ([System.ConsoleColor]::DarkGray)
 W "                                                                     ░░██████                                 " ([System.ConsoleColor]::DarkGray)
-W "                                                                      ░░░░░░                                  " ([System.ConsoleColor]::DarkGray)
+W "                                                                      ░░░░░░                                  " ([System.Color]::DarkGray)
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ V4.4 — FULL SCAN ]")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────────────")
+[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────")
 [Console]::WriteLine("")
 
-# ═══════════════════════════════════════════════════════════
-#  Restore Write-Host for the rest of the script
-# ═══════════════════════════════════════════════════════════
-
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 #  PATH INPUT
 # ═══════════════════════════════════════════════════════════
 Write-Host "  Path " -ForegroundColor DarkGray -NoNewline
@@ -84,9 +83,9 @@ Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  SUSPICIOUS PATTERNS (filename/class path matching)
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
  $suspiciousPatterns = @(
     'AimAssist', 'AutoAnchor', 'AutoCrystal', 'AutoDoubleHand',
     'AutoHitCrystal', 'AutoPot', 'AutoTotem', 'AutoArmor', 'InventoryTotem',
@@ -128,7 +127,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 # ═══════════════════════════════════════════════════════════
 #  CHEAT + BYPASS STRING SIGNATURES
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
  $cheatStrings = @(
     'AutoCrystal', 'autocrystal', 'auto crystal', 'cw crystal',
     'dontPlaceCrystal', 'dontBreakCrystal',
@@ -139,19 +138,19 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "SafeAnchor", "AirAnchor",
     "ＡｕﾄＡｮｃﾞｮﾞ", "Ａｕﾄ Ａｮｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅＡｮｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅ Ａｮｃﾞｮﾞ",
     "ＳａﾇｪＡＡｮｃﾞｮﾞ", "Ｓａｆｅ Ａｮｃﾞｮﾞ", "Ａｮｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
-    "AutoTotem", "autototem", "auto totem", "InventoryTotem",
+    "AutoTotem", "autotemem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
-    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｪｭ", "Ｈｏｖｴｰﾘ oｴｪｪ",
-    "ＩｎｖｪﾝﾄｮﾞｙＴｏﾃｪｭ", "Ａｕﾄ Ｉｎｖｪﾝｵｮﾞｙ Ｔｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ Ｈｲｴ",
+    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｭ", "Ｈｏｖｴｰﾘｙ oｴｪｪ",
+    "ＩｎｖﾝﾄﾝｮﾞｙＴｏﾃｪｭ", "Ａｕﾄ Ｉｎｖﾝｵｏﾘｙ Ｔｏﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｏｘｙ", "Ａｕﾄ Ｔｏﾃｪｭ Ｈｲｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
     "ＡｕﾄＰｏﾄ", "Ａｕﾄ Ｐｏﾄ", "Ａｕﾄ Ｐｏﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
     "Ｓﾞｲｪﾞﾄ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾙﾄ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
     "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｏｕｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｏｕｂﾞﾞ Ｈ｡ﾝﾄ",
-    "AutoClicker", "ＡｕﾄＣｲｯｪｹｰｯ",
+    "AutoClicker", "ＡｕﾄＣｲｯｪｹｹｰｯ",
     "Failed to switch to mace after axe!", "AutoMace", "MaceSwap", "SpearSwap",
-    "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪａｒ Ｓｗ｡ﾇ", "Ｓﾄｭﾝ Ｓﾞ｡ｭ", "StunSlam",
+    "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪａｒ Ｓｗ｡ﾇ", "Ｓﾄｰﾝ Ｓﾞ｡ｭ", "StunSlam",
     "Donut", "JumpReset", "axespam", "axe spam", "EndCrystalItemMixin",
     "findKnockbackSword", "attackRegisteredThisClick",
     "AimAssist", "aimassist", "aim assist", "triggerbot", "trigger bot",
@@ -166,13 +165,13 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
     "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｵｪｪﾞｽﾞ Ｐﾞｱｴﾞｪｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽｿ｡ﾞ",
-    "LootYeeter", "Ｌｏｏｵ Ｙｪｪﾄｪﾞ",
+    "LootYeeter", "Ｌｏｏｵ Ｙｪｪﾄﾞﾞ",
     "AutoBreach", "Ａｕﾄ Ｂﾚｾ｡ｃｯ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
-    "Activate Key", "Ａｃﾞｲｲﾞ｡ｴｪ Ｋｪｙ", "Click Simulation", "Ｃﾞｲｲｸｯ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
+    "Activate Key", "Ａｃﾞｲｲﾞｲﾞ｡ｴｪ Ｋｪｙ", "Click Simulation", "Ｃﾞｲｲｯ Ｓｲﾑﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
     "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕﾝｃｪｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "Macro Key", "Ｍ｡ｋｮｏ Ｋ｡ｙ",
@@ -208,7 +207,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 # ═══════════════════════════════════════════════════════════
 #  DEEP SCAN STRINGS
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
  $deepCheatStrings = @(
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
     "callAttackEntity", "callUseItem",
@@ -240,9 +239,9 @@ foreach ($s in $deepCheatStrings) { [void]$deepCheatStringSet.Add($s) }
 
  $fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 #  ENTROPY CALCULATION
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 function Get-ShannonEntropy {
     param([byte[]]$Data)
     if ($Data.Length -eq 0) { return 0.0 }
@@ -259,7 +258,7 @@ function Get-ShannonEntropy {
 
 # ═══════════════════════════════════════════════════════════
 #  OBFUSCATION ANALYSIS
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════
 function Get-ObfuscationScore {
     param([System.IO.Compression.ZipArchive]$Zip)
     $result = [PSCustomObject]@{
@@ -382,9 +381,9 @@ function Get-ObfuscationScore {
     return $result
 }
 
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 #  MINECRAFT PROCESS STATUS
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 function Get-MinecraftStatus {
     $mcProc = $null
     $javaProcs = @(Get-Process javaw -ErrorAction SilentlyContinue) + @(Get-Process java -ErrorAction SilentlyContinue)
@@ -403,9 +402,9 @@ function Get-MinecraftStatus {
     return [PSCustomObject]@{ Running = $false; PID = 0; Uptime = "-"; RAM = "-" }
 }
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  JVM INTEGRITY CHECK
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
     $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
@@ -442,17 +441,17 @@ function Test-JvmIntegrity {
                 @{ R = '-Dfabric\.addMods=';                           T = "FABRIC_ADD_MODS";          S = "HIGH";   D = "Injects extra mod JARs at runtime — can load cheats outside mods folder" },
                 @{ R = '-Dfabric\.loadMods=';                          T = "FABRIC_LOAD_MODS";         S = "HIGH";   D = "Overrides Fabric mod loading — can force-load arbitrary JARs" },
                 @{ R = '-Dfabric\.classPathGroups=';                   T = "FABRIC_CLASSPATH_GROUPS";  S = "MEDIUM"; D = "Manipulates Fabric classpath group resolution" },
-                @{ R = '-Dfabric\.skipMcProvider=';                    T = "FABRIC_SKIP_MCPROVIDER";   S = "MEDIUM"; D = "Skips Minecraft provider — unusual, can bypass version checks" },
+                @{ R = '-Dfabric\.skipMcProvider=';                    T = "FABRIC_SKIP_MCPROVIDER";   S = "MEDIUM"; D = "Skips Minecraft provider — can bypass version checks" },
                 @{ R = '-Dfabric\.allowUnsupportedVersion=';          T = "FABRIC_UNSUPPORTED_VER";   S = "LOW";    D = "Allows loading mods for unsupported MC versions" },
                 @{ R = '-Dfabric\.remapClasspathFile=';               T = "FABRIC_REMAP_CLASSPATH";   S = "MEDIUM"; D = "Remaps classpath from external file — can inject classes" },
                 @{ R = '-Dfabric\.skipIntermediary=';                 T = "FABRIC_SKIP_INTERMEDIARY"; S = "MEDIUM"; D = "Skips intermediary remapping — can load unverified code" },
-                @{ R = '-Dfabric\.mixin\.hotSwap=';                    T = "FABRIC_MIXIN_HOTSWAP";     S = "HIGH";   D = "Enables Mixin hot-swap — can modify game code at runtime" },
-                @{ R = "-Dfabric\.mixin\.configs=";                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
+                @{ R = '-Dfabric\.mixin\.hotSwap=';                    T = "FABRIC_MIXIN_HOTSWAP";     S = "HIGH";   D = "Enables Mixin hot-swap — runtime code modification" },
+                @{ R = '-Dfabric\.mixin\.configs=';                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
                 @{ R = '-Dfabric\.mixin\.debug\.export=';             T = "FABRIC_MIXIN_DEBUG";       S = "LOW";    D = "Exports Mixin debug data — unusual in production" },
-                @{ R = '-Dfabric\.mixin\.debug\.verbose=';            T = "FABRIC_MIXIN_VERBOSE";     S = "LOW";    D = "Verbose Mixin debugging — unusual in production" },
+                @{ R = '-Dfabric\.mixin\.debug\.verbose=';            T = "FABRIC_MIXIN_VERBOSE";     S = "LOW";    D = "Verbose Mixin debugging" },
                 @{ R = '-Dfabric\.forceVersion=';                      T = "FABRIC_FORCE_VERSION";     S = "LOW";    D = "Forces Fabric game version" },
                 @{ R = '-Dfabric\.autoDetectVersion=';                T = "FABRIC_AUTODETECT_VER";    S = "LOW";    D = "Overrides auto version detection" },
-                @{ R = '-Dfabric\.customModList=';                     T = "FABRIC_CUSTOM_MODLIST";    S = "MEDIUM"; D = "Loads mods from a custom list file — bypasses normal discovery" },
+                @{ R = '-Dfabric\.customModList=';                     T = "FABRIC_CUSTOM_MODLIST";    S = "MEDIUM"; D = "Loads mods from custom list — bypasses normal discovery" },
                 @{ R = '-Dfabric\.resolve\.modFiles=';                 T = "FABRIC_RESOLVE_MODFILES";  S = "MEDIUM"; D = "Overrides mod file resolution" },
                 @{ R = '-Dfabric\.skipDependencyResolution=';         T = "FABRIC_SKIP_DEPS";         S = "MEDIUM"; D = "Skips dependency resolution — can load incomplete mods" },
                 @{ R = '-Dfabric\.loader\.entrypoints=';               T = "FABRIC_ENTRYPOINTS";       S = "MEDIUM"; D = "Overrides loader entrypoints — can inject custom code" },
@@ -498,9 +497,9 @@ function Test-JvmIntegrity {
             )
 
             $classpathFlags = @(
-                @{ R = '-Xbootclasspath/p:';                           T = "BOOTCLASS_PREPEND";        S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader — core class replacement" },
+                @{ R = '-Xbootclasspath/p:';                           T = "BOOTCLASS_PREPEND";        S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader" },
                 @{ R = '-Xbootclasspath/a:';                           T = "BOOTCLASS_APPEND";         S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
-                @{ R = '-Djava\.system\.class\.loader=';               T = "CLASSLOADER_REPLACE";      S = "HIGH";   D = "Replaces the system classloader — full control over class loading" },
+                @{ R = '-Djava\.system\.class\.loader=';               T = "CLASSLOADER_REPLACE";      S = "HIGH";   D = "Replaces the system classloader" },
                 @{ R = '-Djava\.library\.path=';                       T = "NATIVE_LIB_PATH";          S = "MEDIUM"; D = "Overrides native library search path" }
             )
 
@@ -509,28 +508,28 @@ function Test-JvmIntegrity {
             )
 
             $verifyFlags = @(
-                @{ R = '-Xverify:none';                                T = "BYTECODE_VERIFY_OFF";     S = "HIGH";   D = "Disables JVM bytecode verification — unsafe classes load unchecked" },
-                @{ R = '-noverify';                                    T = "NOVERIFY";                S = "HIGH";   D = "Alias for -Xverify:none — disables class verification" }
+                @{ R = '-Xverify:none';                                T = "BYTECODE_VERIFY_OFF";     S = "HIGH";   D = "Disables JVM bytecode verification" },
+                @{ R = '-noverify';                                    T = "NOVERIFY";                S = "HIGH";   D = "Disables class verification" }
             )
 
             $nativeFlags = @(
                 @{ R = '(?<!\w)-agentlib:';                            T = "NATIVE_AGENT_LIB";        S = "HIGH";   D = "Loads native JVMTI agent — can hook any JVM function" },
-                @{ R = '-agentpath:';                                  T = "NATIVE_AGENT_PATH";       S = "HIGH";   D = "Loads native agent by absolute path — deep JVM access" }
+                @{ R = '-agentpath:';                                  T = "NATIVE_AGENT_PATH";       S = "HIGH";   D = "Loads native agent by path — deep JVM access" }
             )
 
             $debugFlags = @(
                 @{ R = '-Xdebug';                                      T = "DEBUG_MODE";              S = "MEDIUM"; D = "JVM debug mode enabled" },
-                @{ R = '-Xrunjdwp:';                                   T = "REMOTE_DEBUG";            S = "HIGH";   D = "Remote debugging enabled — arbitrary code injection risk" },
-                @{ R = '(?<!\w)agentlib:jdwp';                         T = "JDWP_AGENT";              S = "HIGH";   D = "JDWP agent — remote code execution risk" }
+                @{ R = '-Xrunjdwp:';                                   T = "REMOTE_DEBUG";            S = "HIGH";   D = "Remote debugging — code injection risk" },
+                @{ R = '(?<!\w)agentlib:jdwp';                         T = "JDWP_AGENT";              S = "HIGH";   D = "JDWP agent — RCE risk" }
             )
 
             $jarFlags = @(
-                @{ R = '-Dsun\.misc\.URLClassPath\.disableJarChecking=true'; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking — tampered JARs load unchecked" }
+                @{ R = '-Dsun\.misc\.URLClassPath\.disableJarChecking=true'; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" }
             )
 
             $jndiFlags = @(
-                @{ R = '-Dcom\.sun\.jndi\.rmi\.object\.trustURLCodebase=true';  T = "JNDI_RMI_EXPLOIT";  S = "HIGH"; D = "JNDI RMI codebase enabled — Log4Shell attack vector" },
-                @{ R = '-Dcom\.sun\.jndi\.ldap\.object\.trustURLCodebase=true'; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "JNDI LDAP codebase enabled — Log4Shell variant" }
+                @{ R = '-Dcom\.sun\.jndi\.rmi\.object\.trustURLCodebase=true';  T = "JNDI_RMI_EXPLOIT";  S = "HIGH"; D = "JNDI RMI codebase — Log4Shell vector" },
+                @{ R = '-Dcom\.sun\.jndi\.ldap\.object\.trustURLCodebase=true'; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "JNDI LDAP codebase — Log4Shell variant" }
             )
 
             $cpMatches = [regex]::Matches($cmd, '-cp\s+["'']?([^\s"'']+)["'']?')
@@ -567,9 +566,9 @@ function Test-JvmIntegrity {
     return $findings
 }
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  MOD SIGNATURE SCAN
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════
 function Get-ModSignature {
     param(
         [string]$Path,
@@ -668,9 +667,9 @@ function Get-ModSignature {
     return $cleaned
 }
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  URL SOURCE EXTRACTION
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
 function Get-ModSources {
     param([string]$Path)
     $urls      = [System.Collections.Generic.List[string]]::new()
@@ -698,13 +697,13 @@ function Get-ModSources {
     return @($urls | Select-Object -Unique)
 }
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  MAIN SCAN LOOP
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 try { $jars = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop }
 catch {
     Write-Host "  Cannot read directory." -ForegroundColor Red
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.RunWith("NoEcho,IncludeKeyDown")
     exit 1
 }
 
@@ -855,9 +854,9 @@ Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundCo
 Start-Sleep -Milliseconds 300
 Clear-Host
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 #  CLASSIFICATION
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
  $criticalThreats = [System.Collections.Generic.List[PSObject]]::new()
  $suspiciousFiles = [System.Collections.Generic.List[PSObject]]::new()
 
@@ -865,7 +864,7 @@ foreach ($mod in $flagged) {
     $isBlatant = $false
     if ($mod.HitCount -ge 15) { $isBlatant = $true }
     foreach ($str in $mod.Strings) {
-        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿ﾀ|AutoCrystal|ＡｕﾄＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｎｃﾞｮﾞ") {
+        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿﾿ﾀ|AutoCrystal|ＡｕﾄＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｕｏＡｎｃﾞｮﾞ") {
             $isBlatant = $true; break
         }
     }
@@ -919,12 +918,12 @@ function Write-RowFull {
     Write-Host (" " * $pad + "║") -ForegroundColor $BorderColor
 }
 
-# ═══════════════════════════════════════════════════════════
-#  REPORT BANNER (also uses [Console]::WriteLine to avoid padding)
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
+#  REPORT BANNER
+# ═══════════════════════════════════════════════════════
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("██████   █████  ███              ██████   ██████              █████")
+[Console]::WriteLine("██████   █████  ███              ██████   ██████   ██████              █████")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("░░██████ ░░███  ░░░              ░░██████ ██████              ░░███")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
@@ -932,47 +931,44 @@ function Write-RowFull {
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
 [Console]::WriteLine(" ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███")
+[Console::WriteLine(" ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███░███ ░███")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███")
+[Console::WriteLine(" ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███░███ ░███")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine(" █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████")
+[Console::WriteLine(" █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░")
+[Console::WriteLine("░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                                                              ")
+[Console::WriteLine("                                                                                                              ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                                                              ")
+[Console::WriteLine("                                                                                                              ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                                                              ")
+[Console::WriteLine("                                                                                                              ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                              █████████                        ████                                           ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                             ███░░░░░███                      ░░███                                           ")
+[Console]::WriteLine("                             ███░░░░░░███                      ░░███                                           ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                            ░███░░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░░  ░░░░░░  ░░░░░     ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                      ███ ░███                                ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]WriteLine("                                                                     ░░██████                                 ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                      ░░░░░░                                  ")
-[Console]::WriteLine("")
+[Console::WriteLine("                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  ")
+[Console::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console::WriteLine("                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███")
+[Console::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console::WriteLine("                            ░███░░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███    ███░   █░███░░░   ░███      " -ForegroundColor [System.ConsoleColor]::Magenta
+[Console::WriteLine("                            █████   █████ ████ █████░░████████ █████ ░░░███████   █████████░░██████  █████    ")
+[Console::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console::WriteLine("                           ░░░░░   ░░░░░ ░░░░░  ░░░░░░░░░ ░░░░░   ░░░░░░███  ░░░░░░░░░░  ░░░░░░  ░░░░░     " -ForegroundColor [System.ConsoleColor]::DarkMagenta
+[Console::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console::WriteLine("                                                                      ███ ░███                                ")
+[Console::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console::WriteLine("                                                                     ░░██████                                 ")
+[Console::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console::WriteLine("                                                                      ░░░░░░                                  ")
+[Console::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ SCAN RESULTS ]")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
 [Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────────────")
-[Console]::WriteLine("")
+[Console::WriteLine("")
 
  $flaggedColor  = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
  $moduleSummary = ($activeModules -join "  ·  ")
@@ -1069,7 +1065,7 @@ if ($criticalThreats.Count -gt 0) {
 
         if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
             Write-Border 'sep' Red
-            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
+            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray }
             Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Red
             foreach ($ind in $mod.ObfResult.Indicators) {
                 Write-Row "    · " $ind DarkGray DarkGray Red
@@ -1121,7 +1117,7 @@ if ($suspiciousFiles.Count -gt 0) {
 
         if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
             Write-Border 'sep' Yellow
-            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
+            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray }
             Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Yellow
             foreach ($ind in $mod.ObfResult.Indicators) {
                 Write-Row "    · " $ind DarkGray DarkGray Yellow
