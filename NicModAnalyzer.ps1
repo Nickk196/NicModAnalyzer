@@ -244,8 +244,9 @@ $cheatStrings = @(
 
 # ═══════════════════════════════════════════════════════════
 #  DEEP SCAN STRINGS  (Module 3 — Deep Scan)
-#  Includes the original deep strings PLUS the more technical
-#  reflection/mixin bypass strings formerly in Module 2.
+#  Only strings with NO legitimate use in normal mods.
+#  Standard Fabric/Mixin/MC API terms are intentionally
+#  excluded — they produce false positives on every mod.
 # ═══════════════════════════════════════════════════════════
 $deepCheatStrings = @(
     # ── Original deep strings ─────────────────────────────────────────────────
@@ -264,22 +265,16 @@ $deepCheatStrings = @(
     "-Xrunjdwp:", "agentlib:jdwp",
     "dev.gambleclient", "xyz.greaj", "org.chainlibs",
     "dev.krypton", "Dqrkis", "dqrkis", "lvstrng",
-    # ── Generic Fabric/MC networking terms (too common for standard scan) ───────
-    "setVersion", "clientVersion",
-    "NetworkHandler", "ClientConnection", "sendPacket", "receivePacket", "interceptPacket",
-    "packetListener", "PacketListener", "onPacketSend", "onPacketReceive",
-    "PacketEvent", "PacketSendEvent", "PacketReceiveEvent",
-    # ── Reflection & mixin-based bypass (formerly Module 2) ──────────────────
+    # ── Reflection-based bypasses (only truly suspicious usages) ─────────────
+    # Removed: setVersion, clientVersion, NetworkHandler, ClientConnection,
+    # sendPacket, receivePacket, interceptPacket, packetListener, PacketListener,
+    # onPacketSend, onPacketReceive, PacketEvent, PacketSendEvent, PacketReceiveEvent,
+    # IMixinConfig, MixinTransformer, IMixinTransformer, MixinEnvironment,
+    # sun.reflect.Reflection, jdk.internal.reflect — all are standard Fabric/Mixin
+    # framework internals used by virtually every legitimate mod.
     "getDeclaredMethod(", "setAccessible(true)",
-    "MethodHandles.lookup",
-    "sun.reflect.Reflection",
     "unsafe.allocateInstance", "Unsafe.getUnsafe",
-    "jdk.internal.reflect",
-    "MixinEnvironment.getDefaultEnvironment",
-    "IMixinConfig", "MixinTransformer",
-    "SpongeAPI", "IMixinTransformer",
-    "setHardTarget", "mixinBypass",
-    "getGameVersion", "getGameVersion"
+    "setHardTarget", "mixinBypass"
 )
 
 # ── Compile pattern regex and lookup sets ─────────────────────────────────────
