@@ -5,15 +5,28 @@ Clear-Host
 #  BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
-Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
-Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄▄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██╒   ░██╒░ ████▓▒░░╒████▓     ▓█   ▓██╒▒██░   ▓██░ ▓█   ▓██╒░██████╒ ░ ██╒╓░▒███████╒░▒████▒░██╓ ▒██╒" -ForegroundColor Magenta
-Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒╓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
-Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
-Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
-Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
+Write-Host "██████   █████  ███              ██████   ██████              █████                                         " -ForegroundColor Magenta
+Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███                                          " -ForegroundColor Magenta
+Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████                                          " -ForegroundColor DarkMagenta
+Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███                                          " -ForegroundColor DarkMagenta
+Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
+Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
+Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████                                          " -ForegroundColor DarkMagenta
+Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░                                          " -ForegroundColor DarkMagenta
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                              █████████                        ████                                           " -ForegroundColor Magenta
+Write-Host "                             ███░░░░░███                      ░░███                                           " -ForegroundColor Magenta
+Write-Host "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " -ForegroundColor DarkMagenta
+Write-Host "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" -ForegroundColor DarkMagenta
+Write-Host "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " -ForegroundColor Magenta
+Write-Host "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " -ForegroundColor Magenta
+Write-Host "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " -ForegroundColor DarkMagenta
+Write-Host "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " -ForegroundColor DarkMagenta
+Write-Host "                                                                      ███ ░███                                " -ForegroundColor DarkGray
+Write-Host "                                                                     ░░██████                                 " -ForegroundColor DarkGray
+Write-Host "                                                                      ░░░░░░                                  " -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "                                    [ V4.4 — FULL SCAN ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
@@ -386,7 +399,6 @@ function Test-JvmIntegrity {
             $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
             $cmd = $wmi.CommandLine
             if (-not $cmd) { continue }
-
             $isMC = ($cmd -match "net\.minecraft" -or $cmd -match "Minecraft")
             if (-not $isMC) { continue }
 
@@ -530,7 +542,6 @@ function Test-JvmIntegrity {
                     }
                 }
             }
-
         } catch { }
     }
     return $findings
@@ -679,7 +690,7 @@ catch {
 
 if ($jars.Count -eq 0) {
     Write-Host "  No JAR files found." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.RunWith("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     exit 0
 }
 
@@ -703,9 +714,6 @@ if ($mcStatus.Running) {
     Write-Host "Not running" -ForegroundColor DarkGray
 }
 
-# ───────────────────────────────────────────────────────────
-#  PHASE 1 — JVM Scan
-# ───────────────────────────────────────────────────────────
  $jvmResults = [System.Collections.Generic.List[PSObject]]::new()
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
@@ -728,9 +736,6 @@ if ($jvmResults.Count -gt 0) {
 }
 Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
-# ───────────────────────────────────────────────────────────
-#  PHASE 2 — String Analysis + Deep Scan
-# ───────────────────────────────────────────────────────────
  $total   = $jars.Count
  $i       = 0
  $flagged = [System.Collections.Generic.List[PSObject]]::new()
@@ -776,9 +781,6 @@ foreach ($jar in $jars) {
 Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
 Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 
-# ───────────────────────────────────────────────────────────
-#  PHASE 3 — Advanced Obfuscation Detection
-# ───────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
 Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
@@ -805,8 +807,6 @@ Write-Host "  │  100% done                              " -ForegroundColor Dar
 foreach ($mod in $flagged) {
     if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
 }
-# Only promote clean mods to flagged if obfuscation is MODERATE or HEAVY
-# LIGHT obfuscation alone (e.g. just SourceFile stripping) is normal for many legit mods
 foreach ($jar in $jars) {
     if ($clean -contains $jar.Name) {
         $obf = $obfMap[$jar.Name]
@@ -857,9 +857,6 @@ foreach ($mod in $flagged) {
     if ($isBlatant) { $criticalThreats.Add($mod) } else { $suspiciousFiles.Add($mod) }
 }
 
-# ═══════════════════════════════════════════════════════════
-#  HELPER — fixed-width box printer
-# ═══════════════════════════════════════════════════════════
  $W = 72
 
 function Write-Border {
@@ -906,15 +903,28 @@ function Write-RowFull {
 #  REPORT BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
-Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
-Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██╒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██╒░██░▒▓╓▄ ▄██▒   ╒██    ╒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄╄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ╒██╒   ░██╒░ ████▓▒░░╒████▓     ▓█   ▓██╒▒██░   ▓██░ ▓█   ▓██╒░██████╒ ░ ██╒╓░▒███████╒░▒████╒░██╓ ▒██╒" -ForegroundColor Magenta
-Write-Host " ░ ▒░   ╒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒╓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒╓░" -ForegroundColor DarkGray
-Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
-Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
-Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
+Write-Host "██████   █████  ███              ██████   ██████              █████                                         " -ForegroundColor Magenta
+Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███                                          " -ForegroundColor Magenta
+Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████                                          " -ForegroundColor DarkMagenta
+Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███                                          " -ForegroundColor DarkMagenta
+Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
+Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
+Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████                                          " -ForegroundColor DarkMagenta
+Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░                                          " -ForegroundColor DarkMagenta
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                                                                                                              " -ForegroundColor DarkGray
+Write-Host "                              █████████                        ████                                           " -ForegroundColor Magenta
+Write-Host "                             ███░░░░░███                      ░░███                                           " -ForegroundColor Magenta
+Write-Host "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " -ForegroundColor DarkMagenta
+Write-Host "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" -ForegroundColor DarkMagenta
+Write-Host "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " -ForegroundColor Magenta
+Write-Host "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " -ForegroundColor Magenta
+Write-Host "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " -ForegroundColor DarkMagenta
+Write-Host "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " -ForegroundColor DarkMagenta
+Write-Host "                                                                      ███ ░███                                " -ForegroundColor DarkGray
+Write-Host "                                                                     ░░██████                                 " -ForegroundColor DarkGray
+Write-Host "                                                                      ░░░░░░                                  " -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "                                    [ SCAN RESULTS ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
