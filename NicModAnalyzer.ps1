@@ -1,18 +1,38 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# ═══════════════════════════════════════════════════════════
+#  AUTO-RESIZE CONSOLE (Fixes broken ASCII art)
+# ═══════════════════════════════════════════════════════════
+try {
+    $pshost = Get-Host
+    $rawUI = $pshost.UI.RawUI
+    $oldBufferSize = $rawUI.BufferSize
+    $newBufferSize = $oldBufferSize
+    $newBufferSize.Width = 120
+    $newBufferSize.Height = 3000
+    $rawUI.BufferSize = $newBufferSize
+    
+    $oldWindowSize = $rawUI.WindowSize
+    $newWindowSize = $oldWindowSize
+    $newWindowSize.Width = 120
+    $newWindowSize.Height = 30
+    $rawUI.WindowSize = $newWindowSize
+} catch {}
+
 Clear-Host
 
 # ═══════════════════════════════════════════════════════════
 #  BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "██████   █████  ███              ██████   ██████              █████                                         " -ForegroundColor Magenta
-Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███                                          " -ForegroundColor Magenta
-Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████                                          " -ForegroundColor DarkMagenta
-Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███                                          " -ForegroundColor DarkMagenta
-Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
-Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
-Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████                                          " -ForegroundColor DarkMagenta
-Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░                                          " -ForegroundColor DarkMagenta
+Write-Host "██████   █████  ███              ██████   ██████              █████" -ForegroundColor Magenta
+Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███" -ForegroundColor Magenta
+Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████" -ForegroundColor DarkMagenta
+Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███" -ForegroundColor DarkMagenta
+Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
+Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
+Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████" -ForegroundColor DarkMagenta
+Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░" -ForegroundColor DarkMagenta
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
@@ -113,47 +133,47 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     'AutoCrystal', 'autocrystal', 'auto crystal', 'cw crystal',
     'dontPlaceCrystal', 'dontBreakCrystal',
     'AutoHitCrystal', 'autohitcrystal', 'canPlaceCrystalServer', 'healPotSlot',
-    "ＡｕｔｏＣｒｙｽﾀ｡ﾞ", "Ａｕｔｏ Ｃｒｙｽﾀ｡ﾞ", "ＡｕｔｏＨｉﾄＣｒｙｽﾀ｡ﾞ",
+    "ＡｕﾄＣﾞｲｽﾀ｡ﾞ", "Ａｕﾄ Ｃﾞｲｽﾀ｡ﾞ", "ＡｕﾄＨｲﾄＣﾞｲｽﾀ｡ﾞ",
     "AutoAnchor", 'autoanchor', 'auto anchor', 'DoubleAnchor',
     "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
     "SafeAnchor", "AirAnchor",
-    "ＡｕｔｏＡｎｃｈｏﾞ", "Ａｕｔｏ Ａｎｃｈｏﾞ", "ＤｏｕｂｌｅＡｎｃｈｏﾞ", "Ｄｏｕｂｌｅ Ａｎｃｈｏﾞ",
-    "ＳａﾇｪＡＡｎｃｈｏﾞ", "Ｓａｆｅ Ａｎｃｈｏﾞ", "Ａｎｃｈｏｒ Ｍａｃｒｏ", "anchorMacro",
+    "ＡｕﾄＡｎｃﾞｮﾞ", "Ａｕﾄ Ａｎｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅＡｎｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅ Ａｎｃﾞｮﾞ",
+    "ＳａﾇｪＡＡｎｃﾞｮﾞ", "Ｓａｆｅ Ａｎｃﾞｮﾞ", "Ａｎｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
     "AutoTotem", "autototem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
-    "ＡｕｔｏＴｏｔｅｭ", "Ａｕｔｏ Ｔｏｔｅｍ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｅｍ", "Ｈｏｖｴｰﾘ oｴｪｪ",
-    "ＩｎｖｅｎｔｏﾞｙＴｏｔｅｍ", "Ａｕｔｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｍ", "Ａｕｔｏ Ｔｏｔｅｭ Ｈｉｴ",
+    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｪｭ", "Ｈｏｖｴｰﾘ oｴｪｪ",
+    "ＩｎｖｪﾝﾄｮﾞｙＴｏﾃｪｭ", "Ａｕﾄ Ｉｎｖｪﾝｵｮﾞｙ Ｔｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ Ｈｲｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
-    "ＡｕｔｏＰｏﾄ", "Ａｕｔｏ Ｐｏﾄ", "Ａｕｔｏ Ｐｏｔ Ｒｅﾌｲﾞ", "AutoPotRefill", "ＡｕｔｏＡｒｾﾞ", "Ａｕｔｏ Ａｒｮﾞ",
+    "ＡｕﾄＰｏﾄ", "Ａｕﾄ Ｐｏﾄ", "Ａｕﾄ Ｐｏﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
-    "ＳｈｉｅﾞｌﾄＤｉｓａｂﾞ", "Ｓｈｉｅﾙｄ Ｄｉｓａｂﾞ", "Breaking shield with axe...",
-    "AutoDoubleHand", "autodoublehand", "auto double hand", "ＡｕｔｏＤｏｕｂﾞﾞＨａｎｄ", "Ａｕｔｏ Ｄｏｕｂｌｅ Ｈａｎｄ",
-    "AutoClicker", "ＡｕｔｏＣｌｲｯｪｹｰｯ",
+    "Ｓﾞｲｪﾞﾄ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾙﾄ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
+    "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｏｕｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｏｕｂﾞﾞ Ｈ｡ﾝﾄ",
+    "AutoClicker", "ＡｕﾄＣｲｯｪｹｰｯ",
     "Failed to switch to mace after axe!", "AutoMace", "MaceSwap", "SpearSwap",
-    "ＡｕｔｏＭ｡ｃｅ", "Ｍ｡ｃｅＳｗ｡ﾇ", "Ｓﾟｅａｒ Ｓｗ｡ﾇ", "Ｓｔｕｎ Ｓｌａｍ", "StunSlam",
+    "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪａｒ Ｓｗ｡ﾇ", "Ｓﾄｭﾝ Ｓﾞ｡ｭ", "StunSlam",
     "Donut", "JumpReset", "axespam", "axe spam", "EndCrystalItemMixin",
     "findKnockbackSword", "attackRegisteredThisClick",
     "AimAssist", "aimassist", "aim assist", "triggerbot", "trigger bot",
-    "ＡｉｵＡｽｽﾞ", "Ａｉｕ Ａｽｽﾞ", "ＴｒｉｋｶﾞﾞﾞＢｏﾄ", "Ｔｒｉｋｶﾞﾞﾞ Ｂｯﾄ",
-    "Silent Rotations", "SilentRotations", "Ｓｉﾞｭﾝｔ ﾝｵﾀｴｵ｝",
+    "ＡｲｵＡｽｽﾞ", "Ａｲｕ Ａｽｽﾞ", "ＴﾞｲｶﾞﾞﾞＢｏﾄ", "Ｔﾞｲｶﾞﾞﾞ Ｂｯﾄ",
+    "Silent Rotations", "SilentRotations", "Ｓｲﾞｭﾝﾄ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
-    "Ｆ｡ｹＬａｶﾞ", "Ｆ｡ｋｅ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｅ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｴｽ",
+    "Ｆ｡ｹＬ｡ｶﾞ", "Ｆ｡ｋｪ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｪ Ｐｕﾝｳﾞﾞ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｕﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｉｴｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
-    "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
+    "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗ｡ﾞｷｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "NoJumpDelay",
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
-    "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｵｪｪﾞｽﾞ Ｐｌｱｴﾞｪｲ",
+    "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｵｪｪﾞｽﾞ Ｐﾞｱｴﾞｪｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽｿ｡ﾞ",
-    "LootYeeter", "Ｌｏｏｵ Ｙｅｅﾄｪﾞ",
-    "AutoBreach", "Ａｕｔｏ Ｂﾚｾａｃｯ",
+    "LootYeeter", "Ｌｏｏｵ Ｙｪｪﾄｪﾞ",
+    "AutoBreach", "Ａｕﾄ Ｂﾚｾ｡ｃｯ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
-    "Activate Key", "Ａｃﾞｲｲﾞａｅｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｯ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
-    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
+    "Activate Key", "Ａｃﾞｲｲﾞ｡ｴｪ Ｋｪｙ", "Click Simulation", "Ｃﾞｲｲｸｯ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
+    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕﾝｃｪｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "Macro Key", "Ｍ｡ｋｮｏ Ｋ｡ｙ",
     "fakeVersion", "spoofVersion",
@@ -845,7 +865,7 @@ foreach ($mod in $flagged) {
     $isBlatant = $false
     if ($mod.HitCount -ge 15) { $isBlatant = $true }
     foreach ($str in $mod.Strings) {
-        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿ﾀ|AutoCrystal|ＡｕｔｏＣｒｙｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｎｃｈｏﾞ") {
+        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿ﾀ|AutoCrystal|ＡｕﾄＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｏＡｎｃﾞｮﾞ") {
             $isBlatant = $true; break
         }
     }
@@ -903,14 +923,14 @@ function Write-RowFull {
 #  REPORT BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "██████   █████  ███              ██████   ██████              █████                                         " -ForegroundColor Magenta
-Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███                                          " -ForegroundColor Magenta
-Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████                                          " -ForegroundColor DarkMagenta
-Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███                                          " -ForegroundColor DarkMagenta
-Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
-Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███                                           " -ForegroundColor Magenta
-Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████                                          " -ForegroundColor DarkMagenta
-Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░                                          " -ForegroundColor DarkMagenta
+Write-Host "██████   █████  ███              ██████   ██████              █████" -ForegroundColor Magenta
+Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███" -ForegroundColor Magenta
+Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████" -ForegroundColor DarkMagenta
+Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███" -ForegroundColor DarkMagenta
+Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
+Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
+Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████" -ForegroundColor DarkMagenta
+Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░" -ForegroundColor DarkMagenta
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
 Write-Host "                                                                                                              " -ForegroundColor DarkGray
@@ -949,9 +969,6 @@ if ($mcStatus.Running) {
 }
 Write-Border 'bot' DarkGray
 
-# ═══════════════════════════════════════════════════════════
-#  JVM FINDINGS
-# ═══════════════════════════════════════════════════════════
 if ($jvmResults.Count -gt 0) {
     Write-Host ""
     Write-Border 'top' Red
@@ -986,9 +1003,6 @@ if ($jvmResults.Count -gt 0) {
     Write-Border 'bot' Red
 }
 
-# ═══════════════════════════════════════════════════════════
-#  CRITICAL THREATS
-# ═══════════════════════════════════════════════════════════
 if ($criticalThreats.Count -gt 0) {
     foreach ($mod in $criticalThreats) {
         Write-Host ""
@@ -1042,9 +1056,6 @@ if ($criticalThreats.Count -gt 0) {
     }
 }
 
-# ═══════════════════════════════════════════════════════════
-#  SUSPICIOUS FILES
-# ═══════════════════════════════════════════════════════════
 if ($suspiciousFiles.Count -gt 0) {
     foreach ($mod in $suspiciousFiles) {
         Write-Host ""
@@ -1097,9 +1108,6 @@ if ($suspiciousFiles.Count -gt 0) {
     }
 }
 
-# ═══════════════════════════════════════════════════════════
-#  CLEAN MODS
-# ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Border 'top' DarkGray
 Write-RowFull "  CLEAN MODS  ($($clean.Count))" Cyan DarkGray
@@ -1122,9 +1130,6 @@ if ($clean.Count -gt 0) {
 
 Write-Border 'bot' DarkGray
 
-# ═══════════════════════════════════════════════════════════
-#  FOOTER
-# ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
 Write-Host "  Scan complete. Thank you for using NicModAnalyzer!" -ForegroundColor Magenta
