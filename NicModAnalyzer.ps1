@@ -208,15 +208,15 @@ $cheatStrings = @(
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ",
     # ── Bypass / evasion signatures (merged from former Module 2) ─────────────
-    "setVersion", "fakeVersion", "spoofVersion", "clientVersion",
+    # Note: generic Fabric API terms (NetworkHandler, ClientConnection, sendPacket,
+    # PacketListener, setVersion, clientVersion, etc.) are intentionally omitted here
+    # to avoid false positives on legitimate mods — they are checked in Deep Scan only.
+    "fakeVersion", "spoofVersion",
     "brandOverride", "overrideBrand", "setBrand", "fakeClientBrand", "brandSpoof", "versionSpoof",
     "net.minecraft.client.ClientBrandRetriever",
     "ServerboundCustomPayloadPacket", "MC|Brand", "minecraft:brand",
     "cancelPacket", "dropPacket", "suppressPacket", "blockPacket",
     "spoofPacket", "injectPacket", "sendFakePacket", "sendSilentPacket",
-    "packetListener", "PacketListener", "onPacketSend", "onPacketReceive",
-    "PacketEvent", "PacketSendEvent", "PacketReceiveEvent",
-    "ClientConnection", "interceptPacket", "NetworkHandler", "sendPacket", "receivePacket",
     "bypassAC", "bypass_ac", "evadeAC", "evadeAnticheat",
     "isGrimAC", "isNoCheat", "isAAC", "isSpartanAC", "isIntave",
     "grimBypass", "ncpBypass", "aacBypass", "spartanBypass",
@@ -264,6 +264,11 @@ $deepCheatStrings = @(
     "-Xrunjdwp:", "agentlib:jdwp",
     "dev.gambleclient", "xyz.greaj", "org.chainlibs",
     "dev.krypton", "Dqrkis", "dqrkis", "lvstrng",
+    # ── Generic Fabric/MC networking terms (too common for standard scan) ───────
+    "setVersion", "clientVersion",
+    "NetworkHandler", "ClientConnection", "sendPacket", "receivePacket", "interceptPacket",
+    "packetListener", "PacketListener", "onPacketSend", "onPacketReceive",
+    "PacketEvent", "PacketSendEvent", "PacketReceiveEvent",
     # ── Reflection & mixin-based bypass (formerly Module 2) ──────────────────
     "getDeclaredMethod(", "setAccessible(true)",
     "MethodHandles.lookup",
