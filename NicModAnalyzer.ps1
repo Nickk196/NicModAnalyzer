@@ -22,21 +22,34 @@ function W($t, $c) {
 }
 
 [Console]::WriteLine("")
-W "▄   ▄█ ▄█▄        █▀▄▀█ ████▄ ██▄                     " ([System.ConsoleColor]::Magenta)
-W "    █  ██ █▀ ▀▄      █ █ █ █   █ █  █                    " ([System.ConsoleColor]::Magenta)
-W "██   █ ██ █   ▀      █ ▄ █ █   █ █   █                   " ([System.ConsoleColor]::DarkMagenta)
-W "█ █  █ ▐█ █▄  ▄▀     █   █ ▀████ █  █                    " ([System.ConsoleColor]::DarkMagenta)
-W "█  █ █  ▐ ▀███▀         █        ███▀                    " ([System.ConsoleColor]::Magenta)
-W "█   ██                 ▀                                 " ([System.ConsoleColor]::Magenta)
-W "                                                          " ([System.ConsoleColor]::DarkGray)
-W "                                                          " ([System.ConsoleColor]::DarkGray)
-W "    ██      ▄   ██   █    ▀▄    ▄ ▄▄▄▄▄▄   ▄███▄   █▄▄▄▄ " ([System.ConsoleColor]::Magenta)
-W "    █ █      █  █ █  █      █  █ ▀   ▄▄▀   █▀   ▀  █  ▄▀ " ([System.ConsoleColor]::Magenta)
-W "    █▄▄█ ██   █ █▄▄█ █       ▀█   ▄▀▀   ▄▀ ██▄▄    █▀▀▌  " ([System.ConsoleColor]::DarkMagenta)
-W "    █  █ █ █  █ █  █ ███▄    █    ▀▀▀▀▀▀   █▄   ▄▀ █  █  " ([System.ConsoleColor]::DarkMagenta)
-W "       █ █  █ █    █     ▀ ▄▀              ▀███▀     █    " ([System.ConsoleColor]::Magenta)
-W "      █  █   ██   █                                 ▀    " ([System.ConsoleColor]::Magenta)
-W "     ▀           ▀                                       " ([System.ConsoleColor]::DarkMagenta)
+W "█                                    █               " ([System.ConsoleColor]::Magenta)
+W " ██   █                      █▒  ▒█            █               " ([System.ConsoleColor]::Magenta)
+W " ██░  █                      ██  ██            █               " ([System.ConsoleColor]::Magenta)
+W " █▒▓  █ ███     ▓██▒         ██░░██  ███    ██▓█               " ([System.ConsoleColor]::DarkMagenta)
+W " █ █  █   █    ▓█  ▓         █▒▓▓▒█ █▓ ▓█  █▓ ▓█               " ([System.ConsoleColor]::Magenta)
+W " █ ▓▓ █   █    █░            █ ██ █ █   █  █   █               " ([System.ConsoleColor]::DarkMagenta)
+W " █  █ █   █    █             █ █▓ █ █   █  █   █               " ([System.ConsoleColor]::Magenta)
+W " █  ▓▒█   █    █░            █    █ █   █  █   █               " ([System.ConsoleColor]::DarkMagenta)
+W " █  ░██   █    ▓█  ▓         █    █ █▓ ▓█  █▓ ▓█               " ([System.ConsoleColor]::Magenta)
+W " █   ██ █████   ▓██▒         █    █  ███    ██▓█               " ([System.ConsoleColor]::DarkMagenta)
+W "                                                                    " ([System.ConsoleColor]::DarkGray)
+W "                                                                    " ([System.ConsoleColor]::DarkGray)
+W "                                                                    " ([System.ConsoleColor]::DarkGray)
+W "                                                                    " ([System.ConsoleColor]::DarkGray)
+W "                                                                    " ([System.ConsoleColor]::DarkGray)
+W "                              ███                               " ([System.ConsoleColor]::Magenta)
+W "           ██                   █                               " ([System.ConsoleColor]::Magenta)
+W "           ██                   █                               " ([System.ConsoleColor]::Magenta)
+W "          ▒██▒  █▒██▒  ░███░    █    █░  █  █████   ███    █▒██▒" ([System.ConsoleColor]::DarkMagenta)
+W "          ▓▒▒▓  █▓ ▒█  █▒ ▒█    █    ▓▒ ▒▓     ▒▓  ▓▓ ▒█   ██  █" ([System.ConsoleColor]::Magenta)
+W "          █░░█  █   █      █    █    ▒█ █▒    ░█   █   █   █    " ([System.ConsoleColor]::DarkMagenta)
+W "          █  █  █   █  ▒████    █     █ █     █    █████   █    " ([System.ConsoleColor]::Magenta)
+W "         ▒████▒ █   █  █▒  █    █     █▓▓    █░    █       █    " ([System.ConsoleColor]::DarkMagenta)
+W "         ▓▒  ▒▓ █   █  █░ ▓█    █░    ▓█▒   █▒     ▓▓  █   █    " ([System.ConsoleColor]::Magenta)
+W "         █░  ░█ █   █  ▒██▒█    ▒██   ▒█    █████   ███▒   █    " ([System.ConsoleColor]::DarkMagenta)
+W "                                      ▒█                        " ([System.ConsoleColor]::DarkGray)
+W "                                      █▒                        " ([System.ConsoleColor]::DarkGray)
+W "                                     ██" ([System.ConsoleColor]::DarkGray)
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ V4.4 — FULL SCAN ]")
@@ -151,7 +164,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "Silent Rotations", "SilentRotations", "Ｓｲﾞｭﾝﾄ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
     "Ｆ｡ｹＬ｡ｶﾞ", "Ｆ｡ｋｪ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｪ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｕﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｉｴｽ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｕﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｴｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗ｡ﾞｷｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "NoJumpDelay",
@@ -916,36 +929,61 @@ function Write-RowFull {
 # ═════════════════════════════════════════════════════════
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("▄   ▄█ ▄█▄        █▀▄▀█ ████▄ ██▄                     ")
+[Console]::WriteLine("█                                    █               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("    █  ██ █▀ ▀▄      █ █ █ █   █ █  █                    ")
+[Console]::WriteLine(" ██   █                      █▒  ▒█            █               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine(" ██░  █                      ██  ██            █               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("██   █ ██ █   ▀      █ ▄ █ █   █ █   █                   ")
+[Console]::WriteLine(" █▒▓  █ ███     ▓██▒         ██░░██  ███    ██▓█               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine(" █ █  █   █    ▓█  ▓         █▒▓▓▒█ █▓ ▓█  █▓ ▓█               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("█ █  █ ▐█ █▄  ▄▀     █   █ ▀████ █  █                    ")
+[Console]::WriteLine(" █ ▓▓ █   █    █░            █ ██ █ █   █  █   █               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("█  █ █  ▐ ▀███▀         █        ███▀                    ")
+[Console]::WriteLine(" █  █ █   █    █             █ █▓ █ █   █  █   █               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine(" █  ▓▒█   █    █░            █    █ █   █  █   █               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("█   ██                 ▀                                 ")
+[Console]::WriteLine(" █  ░██   █    ▓█  ▓         █    █ █▓ ▓█  █▓ ▓█               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine(" █   ██ █████   ▓██▒         █    █  ███    ██▓█               ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                          ")
+[Console]::WriteLine("                                                                    ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                          ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("    ██      ▄   ██   █    ▀▄    ▄ ▄▄▄▄▄▄   ▄███▄   █▄▄▄▄ ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("    █ █      █  █ █  █      █  █ ▀   ▄▄▀   █▀   ▀  █  ▄▀ ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("    █▄▄█ ██   █ █▄▄█ █       ▀█   ▄▀▀   ▄▀ ██▄▄    █▀▀▌  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("    █  █ █ █  █ █  █ ███▄    █    ▀▀▀▀▀▀   █▄   ▄▀ █  █  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("       █ █  █ █    █     ▀ ▄▀              ▀███▀     █    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("      █  █   ██   █                                 ▀    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("     ▀           ▀                                       ")
+[Console]::WriteLine("                                                                    ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                              ███                               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("           ██                   █                               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("           ██                   █                               ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("          ▒██▒  █▒██▒  ░███░    █    █░  █  █████   ███    █▒██▒")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("          ▓▒▒▓  █▓ ▒█  █▒ ▒█    █    ▓▒ ▒▓     ▒▓  ▓▓ ▒█   ██  █")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("          █░░█  █   █      █    █    ▒█ █▒    ░█   █   █   █    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("          █  █  █   █  ▒████    █     █ █     █    █████   █    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("         ▒████▒ █   █  █▒  █    █     █▓▓    █░    █       █    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("         ▓▒  ▒▓ █   █  █░ ▓█    █░    ▓█▒   █▒     ▓▓  █   █    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("         █░  ░█ █   █  ▒██▒█    ▒██   ▒█    █████   ███▒   █    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                      ▒█                        ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                      █▒                        ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                     ██")
 [Console]::WriteLine("")
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
