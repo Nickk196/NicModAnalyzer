@@ -8,14 +8,14 @@ Write-Host ""
 Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
 Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
 Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██╤▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
-Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄▄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██╒   ░██╒░ ████▓▒░░╒████▓     ▓█   ▓██╒▒██░   ▓██░ ▓█   ▓██╒░██████╒ ░ ██╒╓░▒███████╒░▒████▒░██╓ ▒██╒" -ForegroundColor Magenta
+Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒╓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
 Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ FULL SCAN ]" -ForegroundColor Magenta
+Write-Host "                                    [ V4.4 — FULL SCAN ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -35,7 +35,7 @@ if ([string]::IsNullOrWhiteSpace($modsPath)) {
 }
 if (-not (Test-Path $modsPath -PathType Container)) {
     Write-Host "❌ Invalid Path!" -ForegroundColor Red
-    Write-Host "The path does not exist or is not accessible." -ForegroundColor Yellow
+    Write-Host "The directory does not exist or is not accessible." -ForegroundColor Yellow
     Write-Host
     Write-Host "Tried to access: $modsPath" -ForegroundColor Gray
     Write-Host
@@ -139,12 +139,12 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
-    "Activate Key", "Ａｃﾞｲｲﾞａｅｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｋ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
+    "Activate Key", "Ａｃﾞｲｲﾞａｅｅ Ｋｅｙ", "Click Simulation", "Ｃﾞｲｲｸｯ Ｓｲﾑﾑｳﾞ｡ｯｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
     "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "Macro Key", "Ｍ｡ｋｮｏ Ｋ｡ｙ",
     "fakeVersion", "spoofVersion",
-    "brandOverride", "overrideBrand", "setBrand", "fakeClientBrand", "brandSpoof", "versionSpoof",
+    "brandOverride", "overrideBrand", "fakeClientBrand", "brandSpoof", "versionSpoof",
     "net.minecraft.client.ClientBrandRetriever",
     "ServerboundCustomPayloadPacket", "MC|Brand", "minecraft:brand",
     "cancelPacket", "dropPacket", "suppressPacket", "blockPacket",
@@ -155,7 +155,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "checkAnticheat", "detectAnticheat", "getAnticheat",
     "GrimBypass", "NCPBypass", "AACBypass", "IntaveBypass",
     "setTimerSpeed", "timerSpeed", "Timer.timerSpeed",
-    "tickRate", "setTickRate", "overrideTickRate", "fakeTickCount", "tickBoost",
+    "setTickRate", "overrideTickRate", "fakeTickCount", "tickBoost",
     "hitboxExpand", "expandHitbox",
     "suppressKnockback", "cancelKnockback", "noKnockback",
     "setVelocity(0", "zeroVelocity", "ignoreKnockback",
@@ -418,15 +418,15 @@ function Test-JvmIntegrity {
                 @{ R = '-Dfabric\.mixin\.configs=';                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
                 @{ R = '-Dfabric\.mixin\.debug\.export=';             T = "FABRIC_MIXIN_DEBUG";       S = "LOW";    D = "Exports Mixin debug data — unusual in production" },
                 @{ R = '-Dfabric\.mixin\.debug\.verbose=';            T = "FABRIC_MIXIN_VERBOSE";     S = "LOW";    D = "Verbose Mixin debugging — unusual in production" },
-                @{ R = '-Dfabric\.forceVersion=';                      T = "FABRIC_FORCE_VERSION";     S = "LOW";    D = "Forces Fabric game version — can be used for version spoofing" },
+                @{ R = '-Dfabric\.forceVersion=';                      T = "FABRIC_FORCE_VERSION";     S = "LOW";    D = "Forces Fabric game version" },
                 @{ R = '-Dfabric\.autoDetectVersion=';                T = "FABRIC_AUTODETECT_VER";    S = "LOW";    D = "Overrides auto version detection" },
                 @{ R = '-Dfabric\.customModList=';                     T = "FABRIC_CUSTOM_MODLIST";    S = "MEDIUM"; D = "Loads mods from a custom list file — bypasses normal discovery" },
                 @{ R = '-Dfabric\.resolve\.modFiles=';                 T = "FABRIC_RESOLVE_MODFILES";  S = "MEDIUM"; D = "Overrides mod file resolution" },
                 @{ R = '-Dfabric\.skipDependencyResolution=';         T = "FABRIC_SKIP_DEPS";         S = "MEDIUM"; D = "Skips dependency resolution — can load incomplete mods" },
                 @{ R = '-Dfabric\.loader\.entrypoints=';               T = "FABRIC_ENTRYPOINTS";       S = "MEDIUM"; D = "Overrides loader entrypoints — can inject custom code" },
                 @{ R = '-Dfabric\.language\.providers=';               T = "FABRIC_LANG_PROVIDERS";    S = "MEDIUM"; D = "Overrides language providers — can load non-standard code" },
-                @{ R = '-Dfabric\.development=';                       T = "FABRIC_DEV_MODE";          S = "LOW";    D = "Fabric development mode active — should not be in production" },
-                @{ R = '-Dfabric\.debug\.dumpClasspath=';             T = "FABRIC_DUMP_CLASSPATH";    S = "LOW";    D = "Dumps classpath for debugging — unusual in production" },
+                @{ R = '-Dfabric\.development=';                       T = "FABRIC_DEV_MODE";          S = "LOW";    D = "Fabric development mode active" },
+                @{ R = '-Dfabric\.debug\.dumpClasspath=';             T = "FABRIC_DUMP_CLASSPATH";    S = "LOW";    D = "Dumps classpath for debugging" },
                 @{ R = '-Dfabric\.gameJarPath=';                       T = "FABRIC_GAME_JAR_PATH";     S = "LOW";    D = "Custom game JAR path specified" },
                 @{ R = '-Dfabric\.mods\.toml\.path=';                  T = "FABRIC_MODS_TOML";        S = "MEDIUM"; D = "External mods.toml path — can inject mod metadata" },
                 @{ R = '-Dfabric\.configDir=';                         T = "FABRIC_CONFIG_DIR";        S = "INFO";   D = "Custom config directory set" },
@@ -449,7 +449,7 @@ function Test-JvmIntegrity {
                 @{ R = '-Dfml\.customModList=';                        T = "FORGE_CUSTOM_MODLIST";     S = "MEDIUM"; D = "Loads mods from custom list — bypasses normal discovery" },
                 @{ R = '-Dforge\.disableModScan=';                     T = "FORGE_DISABLE_MODSCAN";    S = "HIGH";   D = "Disables mod scanning — can hide injected mods" },
                 @{ R = '-Dforge\.modList=';                            T = "FORGE_MODLIST";            S = "MEDIUM"; D = "Overrides mod list directly" },
-                @{ R = '-Dforge\.forceVersion=';                       T = "FORGE_FORCE_VERSION";      S = "LOW";    D = "Forces Forge version — version spoofing potential" },
+                @{ R = '-Dforge\.forceVersion=';                       T = "FORGE_FORCE_VERSION";      S = "LOW";    D = "Forces Forge version" },
                 @{ R = '-Dforge\.disableUpdateCheck=';                 T = "FORGE_NO_UPDATE_CHECK";    S = "LOW";    D = "Disables Forge update check" },
                 @{ R = '-Dforge\.mixin\.hotSwap=';                     T = "FORGE_MIXIN_HOTSWAP";      S = "HIGH";   D = "Enables Mixin hot-swap — runtime code modification" },
                 @{ R = '-Dforge\.logging\.mojang\.level=';             T = "FORGE_LOG_LEVEL";          S = "INFO";   D = "Custom Forge log level" },
@@ -679,7 +679,7 @@ catch {
 
 if ($jars.Count -eq 0) {
     Write-Host "  No JAR files found." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.RunWith("NoEcho,IncludeKeyDown")
     exit 0
 }
 
@@ -805,10 +805,12 @@ Write-Host "  │  100% done                              " -ForegroundColor Dar
 foreach ($mod in $flagged) {
     if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
 }
+# Only promote clean mods to flagged if obfuscation is MODERATE or HEAVY
+# LIGHT obfuscation alone (e.g. just SourceFile stripping) is normal for many legit mods
 foreach ($jar in $jars) {
     if ($clean -contains $jar.Name) {
         $obf = $obfMap[$jar.Name]
-        if ($obf -and $obf.ObfLevel -ne "None") {
+        if ($obf -and ($obf.ObfLevel -eq "MODERATE" -or $obf.ObfLevel -eq "HEAVY")) {
             $clean.Remove($jar.Name) | Out-Null
             $flagged.Add([PSCustomObject]@{
                 Name      = $jar.Name
@@ -906,10 +908,10 @@ function Write-RowFull {
 Write-Host ""
 Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
 Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
-Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██▒░██░▒▓╓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄▄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██▒   ░██╒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████╒ ░ ██▒╓░▒███████▒░▒████▒░██╓ ▒██╒" -ForegroundColor Magenta
-Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
+Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██╒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
+Write-Host " ▓██▒  ▐▌██╒░██░▒▓╓▄ ▄██▒   ╒██    ╒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄╄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ╒██╒   ░██╒░ ████▓▒░░╒████▓     ▓█   ▓██╒▒██░   ▓██░ ▓█   ▓██╒░██████╒ ░ ██╒╓░▒███████╒░▒████╒░██╓ ▒██╒" -ForegroundColor Magenta
+Write-Host " ░ ▒░   ╒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒╓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒╓░" -ForegroundColor DarkGray
 Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
