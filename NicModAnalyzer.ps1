@@ -38,7 +38,7 @@ W "                                                                        " ([S
 W "                                                                        " ([System.ConsoleColor]::DarkGray)
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                                    [ V4.4 — FULL SCAN ]")
+[Console]::WriteLine("                                    [ — FULL SCAN ]")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
 [Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────")
 [Console]::WriteLine("")
