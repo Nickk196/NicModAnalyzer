@@ -43,6 +43,9 @@ W "                                                                        " ([S
 [Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────")
 [Console]::WriteLine("")
 
+Write-Host "  For any errors, contact me on Discord" -ForegroundColor DarkMagenta
+Write-Host ""
+
 # ═══════════════════════════════════════════════════════════
 #  PATH INPUT
 # ═══════════════════════════════════════════════════════════
@@ -149,7 +152,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "ＡｲｵＡｽｽﾞ", "Ａｲｳ Ａｽｽﾞ", "ＴﾞｲｶﾞﾞﾞＢｵﾄ", "Ｔﾞｲｶﾞﾞﾞ Ｂｯﾄ",
     "Silent Rotations", "SilentRotations", "Ｓｲﾞｭﾝﾄ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
-    "Ｆ｡ｹＬ｡ｶﾞ", "Ｆ｡ｋｪ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｪ Ｐｕﾝｳﾞﾞ",
+    "Ｆ｡ｹＬ｡ｶﾞ", "Ｆ｡ｋｪ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｪ Ｐｵﾝｳﾞﾞ",
     "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｵﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｴｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗ｡ﾞｷｽｹ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
@@ -761,7 +764,7 @@ Write-Host "  │" -ForegroundColor DarkMagenta
 foreach ($jar in $jars) {
     $i++
     $pct = [math]::Floor(($i / $total) * 100)
-    $padName = $jar.Name.PadRight(40).Substring(0, 40)
+    $padName = $jar.Name.PadRight(40).Substring(0, [math]::Min(40, $jar.Name.Length))
     [Console]::Write("  │  $pct% $padName`r")
     $sig = Get-ModSignature -Path $jar.FullName -ScanStrings $true -ScanDeep $true
 
@@ -801,7 +804,7 @@ Write-Host "  │" -ForegroundColor DarkMagenta
 foreach ($jar in $jars) {
     $oi++
     $pct = [math]::Floor(($oi / $total) * 100)
-    $padName = $jar.Name.PadRight(40).Substring(0, 40)
+    $padName = $jar.Name.PadRight(40).Substring(0, [math]::Min(40, $jar.Name.Length))
     [Console]::Write("  │  $pct% $padName`r")
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
@@ -886,7 +889,6 @@ function Write-Row {
     $available = $W - $Label.Length
     if ($available -lt 4) {
         $truncLabel = $Label.Substring(0, [math]::Max(0, $W - 4))
-        $Value = ""
         $pad = $W - $truncLabel.Length
         Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
         Write-Host $truncLabel -ForegroundColor $LabelColor -NoNewline
@@ -1135,7 +1137,7 @@ if ($clean.Count -gt 0) {
     $col = 0
     $lineBuffer = ""
     foreach ($c in ($clean | Sort-Object)) {
-        $display = if ($c.Length -gt $colWidth - 1) { $c.Substring(0, $colWidth - 2) + "…" } else { $c }
+        $display = if ($c.Length -gt $colWidth - 1) { $c.Substring(0, [math]::Max(0, $colWidth - 2)) + "…" } else { $c }
         $padded = $display.PadRight($colWidth)
         $lineBuffer += $padded
         $col++
@@ -1152,45 +1154,17 @@ if ($clean.Count -gt 0) {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  VERDICT FOOTER
+#  FOOTER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Border 'top' DarkGray
- $verdictText  = ""
- $verdictColor = [System.ConsoleColor]::Cyan
-
-if ($criticalThreats.Count -gt 0) {
-    $verdictText  = "  VERDICT  ·  $($criticalThreats.Count) CRITICAL THREAT(S) FOUND — REMOVE IMMEDIATELY"
-    $verdictColor = [System.ConsoleColor]::Red
-} elseif ($suspiciousFiles.Count -gt 0) {
-    $verdictText  = "  VERDICT  ·  $($suspiciousFiles.Count) suspicious file(s) — MANUAL REVIEW RECOMMENDED"
-    $verdictColor = [System.ConsoleColor]::Yellow
-} elseif ($jvmResults.Count -gt 0) {
-    $highJVM = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" })
-    if ($highJVM.Count -gt 0) {
-        $verdictText  = "  VERDICT  ·  JVM anomalies detected — INVESTIGATE LAUNCH CONFIGURATION"
-        $verdictColor = [System.ConsoleColor]::Yellow
-    } else {
-        $verdictText  = "  VERDICT  ·  Minor JVM flags only — LIKELY CLEAN"
-        $verdictColor = [System.ConsoleColor]::Cyan
-    }
-} else {
-    $verdictText  = "  VERDICT  ·  ALL CLEAN — NO THREATS DETECTED"
-    $verdictColor = [System.ConsoleColor]::Cyan
-}
-
-Write-RowFull $verdictText $verdictColor $verdictColor
-Write-Border 'sep' DarkGray
-
- $summaryParts = @()
-if ($criticalThreats.Count -gt 0) { $summaryParts += "$($criticalThreats.Count) critical" }
-if ($suspiciousFiles.Count -gt 0) { $summaryParts += "$($suspiciousFiles.Count) suspicious" }
-if ($jvmResults.Count -gt 0)      { $summaryParts += "$($jvmResults.Count) JVM issue(s)" }
-if ($obfHeavy -gt 0)               { $summaryParts += "$obfHeavy heavily obfuscated" }
-if ($clean.Count -gt 0)            { $summaryParts += "$($clean.Count) clean" }
-
- $summaryLine = if ($summaryParts.Count -gt 0) { ($summaryParts -join "  ·  ") } else { "no findings" }
-Write-RowFull "  $summaryLine" DarkGray DarkGray
+Write-Border 'blank' DarkGray
+Write-RowFull "  Scan Complete. Thank you for using NicModAnalyzer" Magenta DarkGray
+Write-Border 'blank' DarkGray
+Write-RowFull "  Credits to MeowModAnalyzer" DarkMagenta DarkGray
+Write-Border 'blank' DarkGray
+Write-RowFull "  Special thanks to Tonynoh for helping me" DarkMagenta DarkGray
+Write-Border 'blank' DarkGray
 Write-Border 'bot' DarkGray
 
 Write-Host ""
