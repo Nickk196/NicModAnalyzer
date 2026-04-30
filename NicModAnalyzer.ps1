@@ -22,34 +22,20 @@ function W($t, $c) {
 }
 
 [Console]::WriteLine("")
-W "█                                    █               " ([System.ConsoleColor]::Magenta)
-W " ██   █                      █▒  ▒█            █               " ([System.ConsoleColor]::Magenta)
-W " ██░  █                      ██  ██            █               " ([System.ConsoleColor]::Magenta)
-W " █▒▓  █ ███     ▓██▒         ██░░██  ███    ██▓█               " ([System.ConsoleColor]::DarkMagenta)
-W " █ █  █   █    ▓█  ▓         █▒▓▓▒█ █▓ ▓█  █▓ ▓█               " ([System.ConsoleColor]::Magenta)
-W " █ ▓▓ █   █    █░            █ ██ █ █   █  █   █               " ([System.ConsoleColor]::DarkMagenta)
-W " █  █ █   █    █             █ █▓ █ █   █  █   █               " ([System.ConsoleColor]::Magenta)
-W " █  ▓▒█   █    █░            █    █ █   █  █   █               " ([System.ConsoleColor]::DarkMagenta)
-W " █  ░██   █    ▓█  ▓         █    █ █▓ ▓█  █▓ ▓█               " ([System.ConsoleColor]::Magenta)
-W " █   ██ █████   ▓██▒         █    █  ███    ██▓█               " ([System.ConsoleColor]::DarkMagenta)
-W "                                                                    " ([System.ConsoleColor]::DarkGray)
-W "                                                                    " ([System.ConsoleColor]::DarkGray)
-W "                                                                    " ([System.ConsoleColor]::DarkGray)
-W "                                                                    " ([System.ConsoleColor]::DarkGray)
-W "                                                                    " ([System.ConsoleColor]::DarkGray)
-W "                              ███                               " ([System.ConsoleColor]::Magenta)
-W "           ██                   █                               " ([System.ConsoleColor]::Magenta)
-W "           ██                   █                               " ([System.ConsoleColor]::Magenta)
-W "          ▒██▒  █▒██▒  ░███░    █    █░  █  █████   ███    █▒██▒" ([System.ConsoleColor]::DarkMagenta)
-W "          ▓▒▒▓  █▓ ▒█  █▒ ▒█    █    ▓▒ ▒▓     ▒▓  ▓▓ ▒█   ██  █" ([System.ConsoleColor]::Magenta)
-W "          █░░█  █   █      █    █    ▒█ █▒    ░█   █   █   █    " ([System.ConsoleColor]::DarkMagenta)
-W "          █  █  █   █  ▒████    █     █ █     █    █████   █    " ([System.ConsoleColor]::Magenta)
-W "         ▒████▒ █   █  █▒  █    █     █▓▓    █░    █       █    " ([System.ConsoleColor]::DarkMagenta)
-W "         ▓▒  ▒▓ █   █  █░ ▓█    █░    ▓█▒   █▒     ▓▓  █   █    " ([System.ConsoleColor]::Magenta)
-W "         █░  ░█ █   █  ▒██▒█    ▒██   ▒█    █████   ███▒   █    " ([System.ConsoleColor]::DarkMagenta)
-W "                                      ▒█                        " ([System.ConsoleColor]::DarkGray)
-W "                                      █▒                        " ([System.ConsoleColor]::DarkGray)
-W "                                     ██" ([System.ConsoleColor]::DarkGray)
+W "███    ██ ██  ██████     ███    ███  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
+W "████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   " ([System.ConsoleColor]::Magenta)
+W "██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
+W "██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
+W "██   ████ ██  ██████     ██      ██  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  " ([System.ConsoleColor]::Magenta)
+W "    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ " ([System.ConsoleColor]::DarkMagenta)
+W "    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  " ([System.ConsoleColor]::DarkMagenta)
+W "    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ " ([System.ConsoleColor]::Magenta)
+W "    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ " ([System.ConsoleColor]::DarkMagenta)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ V4.4 — FULL SCAN ]")
@@ -146,41 +132,41 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "ＳａﾇｪＡＡｮｃﾞｮﾞ", "Ｓａｆｅ Ａｮｃﾞｮﾞ", "Ａｮｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
     "AutoTotem", "autotemem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
-    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｭ", "Ｈｏｖｴｰﾘｙ oｴｪｪ",
-    "ＩｎｖﾝﾄﾝｮﾞｙＴｏﾃｪｭ", "Ａｕﾄ Ｉｎｖﾝｵｏﾘｙ Ｔｏﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｏｘｙ", "Ａｕﾄ Ｔｏﾃｪｭ Ｈｲｴ",
+    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｶﾞﾘ Ｔｵﾃｪｭ", "Ｈｏｶﾞｰﾘｙ oｴｪｪ",
+    "ＩｎｶﾝﾄﾝｮﾞｙＴｵﾃｪｭ", "Ａｕﾄ Ｉｎｶﾝｵｵﾘｙ Ｔｵﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｵｽｹ", "Ａｕﾄ Ｔｵﾃｪｭ Ｈｲｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
-    "ＡｕﾄＰｏﾄ", "Ａｕﾄ Ｐｏﾄ", "Ａｕﾄ Ｐｏﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
+    "ＡｕﾄＰｵﾄ", "Ａｕﾄ Ｐｵﾄ", "Ａｕﾄ Ｐｵﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
     "Ｓﾞｲｪﾞﾄ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾙﾄ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
-    "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｏｕｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｏｕｂﾞﾞ Ｈ｡ﾝﾄ",
+    "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｵｳｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｵｳｂﾞﾞ Ｈ｡ﾝﾄ",
     "AutoClicker", "ＡｕﾄＣｲｯｪｹｹｰｯ",
     "Failed to switch to mace after axe!", "AutoMace", "MaceSwap", "SpearSwap",
-    "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪａｒ Ｓｗ｡ﾇ", "Ｓﾄｰﾝ Ｓﾞ｡ｭ", "StunSlam",
+    "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪｱｒ Ｓｗ｡ﾇ", "Ｓﾄｰﾝ Ｓﾞ｡ｭ", "StunSlam",
     "Donut", "JumpReset", "axespam", "axe spam", "EndCrystalItemMixin",
     "findKnockbackSword", "attackRegisteredThisClick",
     "AimAssist", "aimassist", "aim assist", "triggerbot", "trigger bot",
-    "ＡｲｵＡｽｽﾞ", "Ａｲｕ Ａｽｽﾞ", "ＴﾞｲｶﾞﾞﾞＢｏﾄ", "Ｔﾞｲｶﾞﾞﾞ Ｂｯﾄ",
+    "ＡｲｵＡｽｽﾞ", "Ａｲｳ Ａｽｽﾞ", "ＴﾞｲｶﾞﾞﾞＢｵﾄ", "Ｔﾞｲｶﾞﾞﾞ Ｂｯﾄ",
     "Silent Rotations", "SilentRotations", "Ｓｲﾞｭﾝﾄ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
     "Ｆ｡ｹＬ｡ｶﾞ", "Ｆ｡ｋｪ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｪ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｕﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｴｽ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａﾝﾄｲ Ｗｪｂ", "ＡｵﾄＷｪｂ", "Ｐﾞ｡ｾｪｽ Ｗｪｂｽ Ｏﾝ Ｅﾇｭｲｴｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
-    "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗ｡ﾞｷｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
+    "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗ｡ﾞｷｽｹ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "NoJumpDelay",
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
     "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｵｪｪﾞｽﾞ Ｐﾞｱｴﾞｪｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽﾌ｡ﾞ",
-    "LootYeeter", "Ｌｏｏｵ Ｙｪｪﾄﾞﾞ",
+    "LootYeeter", "Ｌｵｵｵ Ｙｪｪﾄﾞﾞ",
     "AutoBreach", "Ａｕﾄ Ｂﾚｾ｡ｃﾞ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem", "arrayOfString", "POT_CHEATS", "Dqrkis Client", "Entity.isGlowing",
-    "Activate Key", "Ａｃﾞｲｲﾞｲﾞ｡ｴｪ Ｋｪｙ", "Click Simulation", "Ｃﾞｲｲｯ Ｓｲﾑﾑﾑｳﾞ｡ﾞｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
-    "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕﾝｃｪｵｼｴ",
+    "Activate Key", "Ａｃﾞｲｲﾞｲﾞ｡ｴｪ Ｋｪｹ", "Click Simulation", "Ｃﾞｲｲｯ Ｓｲﾑﾑﾑｳﾞ｡ﾞｉｮ", "On RMB", "Ｏｎ ＲＭＢ",
+    "No Count Glitch", "Ｎｵ Ｃｵｳﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｵ Ｂｵｕﾞｼｴ", "ＮｵＢｵｕﾝｃｪｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "Macro Key", "Ｍ｡ｋｮｏ Ｋ｡ｙ",
+    "Macro Key", "Ｍ｡ｋｮｵ Ｋ｡ｹ",
     "fakeVersion", "spoofVersion",
     "brandOverride", "overrideBrand", "fakeClientBrand", "brandSpoof", "versionSpoof",
     "net.minecraft.client.ClientBrandRetriever",
@@ -929,62 +915,33 @@ function Write-RowFull {
 # ═════════════════════════════════════════════════════════
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("█                                    █               ")
+[Console]::WriteLine("███    ██ ██  ██████     ███    ███  ██████  ██████                    ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" ██   █                      █▒  ▒█            █               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" ██░  █                      ██  ██            █               ")
+[Console]::WriteLine("████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine(" █▒▓  █ ███     ▓██▒         ██░░██  ███    ██▓█               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" █ █  █   █    ▓█  ▓         █▒▓▓▒█ █▓ ▓█  █▓ ▓█               ")
+[Console]::WriteLine("██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine(" █ ▓▓ █   █    █░            █ ██ █ █   █  █   █               ")
+[Console]::WriteLine("██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" █  █ █   █    █             █ █▓ █ █   █  █   █               ")
+[Console]::WriteLine("██   ████ ██  ██████     ██      ██  ██████  ██████                    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                        ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                        ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine(" █  ▓▒█   █    █░            █    █ █   █  █   █               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine(" █  ░██   █    ▓█  ▓         █    █ █▓ ▓█  █▓ ▓█               ")
+[Console]::WriteLine("    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine(" █   ██ █████   ▓██▒         █    █  ███    ██▓█               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                    ")
+[Console]::WriteLine("    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  ")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                              ███                               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("           ██                   █                               ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("           ██                   █                               ")
+[Console]::WriteLine("    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("          ▒██▒  █▒██▒  ░███░    █    █░  █  █████   ███    █▒██▒")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("          ▓▒▒▓  █▓ ▒█  █▒ ▒█    █    ▓▒ ▒▓     ▒▓  ▓▓ ▒█   ██  █")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("          █░░█  █   █      █    █    ▒█ █▒    ░█   █   █   █    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("          █  █  █   █  ▒████    █     █ █     █    █████   █    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("         ▒████▒ █   █  █▒  █    █     █▓▓    █░    █       █    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("         ▓▒  ▒▓ █   █  █░ ▓█    █░    ▓█▒   █▒     ▓▓  █   █    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("         █░  ░█ █   █  ▒██▒█    ▒██   ▒█    █████   ███▒   █    ")
+[Console]::WriteLine("    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                      ▒█                        ")
+[Console]::WriteLine("                                                                        ")
 [Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                      █▒                        ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                     ██")
-[Console]::WriteLine("")
+[Console]::WriteLine("                                                                        ")
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ SCAN RESULTS ]")
@@ -1046,146 +1003,4 @@ if ($jvmResults.Count -gt 0) {
 }
 
 if ($criticalThreats.Count -gt 0) {
-    foreach ($mod in $criticalThreats) {
-        Write-Host ""
-        Write-Border 'top' Red
-        Write-RowFull "  CHEAT DETECTED" Red Red
-        Write-Border 'sep' Red
-        Write-Row "  File     : " $mod.Name                        DarkGray Yellow Red
-        Write-Row "  Size     : " "$($mod.Size) KB"                DarkGray Gray   Red
-        Write-Row "  Hits     : " "$($mod.HitCount)"               DarkGray White  Red
-
-        if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Red
-        }
-
-        $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
-        if ($allHits.Count -gt 0) {
-            Write-Border 'sep' Red
-            Write-RowFull "  Cheat Signatures" DarkGray Red
-            foreach ($h in ($allHits | Select-Object -First 5)) {
-                Write-Row "    · " $h DarkGray Red Red
-            }
-            if ($allHits.Count -gt 5) { Write-RowFull "    + $($allHits.Count - 5) more matches" DarkGray Red }
-        }
-
-        if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
-            Write-Border 'sep' Red
-            Write-RowFull "  Deep Scan Hits" DarkGray Red
-            foreach ($d in ($mod.DeepHits | Select-Object -First 4)) {
-                Write-Row "    · " $d DarkGray DarkGray Red
-            }
-        }
-
-        if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
-            Write-Border 'sep' Red
-            Write-RowFull "  High Entropy Classes" DarkGray Red
-            foreach ($e in $mod.Entropy) {
-                Write-Row "    · " $e DarkGray DarkGray Red
-            }
-        }
-
-        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
-            Write-Border 'sep' Red
-            $obfColor = switch ($mod.ObfResult.ObfLevel) { 
-                "HEAVY"   { [System.ConsoleColor]::Red } 
-                "MODERATE" { [System.ConsoleColor]::Yellow } 
-                default   { [System.ConsoleColor]::DarkGray } 
-            }
-            Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Red
-            foreach ($ind in $mod.ObfResult.Indicators) {
-                Write-Row "    · " $ind DarkGray DarkGray Red
-            }
-        }
-
-        Write-Border 'bot' Red
-    }
-}
-
-if ($suspiciousFiles.Count -gt 0) {
-    foreach ($mod in $suspiciousFiles) {
-        Write-Host ""
-        Write-Border 'top' Yellow
-        Write-RowFull "  SUSPICIOUS — manual decompile recommended" Yellow Yellow
-        Write-Border 'sep' Yellow
-        Write-Row "  File     : " $mod.Name                        DarkGray White  Yellow
-        Write-Row "  Size     : " "$($mod.Size) KB"                DarkGray Gray   Yellow
-        Write-Row "  Hits     : " "$($mod.HitCount)"               DarkGray White  Yellow
-
-        if ($mod.Sources -and $mod.Sources.Count -gt 0) {
-            Write-Row "  Source   : " $mod.Sources[0]              DarkGray DarkGray Yellow
-        }
-
-        $allHits = @($mod.Strings) + @($mod.Fullwidth) | Where-Object { $_ }
-        if ($allHits.Count -gt 0) {
-            Write-Border 'sep' Yellow
-            Write-RowFull "  Cheat Signatures" DarkGray Yellow
-            foreach ($h in ($allHits | Select-Object -First 4)) {
-                Write-Row "    · " $h DarkGray Yellow Yellow
-            }
-        }
-
-        if ($mod.DeepHits -and $mod.DeepHits.Count -gt 0) {
-            Write-Border 'sep' Yellow
-            Write-RowFull "  Deep Scan Hits" DarkGray Yellow
-            foreach ($d in ($mod.DeepHits | Select-Object -First 3)) {
-                Write-Row "    · " $d DarkGray DarkGray Yellow
-            }
-        }
-
-        if ($mod.Entropy -and $mod.Entropy.Count -gt 0) {
-            Write-Border 'sep' Yellow
-            Write-RowFull "  High Entropy Classes" DarkGray Yellow
-            foreach ($e in $mod.Entropy) {
-                Write-Row "    · " $e DarkGray DarkGray Yellow
-            }
-        }
-
-        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
-            Write-Border 'sep' Yellow
-            $obfColor = switch ($mod.ObfResult.ObfLevel) { 
-                "HEAVY"   { [System.ConsoleColor]::Red } 
-                "MODERATE" { [System.ConsoleColor]::Yellow } 
-                default   { [System.ConsoleColor]::DarkGray } 
-            }
-            Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Yellow
-            foreach ($ind in $mod.ObfResult.Indicators) {
-                Write-Row "    · " $ind DarkGray DarkGray Yellow
-            }
-        }
-
-        Write-Border 'bot' Yellow
-    }
-}
-
-Write-Host ""
-Write-Border 'top' DarkGray
-Write-RowFull "  CLEAN MODS  ($($clean.Count))" Cyan DarkGray
-Write-Border 'sep' DarkGray
-
-if ($clean.Count -gt 0) {
-    $colCount = 2
-    $rows = [math]::Ceiling($clean.Count / $colCount)
-    for ($r = 0; $r -lt $rows; $r++) {
-        $left  = $clean[$r]
-        $right = if (($r + $rows) -lt $clean.Count) { $clean[$r + $rows] } else { "" }
-        if ($left.Length  -gt 33) { $left  = $left.Substring(0,30)  + "..." }
-        if ($right.Length -gt 33) { $right = $right.Substring(0,30) + "..." }
-        $cell  = ("  " + $left.PadRight(35) + $right).PadRight($W)
-        Write-RowFull $cell DarkGray DarkGray
-    }
-} else {
-    Write-RowFull "  (none)" DarkGray DarkGray
-}
-
-Write-Border 'bot' DarkGray
-
-Write-Host ""
-Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
-Write-Host "  Scan complete. Thank you for using NicModAnalyzer!" -ForegroundColor Magenta
-Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
-Write-Host "  Special thanks to Tonynoh   ·   Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
-Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
-Write-Host ""
-Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
- $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    foreach ($
