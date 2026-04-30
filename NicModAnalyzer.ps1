@@ -8,14 +8,14 @@ Write-Host ""
 Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
 Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
 Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██╤▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
 Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
 Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ V4.4 — FULL SCAN ]" -ForegroundColor Magenta
+Write-Host "                                    [ FULL SCAN ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -35,7 +35,7 @@ if ([string]::IsNullOrWhiteSpace($modsPath)) {
 }
 if (-not (Test-Path $modsPath -PathType Container)) {
     Write-Host "❌ Invalid Path!" -ForegroundColor Red
-    Write-Host "The directory does not exist or is not accessible." -ForegroundColor Yellow
+    Write-Host "The path does not exist or is not accessible." -ForegroundColor Yellow
     Write-Host
     Write-Host "Tried to access: $modsPath" -ForegroundColor Gray
     Write-Host
@@ -112,7 +112,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "ＩｎｖｅｎｔｏﾞｙＴｏｔｅｍ", "Ａｕｔｏ Ｉｎｖｅﾝｵｏｒｙ Ｔｏｔｅｍ", "Ａｕｔｏ Ｔｏｔｅｭ Ｈｉｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
-    "ＡｕｔｏＰｏﾄ", "Ａｕｔｏ Ｐｏﾄ", "Ａｕｔｏ Ｐｏｔ Ｒｅﾌｉﾞ", "AutoPotRefill", "ＡｕｔｏＡｒｾﾞ", "Ａｕｔｏ Ａｒｮﾞ",
+    "ＡｕｔｏＰｏﾄ", "Ａｕｔｏ Ｐｏﾄ", "Ａｕｔｏ Ｐｏｔ Ｒｅﾌｲﾞ", "AutoPotRefill", "ＡｕｔｏＡｒｾﾞ", "Ａｕｔｏ Ａｒｮﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
     "ＳｈｉｅﾞｌﾄＤｉｓａｂﾞ", "Ｓｈｉｅﾙｄ Ｄｉｓａｂﾞ", "Breaking shield with axe...",
     "AutoDoubleHand", "autodoublehand", "auto double hand", "ＡｕｔｏＤｏｕｂﾞﾞＨａｎｄ", "Ａｕｔｏ Ｄｏｕｂｌｅ Ｈａｎｄ",
@@ -131,10 +131,10 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "NoJumpDelay",
     "PackSpoof", "Antiknockback", "catlean", "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
-    "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｏｪｪﾞｽﾞ Ｐｌｱｴﾞｪｲ",
+    "BaseFinder", "invsee", "ItemExploit", "FreezePlayer", "Ｆｲｵｪｪﾞｽﾞ Ｐｌｱｴﾞｪｲ",
     "LWFH Crystal", "ＬＷＦＨ Ｃﾞｲｽｿ｡ﾞ",
     "LootYeeter", "Ｌｏｏｵ Ｙｅｅﾄｪﾞ",
-    "AutoBreach", "Ａｕｔｏ Ｂﾚｾａｃｋ",
+    "AutoBreach", "Ａｕｔｏ Ｂﾚｾａｃｯ",
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown", "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
@@ -371,7 +371,7 @@ function Get-MinecraftStatus {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  JVM INTEGRITY CHECK  (EXPANDED — Fabric/Forge/Security)
+#  JVM INTEGRITY CHECK
 # ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
@@ -390,7 +390,6 @@ function Test-JvmIntegrity {
             $isMC = ($cmd -match "net\.minecraft" -or $cmd -match "Minecraft")
             if (-not $isMC) { continue }
 
-            # ── Agent detection ───────────────────────────────────────────────
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
             $agentWhitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus","lunar","appney")
             foreach ($m in $agentMatches) {
@@ -407,7 +406,6 @@ function Test-JvmIntegrity {
                 }
             }
 
-            # ── FABRIC INJECTION PATTERNS ─────────────────────────────────────
             $fabricFlags = @(
                 @{ R = '-Dfabric\.addMods=';                           T = "FABRIC_ADD_MODS";          S = "HIGH";   D = "Injects extra mod JARs at runtime — can load cheats outside mods folder" },
                 @{ R = '-Dfabric\.loadMods=';                          T = "FABRIC_LOAD_MODS";         S = "HIGH";   D = "Overrides Fabric mod loading — can force-load arbitrary JARs" },
@@ -441,7 +439,6 @@ function Test-JvmIntegrity {
                 @{ R = '-Dfabric\.gameVersion=';                       T = "FABRIC_GAME_VERSION";      S = "INFO";   D = "Fabric game version" }
             )
 
-            # ── FORGE INJECTION PATTERNS ──────────────────────────────────────
             $forgeFlags = @(
                 @{ R = '-Dforge\.addMods=';                            T = "FORGE_ADD_MODS";           S = "HIGH";   D = "Injects extra mod JARs at runtime — can load cheats" },
                 @{ R = '-Dforge\.mods=';                               T = "FORGE_MODS";               S = "HIGH";   D = "Overrides Forge mod list — can force-load JARs" },
@@ -463,13 +460,11 @@ function Test-JvmIntegrity {
                 @{ R = '-Dforge\.assetsDir=';                          T = "FORGE_ASSETS_DIR";         S = "INFO";   D = "Custom assets directory" }
             )
 
-            # ── SECURITY BYPASS PATTERNS ──────────────────────────────────────
             $securityFlags = @(
                 @{ R = '-Djava\.security\.manager=';                   T = "SEC_MANAGER_DISABLED";     S = "HIGH";   D = "Disables or replaces Java Security Manager — removes sandbox" },
                 @{ R = '-Djava\.security\.policy=';                    T = "SEC_POLICY_OVERRIDE";      S = "MEDIUM"; D = "Overrides Java security policy — weakens permissions" }
             )
 
-            # ── CLASSPATH MANIPULATION ────────────────────────────────────────
             $classpathFlags = @(
                 @{ R = '-Xbootclasspath/p:';                           T = "BOOTCLASS_PREPEND";        S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader — core class replacement" },
                 @{ R = '-Xbootclasspath/a:';                           T = "BOOTCLASS_APPEND";         S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
@@ -477,47 +472,40 @@ function Test-JvmIntegrity {
                 @{ R = '-Djava\.library\.path=';                       T = "NATIVE_LIB_PATH";          S = "MEDIUM"; D = "Overrides native library search path" }
             )
 
-            # ── BRAND / VERSION SPOOF ─────────────────────────────────────────
             $spoofFlags = @(
                 @{ R = '-Dclient\.brand=';                             T = "BRAND_SPOOF";             S = "LOW";    D = "Spoofs client brand string" }
             )
 
-            # ── BYTECODE VERIFICATION ─────────────────────────────────────────
             $verifyFlags = @(
                 @{ R = '-Xverify:none';                                T = "BYTECODE_VERIFY_OFF";     S = "HIGH";   D = "Disables JVM bytecode verification — unsafe classes load unchecked" },
                 @{ R = '-noverify';                                    T = "NOVERIFY";                S = "HIGH";   D = "Alias for -Xverify:none — disables class verification" }
             )
 
-            # ── NATIVE AGENT LOADING ──────────────────────────────────────────
             $nativeFlags = @(
                 @{ R = '(?<!\w)-agentlib:';                            T = "NATIVE_AGENT_LIB";        S = "HIGH";   D = "Loads native JVMTI agent — can hook any JVM function" },
                 @{ R = '-agentpath:';                                  T = "NATIVE_AGENT_PATH";       S = "HIGH";   D = "Loads native agent by absolute path — deep JVM access" }
             )
 
-            # ── DEBUG / REMOTE ACCESS ─────────────────────────────────────────
             $debugFlags = @(
                 @{ R = '-Xdebug';                                      T = "DEBUG_MODE";              S = "MEDIUM"; D = "JVM debug mode enabled" },
                 @{ R = '-Xrunjdwp:';                                   T = "REMOTE_DEBUG";            S = "HIGH";   D = "Remote debugging enabled — arbitrary code injection risk" },
                 @{ R = '(?<!\w)agentlib:jdwp';                         T = "JDWP_AGENT";              S = "HIGH";   D = "JDWP agent — remote code execution risk" }
             )
 
-            # ── JAR SIGNATURE BYPASS ──────────────────────────────────────────
             $jarFlags = @(
                 @{ R = '-Dsun\.misc\.URLClassPath\.disableJarChecking=true'; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking — tampered JARs load unchecked" }
             )
 
-            # ── JNDI EXPLOIT VECTORS ──────────────────────────────────────────
             $jndiFlags = @(
                 @{ R = '-Dcom\.sun\.jndi\.rmi\.object\.trustURLCodebase=true';  T = "JNDI_RMI_EXPLOIT";  S = "HIGH"; D = "JNDI RMI codebase enabled — Log4Shell attack vector" },
                 @{ R = '-Dcom\.sun\.jndi\.ldap\.object\.trustURLCodebase=true'; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "JNDI LDAP codebase enabled — Log4Shell variant" }
             )
 
-            # ── CUSTOM CLASSPATH (via -cp) pointing to suspicious locations ───
             $cpMatches = [regex]::Matches($cmd, '-cp\s+["'']?([^\s"'']+)["'']?')
             foreach ($cpm in $cpMatches) {
                 $cpVal = $cpm.Groups[1].Value
                 $suspiciousCpPaths = @('\.minecraft\\mods\\', '\.minecraft\mods\/', '\\AppData\\Local\\Temp\\', '\$HOME\/\.cache\/', '\\Users\\.*\\Desktop\\', '\\Users\\.*\\Downloads\\')
-                foreach $scp in $suspiciousCpPaths {
+                foreach ($scp in $suspiciousCpPaths) {
                     if ($cpVal -match $scp) {
                         $key = "SUSPICIOUS_CP|$($scp.Substring(0,20))"
                         if (-not $foundFlags.Contains($key)) {
@@ -529,7 +517,6 @@ function Test-JvmIntegrity {
                 }
             }
 
-            # ── Run all flag categories ───────────────────────────────────────
             $allFlagSets = @($fabricFlags, $forgeFlags, $securityFlags, $classpathFlags, $spoofFlags, $verifyFlags, $nativeFlags, $debugFlags, $jarFlags, $jndiFlags)
             foreach ($flagSet in $allFlagSets) {
                 foreach ($fl in $flagSet) {
@@ -717,7 +704,7 @@ if ($mcStatus.Running) {
 }
 
 # ───────────────────────────────────────────────────────────
-#  PHASE 1 — JVM Scan (Expanded)
+#  PHASE 1 — JVM Scan
 # ───────────────────────────────────────────────────────────
  $jvmResults = [System.Collections.Generic.List[PSObject]]::new()
 Write-Host ""
@@ -920,8 +907,8 @@ Write-Host ""
 Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
 Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
 Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
-Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██╒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓╓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██╒░██╤▄▄▄▄██ ▒██░     ░ ▐██╓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░╒ ▓███▀ ░   ▒██▒   ░██╒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████╒ ░ ██▒╓░▒███████▒░▒████▒░██╓ ▒██╒" -ForegroundColor Magenta
 Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
 Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
@@ -1122,73 +1109,6 @@ if ($clean.Count -gt 0) {
 }
 
 Write-Border 'bot' DarkGray
-
-# ═══════════════════════════════════════════════════════════
-#  BAN VERDICT
-# ═══════════════════════════════════════════════════════════
-Write-Host ""
-
-# JVM issues factor into verdict
- $jvmHighCount = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" }).Count
- $jvmMedCount  = @($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" }).Count
-
-if ($criticalThreats.Count -gt 0 -or $jvmHighCount -gt 0) {
-    $verdictColor  = [System.ConsoleColor]::Red
-    $verdictLabel  = "BAN RECOMMENDED"
-    $reasonParts = @()
-    if ($criticalThreats.Count -gt 0) { $reasonParts += "critical cheat signatures in $($criticalThreats.Count) mod(s)" }
-    if ($jvmHighCount -gt 0)         { $reasonParts += "$jvmHighCount HIGH severity JVM issue(s)" }
-    $verdictReason = "Detected: " + ($reasonParts -join ", ") + "."
-} elseif ($suspiciousFiles.Count -ge 3 -or ($suspiciousFiles.Count -ge 1 -and $jvmMedCount -ge 2)) {
-    $verdictColor  = [System.ConsoleColor]::Red
-    $verdictLabel  = "BAN RECOMMENDED"
-    $verdictReason = "$($suspiciousFiles.Count) suspicious mods found with JVM anomalies. High probability of cheating."
-} elseif ($suspiciousFiles.Count -gt 0 -or $jvmResults.Count -gt 0) {
-    $verdictColor  = [System.ConsoleColor]::Yellow
-    $verdictLabel  = "MANUAL REVIEW RECOMMENDED"
-    $verdictReason = "Suspicious indicators found. Decompile flagged mod(s) before deciding."
-} else {
-    $verdictColor  = [System.ConsoleColor]::Cyan
-    $verdictLabel  = "NO BAN — CLEAN"
-    $verdictReason = "No cheat signatures detected. Player appears to be clean."
-}
-
-Write-Border 'top' $verdictColor
-Write-RowFull "  VERDICT" $verdictColor $verdictColor
-Write-Border 'sep' $verdictColor
-Write-RowFull "  $verdictLabel" $verdictColor $verdictColor
-Write-RowFull "  $verdictReason" White $verdictColor
-
-if ($criticalThreats.Count -gt 0) {
-    Write-Border 'sep' $verdictColor
-    Write-RowFull "  Cheats confirmed:" DarkGray $verdictColor
-    foreach ($mod in $criticalThreats) {
-        Write-Row "    · " $mod.Name DarkGray Red $verdictColor
-    }
-}
-if ($suspiciousFiles.Count -gt 0) {
-    Write-Border 'sep' $verdictColor
-    Write-RowFull "  Suspicious mods:" DarkGray $verdictColor
-    foreach ($mod in $suspiciousFiles) {
-        Write-Row "    · " $mod.Name DarkGray Yellow $verdictColor
-    }
-}
-if ($jvmHighCount -gt 0) {
-    Write-Border 'sep' $verdictColor
-    Write-RowFull "  HIGH severity JVM issues:" DarkGray $verdictColor
-    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "HIGH" })) {
-        Write-Row "    · " "$($j.Type)" DarkGray Red $verdictColor
-    }
-}
-if ($jvmMedCount -gt 0) {
-    Write-Border 'sep' $verdictColor
-    Write-RowFull "  MEDIUM severity JVM issues:" DarkGray $verdictColor
-    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" })) {
-        Write-Row "    · " "$($j.Type)" DarkGray Yellow $verdictColor
-    }
-}
-
-Write-Border 'bot' $verdictColor
 
 # ═══════════════════════════════════════════════════════════
 #  FOOTER
