@@ -1,56 +1,56 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # ═══════════════════════════════════════════════════════════
-#  AUTO-RESIZE CONSOLE (Fixes broken ASCII art)
+#  FORCE CONSOLE WIDTH
 # ═══════════════════════════════════════════════════════════
+try { [Console]::SetBufferSize(150, 9999) } catch {}
+try { [Console]::SetWindowSize(150, 30) } catch {}
 try {
-    $pshost = Get-Host
-    $rawUI = $pshost.UI.RawUI
-    $oldBufferSize = $rawUI.BufferSize
-    $newBufferSize = $oldBufferSize
-    $newBufferSize.Width = 120
-    $newBufferSize.Height = 3000
-    $rawUI.BufferSize = $newBufferSize
-    
-    $oldWindowSize = $rawUI.WindowSize
-    $newWindowSize = $oldWindowSize
-    $newWindowSize.Width = 120
-    $newWindowSize.Height = 30
-    $rawUI.WindowSize = $newWindowSize
+    $rawUI = $Host.UI.RawUI
+    $buf = $rawUI.BufferSize; $buf.Width = 150; $buf.Height = 9999; $rawUI.BufferSize = $buf
+    $win = $rawUI.WindowSize; $win.Width = 150; $win.Height = 30; $rawUI.WindowSize = $win
 } catch {}
 
 Clear-Host
 
 # ═══════════════════════════════════════════════════════════
-#  BANNER
+#  BANNER (using [Console]::WriteLine to avoid padding glitches)
 # ═══════════════════════════════════════════════════════════
-Write-Host ""
-Write-Host "██████   █████  ███              ██████   ██████              █████" -ForegroundColor Magenta
-Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███" -ForegroundColor Magenta
-Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████" -ForegroundColor DarkMagenta
-Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███" -ForegroundColor DarkMagenta
-Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
-Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
-Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████" -ForegroundColor DarkMagenta
-Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░" -ForegroundColor DarkMagenta
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                              █████████                        ████                                           " -ForegroundColor Magenta
-Write-Host "                             ███░░░░░███                      ░░███                                           " -ForegroundColor Magenta
-Write-Host "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " -ForegroundColor DarkMagenta
-Write-Host "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" -ForegroundColor DarkMagenta
-Write-Host "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " -ForegroundColor Magenta
-Write-Host "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " -ForegroundColor Magenta
-Write-Host "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " -ForegroundColor DarkMagenta
-Write-Host "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " -ForegroundColor DarkMagenta
-Write-Host "                                                                      ███ ░███                                " -ForegroundColor DarkGray
-Write-Host "                                                                     ░░██████                                 " -ForegroundColor DarkGray
-Write-Host "                                                                      ░░░░░░                                  " -ForegroundColor DarkGray
-Write-Host ""
-Write-Host "                                    [ V4.4 — FULL SCAN ]" -ForegroundColor Magenta
-Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-Write-Host ""
+function W($t, $c) { [Console]::ForegroundColor = $c; [Console]::WriteLine($t) }
+
+[Console]::WriteLine("")
+W "██████   █████  ███              ██████   ██████              █████" ([System.ConsoleColor]::Magenta)
+W "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███" ([System.ConsoleColor]::Magenta)
+W " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████" ([System.ConsoleColor]::DarkMagenta)
+W " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███" ([System.ConsoleColor]::DarkMagenta)
+W " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███" ([System.ConsoleColor]::Magenta)
+W " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███" ([System.ConsoleColor]::Magenta)
+W " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████" ([System.ConsoleColor]::DarkMagenta)
+W "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░" ([System.ConsoleColor]::DarkMagenta)
+W "" ([System.ConsoleColor]::DarkGray)
+W "" ([System.ConsoleColor]::DarkGray)
+W "" ([System.ConsoleColor]::DarkGray)
+W "                              █████████                        ████                                           " ([System.ConsoleColor]::Magenta)
+W "                             ███░░░░░███                      ░░███                                           " ([SystemColor]::Magenta)
+W "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " ([System.ConsoleColor]::DarkMagenta)
+W "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" ([System.ConsoleColor]::DarkMagenta)
+W "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " ([System.ConsoleColor]::Magenta)
+W "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " ([SystemColor]::Magenta)
+W "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " ([System.ConsoleColor]::DarkMagenta)
+W "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " ([System.ConsoleColor]::DarkMagenta)
+W "                                                                      ███ ░███                                " ([System.ConsoleColor]::DarkGray)
+W "                                                                     ░░██████                                 " ([System.ConsoleColor]::DarkGray)
+W "                                                                      ░░░░░░                                  " ([System.ConsoleColor]::DarkGray)
+[Console]::WriteLine("")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                                    [ V4.4 — FULL SCAN ]")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────────────")
+[Console]::WriteLine("")
+
+# ═══════════════════════════════════════════════════════════
+#  Restore Write-Host for the rest of the script
+# ═══════════════════════════════════════════════════════════
 
 # ═══════════════════════════════════════════════════════════
 #  PATH INPUT
@@ -137,8 +137,8 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "AutoAnchor", 'autoanchor', 'auto anchor', 'DoubleAnchor',
     "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
     "SafeAnchor", "AirAnchor",
-    "ＡｕﾄＡｎｃﾞｮﾞ", "Ａｕﾄ Ａｎｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅＡｎｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅ Ａｎｃﾞｮﾞ",
-    "ＳａﾇｪＡＡｎｃﾞｮﾞ", "Ｓａｆｅ Ａｎｃﾞｮﾞ", "Ａｎｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
+    "ＡｕﾄＡｮｃﾞｮﾞ", "Ａｕﾄ Ａｮｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅＡｮｃﾞｮﾞ", "＄ｏｕｂﾞﾞｅ Ａｮｃﾞｮﾞ",
+    "ＳａﾇｪＡＡｮｃﾞｮﾞ", "Ｓａｆｅ Ａｮｃﾞｮﾞ", "Ａｮｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
     "AutoTotem", "autototem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
     "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｖｴﾞﾘ Ｔｏﾄｪｪｭ", "Ｈｏｖｴｰﾘ oｴｪｪ",
@@ -447,7 +447,7 @@ function Test-JvmIntegrity {
                 @{ R = '-Dfabric\.remapClasspathFile=';               T = "FABRIC_REMAP_CLASSPATH";   S = "MEDIUM"; D = "Remaps classpath from external file — can inject classes" },
                 @{ R = '-Dfabric\.skipIntermediary=';                 T = "FABRIC_SKIP_INTERMEDIARY"; S = "MEDIUM"; D = "Skips intermediary remapping — can load unverified code" },
                 @{ R = '-Dfabric\.mixin\.hotSwap=';                    T = "FABRIC_MIXIN_HOTSWAP";     S = "HIGH";   D = "Enables Mixin hot-swap — can modify game code at runtime" },
-                @{ R = '-Dfabric\.mixin\.configs=';                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
+                @{ R = "-Dfabric\.mixin\.configs=";                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
                 @{ R = '-Dfabric\.mixin\.debug\.export=';             T = "FABRIC_MIXIN_DEBUG";       S = "LOW";    D = "Exports Mixin debug data — unusual in production" },
                 @{ R = '-Dfabric\.mixin\.debug\.verbose=';            T = "FABRIC_MIXIN_VERBOSE";     S = "LOW";    D = "Verbose Mixin debugging — unusual in production" },
                 @{ R = '-Dfabric\.forceVersion=';                      T = "FABRIC_FORCE_VERSION";     S = "LOW";    D = "Forces Fabric game version" },
@@ -710,7 +710,7 @@ catch {
 
 if ($jars.Count -eq 0) {
     Write-Host "  No JAR files found." -ForegroundColor Yellow
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $null = $Host.UI.RawUI.RunWith("NoEcho,IncludeKeyDown")
     exit 0
 }
 
@@ -920,35 +920,59 @@ function Write-RowFull {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  REPORT BANNER
+#  REPORT BANNER (also uses [Console]::WriteLine to avoid padding)
 # ═══════════════════════════════════════════════════════════
-Write-Host ""
-Write-Host "██████   █████  ███              ██████   ██████              █████" -ForegroundColor Magenta
-Write-Host "░░██████ ░░███  ░░░              ░░██████ ██████              ░░███" -ForegroundColor Magenta
-Write-Host " ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████" -ForegroundColor DarkMagenta
-Write-Host " ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███" -ForegroundColor DarkMagenta
-Write-Host " ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
-Write-Host " ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███" -ForegroundColor Magenta
-Write-Host " █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████" -ForegroundColor DarkMagenta
-Write-Host "░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░" -ForegroundColor DarkMagenta
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                                                                                                              " -ForegroundColor DarkGray
-Write-Host "                              █████████                        ████                                           " -ForegroundColor Magenta
-Write-Host "                             ███░░░░░███                      ░░███                                           " -ForegroundColor Magenta
-Write-Host "                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  " -ForegroundColor DarkMagenta
-Write-Host "                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███" -ForegroundColor DarkMagenta
-Write-Host "                            ░███░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  " -ForegroundColor Magenta
-Write-Host "                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      " -ForegroundColor Magenta
-Write-Host "                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    " -ForegroundColor DarkMagenta
-Write-Host "                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░  ░░░░░░  ░░░░░     " -ForegroundColor DarkMagenta
-Write-Host "                                                                      ███ ░███                                " -ForegroundColor DarkGray
-Write-Host "                                                                     ░░██████                                 " -ForegroundColor DarkGray
-Write-Host "                                                                      ░░░░░░                                  " -ForegroundColor DarkGray
-Write-Host ""
-Write-Host "                                    [ SCAN RESULTS ]" -ForegroundColor Magenta
-Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-Write-Host ""
+[Console]::WriteLine("")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("██████   █████  ███              ██████   ██████              █████")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("░░██████ ░░███  ░░░              ░░██████ ██████              ░░███")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine(" ░███░███ ░███  ████   ██████     ░███░█████░███   ██████   ███████")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine(" ░███░░███░███ ░░███  ███░░███    ░███░░███ ░███  ███░░███ ███░░███")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine(" ░███ ░░██████  ░███ ░███ ░░░     ░███ ░░░  ░███ ░███ ░███░███ ░███")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine(" ░███  ░░█████  ░███ ░███  ███    ░███      ░███ ░███ ░███░███ ░███")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine(" █████  ░░█████ █████░░██████     █████     █████░░██████ ░░████████")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("░░░░░    ░░░░░ ░░░░░  ░░░░░░     ░░░░░     ░░░░░  ░░░░░░   ░░░░░░░░")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                                                              ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                                                              ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                                                              ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                              █████████                        ████                                           ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                             ███░░░░░███                      ░░███                                           ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("                            ░███    ░███  ████████    ██████   ░███  █████ ████  █████████  ██████  ████████  ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("                            ░███████████ ░░███░░███  ░░░░░███  ░███ ░░███ ░███  ░█░░░░███  ███░░███░░███░░███")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                            ░███░░░░░░███  ░███ ░███   ███████  ░███  ░███ ░███  ░   ███░  ░███████  ░███ ░░░  ")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                            ░███    ░███  ░███ ░███  ███░░███  ░███  ░███ ░███    ███░   █░███░░░   ░███      ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("                            █████   █████ ████ █████░░████████ █████ ░░███████   █████████░░██████  █████    ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
+[Console]::WriteLine("                           ░░░░░   ░░░░░ ░░░░ ░░░░░  ░░░░░░░░ ░░░░░   ░░░░░███  ░░░░░░░░░░  ░░░░░░  ░░░░░     ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                      ███ ░███                                ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]WriteLine("                                                                     ░░██████                                 ")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("                                                                      ░░░░░░                                  ")
+[Console]::WriteLine("")
+[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
+[Console]::WriteLine("                                    [ SCAN RESULTS ]")
+[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
+[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────────────")
+[Console]::WriteLine("")
 
  $flaggedColor  = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
  $moduleSummary = ($activeModules -join "  ·  ")
@@ -963,9 +987,9 @@ Write-Row "  Clean    : " "$($clean.Count)"                        DarkGray   Cy
 Write-Row "  Flagged  : " "$($flagged.Count)"                      DarkGray   $flaggedColor DarkGray
 
 if ($mcStatus.Running) {
-    Write-Row "  Minecraft: " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
+    Write-Row "  Minecraft: " " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
 } else {
-    Write-Row "  Minecraft: " "not running" DarkGray DarkGray DarkGray
+    Write-Row "  Minecraft: " " "not running" DarkGray DarkGray DarkGray
 }
 Write-Border 'bot' DarkGray
 
@@ -1138,4 +1162,4 @@ Write-Host "  Special thanks to Tonynoh   ·   Credits to MeowModAnalyzer" -Fore
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
- $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+ $null = $Host.UI.RawUI.RunWith("NoEcho,IncludeKeyDown")
