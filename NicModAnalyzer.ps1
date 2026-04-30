@@ -34,8 +34,8 @@ if ([string]::IsNullOrWhiteSpace($modsPath)) {
     Write-Host
 }
 if (-not (Test-Path $modsPath -PathType Container)) {
-    Write-Host " Invalid Path!" -ForegroundColor Red
-    Write-Host "The path does not exist or is not accessible." -ForegroundColor Yellow
+    Write-Host "❌ Invalid Path!" -ForegroundColor Red
+    Write-Host "The directory does not exist or is not accessible." -ForegroundColor Yellow
     Write-Host
     Write-Host "Tried to access: $modsPath" -ForegroundColor Gray
     Write-Host
@@ -989,9 +989,57 @@ if ($clean.Count -gt 0) {
 Write-Border 'bot' DarkGray
 
 # ═══════════════════════════════════════════════════════════
+#  BAN VERDICT
+# ═══════════════════════════════════════════════════════════
+Write-Host ""
+
+if ($criticalThreats.Count -gt 0) {
+    $verdictColor  = [System.ConsoleColor]::Red
+    $verdictLabel  = "BAN RECOMMENDED"
+    $verdictReason = "Critical cheat signatures detected in $($criticalThreats.Count) mod(s). Evidence is strong."
+} elseif ($suspiciousFiles.Count -ge 3) {
+    $verdictColor  = [System.ConsoleColor]::Red
+    $verdictLabel  = "BAN RECOMMENDED"
+    $verdictReason = "$($suspiciousFiles.Count) suspicious mods found. High probability of cheating."
+} elseif ($suspiciousFiles.Count -gt 0 -or $jvmResults.Count -gt 0) {
+    $verdictColor  = [System.ConsoleColor]::Yellow
+    $verdictLabel  = "MANUAL REVIEW RECOMMENDED"
+    $verdictReason = "Suspicious indicators found. Decompile flagged mod(s) before deciding."
+} else {
+    $verdictColor  = [System.ConsoleColor]::Cyan
+    $verdictLabel  = "NO BAN — CLEAN"
+    $verdictReason = "No cheat signatures detected. Player appears to be clean."
+}
+
+Write-Border 'top' $verdictColor
+Write-RowFull "  VERDICT" $verdictColor $verdictColor
+Write-Border 'sep' $verdictColor
+Write-RowFull "  $verdictLabel" $verdictColor $verdictColor
+Write-RowFull "  $verdictReason" White $verdictColor
+
+if ($criticalThreats.Count -gt 0) {
+    Write-Border 'sep' $verdictColor
+    Write-RowFull "  Cheats confirmed:" DarkGray $verdictColor
+    foreach ($mod in $criticalThreats) {
+        Write-Row "    · " $mod.Name DarkGray Red $verdictColor
+    }
+}
+if ($suspiciousFiles.Count -gt 0) {
+    Write-Border 'sep' $verdictColor
+    Write-RowFull "  Suspicious mods:" DarkGray $verdictColor
+    foreach ($mod in $suspiciousFiles) {
+        Write-Row "    · " $mod.Name DarkGray Yellow $verdictColor
+    }
+}
+
+Write-Border 'bot' $verdictColor
+
+# ═══════════════════════════════════════════════════════════
 #  FOOTER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
+Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
+Write-Host "  Scan complete. Thank you for using NicModAnalyzer!" -ForegroundColor Magenta
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
 Write-Host "  Special thanks to Tonynoh   ·   Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
