@@ -5,14 +5,17 @@ Clear-Host
 #  BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "  ██╗  ██╗██╗██╗    ██╗██╗    ███╗   ███╗ ██████╗ ██████╗      █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗ " -ForegroundColor Green
-Write-Host "  ██║ ██╔╝██║██║    ██║██║    ████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗" -ForegroundColor Green
-Write-Host "  █████╔╝ ██║██║ █╗ ██║██║    ██╔████╔██║██║   ██║██║  ██║    ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝" -ForegroundColor DarkGreen
-Write-Host "  ██╔═██╗ ██║██║███╗██║██║    ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkGreen
-Write-Host "  ██║  ██╗██║╚███╔███╔╝██║    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Green
-Write-Host "  ╚═╝  ╚═╝╚═╝ ╚══╝╚══╝ ╚═╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Green
+Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
+Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
+Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
+Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
+Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
+Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ V1.0 - MOD ANALYZER ]" -ForegroundColor Green
+Write-Host "                                    [ V4.1 - MOD ANALYZER ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -20,8 +23,8 @@ Write-Host ""
 #  PATH INPUT
 # ═══════════════════════════════════════════════════════════
 Write-Host "  Path " -ForegroundColor DarkGray -NoNewline
-Write-Host "(leave blank for default)" -ForegroundColor DarkGreen
-Write-Host "  > " -ForegroundColor Green -NoNewline
+Write-Host "(leave blank for default)" -ForegroundColor DarkMagenta
+Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $modsPath = Read-Host
 
 if ([string]::IsNullOrWhiteSpace($modsPath)) {
@@ -39,21 +42,21 @@ if (-not (Test-Path $modsPath -PathType Container)) {
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host "  Scan mode " -ForegroundColor DarkGray -NoNewline
-Write-Host "[1]" -ForegroundColor Green -NoNewline
+Write-Host "[1]" -ForegroundColor Magenta -NoNewline
 Write-Host " Standard   " -ForegroundColor Gray -NoNewline
-Write-Host "[2]" -ForegroundColor Green -NoNewline
+Write-Host "[2]" -ForegroundColor Magenta -NoNewline
 Write-Host " Deep  (all file types + entropy + obfuscation analysis)" -ForegroundColor Gray
-Write-Host "  > " -ForegroundColor Green -NoNewline
+Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $scanModeInput = Read-Host
 $deepScan = ($scanModeInput.Trim() -eq '2')
 
 Write-Host ""
 if ($deepScan) {
     Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
-    Write-Host "DEEP SCAN" -ForegroundColor Green
+    Write-Host "DEEP SCAN" -ForegroundColor Magenta
 } else {
     Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
-    Write-Host "STANDARD SCAN" -ForegroundColor DarkGreen
+    Write-Host "STANDARD SCAN" -ForegroundColor DarkMagenta
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -134,7 +137,7 @@ $cheatStrings = @(
     "Silent Rotations", "SilentRotations", "Ｓｉﾞｭﾝｔ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
     "Ｆ｡ｹＬａｶﾞ", "Ｆ｡ｋｅ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｅ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｴｽ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｅｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay", "ＥｌｙﾞＳＷａｵ", "Ｅｌｙﾄﾗａ Ｓｗｱﾞ",
@@ -174,49 +177,42 @@ $cheatStrings = @(
     "Holding Web", "ﾎｵﾙﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｴ Ｗｈｅﾝ ａｆﾂｃｴｕｽ Ｐｌ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
     "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｶ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
-    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｫｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｫｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｯﾝｽ",
+    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
+    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｫｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｫｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
     "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｷｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
 # ═══════════════════════════════════════════════════════════
-#  DEEP SCAN STRINGS
-#  Kept ONLY highly specific signatures — things that appear
-#  exclusively in cheat clients, not in legitimate mods.
-#  Removed: getDeclaredMethod, setAccessible, MethodHandles,
-#  ModuleManager, CommandManager, GuiHacks, ClickGui,
-#  AltManager, Runtime.exec, -Xdebug, -Djava.library.path,
-#  SessionStealer (too generic / common in legit tools).
+#  DEEP SCAN STRINGS — precise hooks only, no generic terms
 # ═══════════════════════════════════════════════════════════
 $deepCheatStrings = @(
-    # Packet spoofing — very specific to cheat clients
-    "spoofPacket", "cancelPacket", "dropPacket",
-
-    # Timer manipulation — exclusive to cheat clients
-    "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
-
-    # JNDI exploit flags — no legitimate mod sets these
-    "com.sun.jndi.rmi.object.trustURLCodebase=true",
-    "com.sun.jndi.ldap.object.trustURLCodebase=true",
-
-    # Remote debug attachment via JVM arg strings inside JARs — not normal mod content
-    "-Xrunjdwp:", "agentlib:jdwp",
-
-    # Known cheat-specific namespaces / identifiers
-    "dev.gambleclient", "xyz.greaj", "org.chainlibs",
-    "dev.krypton", "Dqrkis", "dqrkis", "lvstrng",
-
-    # Cheat-specific mixin accessor names (not used by any known legit mod)
+    # Mixin hooks that cheat clients use but legit mods almost never do
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
     "callAttackEntity", "callUseItem",
-    "resetLastAttackedTicks",
-
-    # JAR signature checking disabled (almost never set by legit mods in-JAR)
-    "-Dsun.misc.URLClassPath.disableJarChecking=true",
-
-    # System classloader replacement (extreme injection — no legit mod does this)
-    "-Djava.system.class.loader="
+    "getAttackCooldownProgress", "resetLastAttackedTicks",
+    # Reflection abuse patterns (exact combos uncommon in legit mods)
+    "getDeclaredMethod(", "setAccessible(true)",
+    "MethodHandles.lookup",
+    # Client-specific registration patterns
+    "ModuleManager", "FeatureManager", "HackList",
+    "CommandManager.register",
+    "GuiHacks", "ClickGui", "AltManager", "SessionStealer",
+    # Packet manipulation
+    "spoofPacket", "cancelPacket", "dropPacket",
+    "CPacketHeldItemChange", "ServerboundMovePlayerPacket",
+    # Timer abuse
+    "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
+    # Runtime exec abuse
+    "Runtime.getRuntime().exec(",
+    # Dangerous JNDI flags (Log4Shell vectors)
+    "com.sun.jndi.rmi.object.trustURLCodebase=true",
+    "com.sun.jndi.ldap.object.trustURLCodebase=true",
+    # Remote debug attachment
+    "-Xrunjdwp:", "agentlib:jdwp",
+    # Known cheat-specific class patterns
+    "dev.gambleclient", "xyz.greaj", "org.chainlibs",
+    "dev.krypton", "Dqrkis", "dqrkis", "lvstrng"
 )
 
 $patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
@@ -276,15 +272,15 @@ function Get-ObfuscationScore {
 
     # 2. Known obfuscator markers in MANIFEST or config files
     $obfuscatorSigs = @{
-        "Allatori"    = "Allatori"
-        "Zelix"       = "Zelix"
-        "ProGuard"    = "Obfuscated-By: ProGuard"
-        "Stringer"    = "Stringer Java Obfuscator"
-        "Skidfuscator" = "skidfuscator"
-        "Radon"       = "Radon"
-        "BisGuard"    = "BisGuard"
-        "QProtect"    = "QProtect"
-        "Paramorphism" = "paramorphism"
+        "Allatori"   = "Allatori"
+        "Zelix"      = "Zelix"
+        "ProGuard"   = "Obfuscated-By: ProGuard"
+        "Stringer"   = "Stringer Java Obfuscator"
+        "Skidfuscator"= "skidfuscator"
+        "Radon"      = "Radon"
+        "BisGuard"   = "BisGuard"
+        "QProtect"   = "QProtect"
+        "Paramorphism"= "paramorphism"
     }
     foreach ($entry in ($Zip.Entries | Where-Object { $_.FullName -match 'MANIFEST\.MF$|\.json$|\.toml$' })) {
         try {
@@ -319,6 +315,8 @@ function Get-ObfuscationScore {
             $st = $ce.Open(); $buf = New-Object System.IO.MemoryStream
             $st.CopyTo($buf); $st.Close()
             $bytes = $buf.ToArray(); $buf.Dispose()
+            # SourceFile attribute tag is 0x00 0x01 in class constant pool header area
+            # Simpler heuristic: check if the string "SourceFile" is absent in a non-trivial class
             if ($bytes.Length -gt 200) {
                 $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
                 if (-not ($ascii -match "SourceFile")) { $strippedCount++ }
@@ -334,7 +332,12 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Partial SourceFile stripping: $strippedRatio% of sampled classes")
     }
 
-    # 5. Invisible / PUA identifier abuse in class names
+    # 5. Unicode/invisible identifier abuse in class names
+    # Only flag codepoints that have no legitimate use in Java identifiers:
+    #   - Zero-width / invisible glue chars (U+200B–U+200D, U+2060, U+FEFF, U+00AD)
+    #   - Private Use Area (U+E000–U+F8FF) — used by some obfuscators as fake chars
+    #   - Unicode control chars embedded in paths (U+0001–U+001F, U+007F–U+009F)
+    # Deliberately NOT flagging CJK, Cyrillic, accented Latin, etc. — all valid in package names.
     $suspiciousUniRx = [regex]::new(
         '[\u00AD\u200B\u200C\u200D\u2060\uFEFF]|[\uE000-\uF8FF]|[\u0001-\u001F\u007F-\u009F]',
         [System.Text.RegularExpressions.RegexOptions]::Compiled
@@ -345,7 +348,7 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Invisible/PUA identifier chars: $($unicodeNames.Count) class(es) with zero-width or private-use codepoints")
     }
 
-    # 6. String encryption markers
+    # 6. String encryption markers (common in Skidfuscator / Stringer output)
     $encryptedStringMarkers = @("decrypt", "deobf", "StringEncryption", "StringDecryptor",
                                  "decryptString", "stringPool", "StringPool", "\$\$decrypt")
     $encCount = 0
@@ -433,9 +436,11 @@ function Test-JvmIntegrity {
                 @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader — severe injection risk" },
                 @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent library — can hook anything" },
                 @{ F = "-agentpath:";               T = "NATIVE_AGENT_PATH";      S = "HIGH";   D = "Loads native agent by path — deep JVM access" },
+                @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path" },
                 @{ F = "-Dsun.misc.URLClassPath.disableJarChecking=true"; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" },
                 @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "Enables JNDI RMI codebase — Log4Shell-style attack vector" },
                 @{ F = "-Dcom.sun.jndi.ldap.object.trustURLCodebase=true"; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "Enables JNDI LDAP codebase — Log4Shell variant" },
+                @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode" },
                 @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Enables remote debugging — allows arbitrary code injection" },
                 @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "Java Debug Wire Protocol agent — remote code execution risk" }
             )
@@ -599,7 +604,7 @@ Write-Host ""
 
 if ($mcStatus.Running) {
     Write-Host "  Minecraft  " -ForegroundColor DarkGray -NoNewline
-    Write-Host "● " -ForegroundColor Green -NoNewline
+    Write-Host "● " -ForegroundColor Magenta -NoNewline
     Write-Host "Running  " -ForegroundColor White -NoNewline
     Write-Host "PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" -ForegroundColor DarkGray
 } else {
@@ -612,10 +617,10 @@ if ($mcStatus.Running) {
 #  PHASE 1 — JVM Arguments
 # ───────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "  ┌─ " -ForegroundColor DarkGreen -NoNewline
-Write-Host "Phase 1" -ForegroundColor Green -NoNewline
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
 Write-Host " · JVM Arguments" -ForegroundColor DarkGray
-Write-Host "  │" -ForegroundColor DarkGreen
+Write-Host "  │" -ForegroundColor DarkMagenta
 Write-Host "  │  checking... " -ForegroundColor DarkGray -NoNewline
 $jvmResults = Test-JvmIntegrity
 if ($jvmResults.Count -gt 0) {
@@ -623,17 +628,17 @@ if ($jvmResults.Count -gt 0) {
 } else {
     Write-Host "clean" -ForegroundColor Cyan
 }
-Write-Host "  └─ done" -ForegroundColor DarkGreen
+Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
 # ───────────────────────────────────────────────────────────
 #  PHASE 2 — Mod Signatures
 # ───────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "  ┌─ " -ForegroundColor DarkGreen -NoNewline
-Write-Host "Phase 2" -ForegroundColor Green -NoNewline
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
 $phaseLabel = if ($deepScan) { " · Mod Signatures + Deep Strings + Entropy" } else { " · Mod Signatures" }
 Write-Host $phaseLabel -ForegroundColor DarkGray
-Write-Host "  │" -ForegroundColor DarkGreen
+Write-Host "  │" -ForegroundColor DarkMagenta
 
 $total   = $jars.Count; $i = 0
 $flagged = [System.Collections.Generic.List[PSObject]]::new()
@@ -642,7 +647,7 @@ $clean   = [System.Collections.Generic.List[string]]::new()
 foreach ($jar in $jars) {
     $i++
     $pct = [math]::Floor(($i / $total) * 100)
-    Write-Host "  │  $pct% " -ForegroundColor DarkGreen -NoNewline
+    Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
     Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
     Write-Host "`r" -NoNewline
 
@@ -670,19 +675,20 @@ foreach ($jar in $jars) {
         })
     } else { $clean.Add($jar.Name) }
 }
-Write-Host "  │  100% done                              " -ForegroundColor DarkGreen
-Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkGreen
+Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 
 # ───────────────────────────────────────────────────────────
 #  PHASE 3 — Obfuscation Analysis (deep mode only)
 # ───────────────────────────────────────────────────────────
 if ($deepScan) {
     Write-Host ""
-    Write-Host "  ┌─ " -ForegroundColor DarkGreen -NoNewline
-    Write-Host "Phase 3" -ForegroundColor Green -NoNewline
+    Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
     Write-Host " · Obfuscation Analysis" -ForegroundColor DarkGray
-    Write-Host "  │" -ForegroundColor DarkGreen
+    Write-Host "  │" -ForegroundColor DarkMagenta
 
+    # Run over ALL jars (flagged + clean) so hidden-only-obfuscated ones surface
     $allJarPaths = @{}
     foreach ($jar in $jars) { $allJarPaths[$jar.Name] = $jar.FullName }
 
@@ -691,7 +697,7 @@ if ($deepScan) {
     foreach ($jar in $jars) {
         $oi++
         $pct = [math]::Floor(($oi / $total) * 100)
-        Write-Host "  │  $pct% " -ForegroundColor DarkGreen -NoNewline
+        Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
         Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
         Write-Host "`r" -NoNewline
         try {
@@ -701,11 +707,13 @@ if ($deepScan) {
             $obfMap[$jar.Name] = $obfResult
         } catch { $obfMap[$jar.Name] = $null }
     }
-    Write-Host "  │  100% done                              " -ForegroundColor DarkGreen
+    Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
 
+    # Merge obf results into flagged mods
     foreach ($mod in $flagged) {
         if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
     }
+    # Promote clean-but-heavily-obfuscated mods to suspicious
     foreach ($jar in $jars) {
         if ($clean -contains $jar.Name) {
             $obf = $obfMap[$jar.Name]
@@ -729,7 +737,7 @@ if ($deepScan) {
     }
 
     $obfHeavy = ($obfMap.Values | Where-Object { $_ -and $_.ObfLevel -eq "HEAVY" }).Count
-    Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundColor DarkGreen
+    Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundColor DarkMagenta
 }
 
 Start-Sleep -Milliseconds 300
@@ -798,17 +806,20 @@ function Write-RowFull {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  REPORT BANNER
+#  REPORT BANNER  (same as launch banner)
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "  ██╗  ██╗██╗██╗    ██╗██╗    ███╗   ███╗ ██████╗ ██████╗      █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗ " -ForegroundColor Green
-Write-Host "  ██║ ██╔╝██║██║    ██║██║    ████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗" -ForegroundColor Green
-Write-Host "  █████╔╝ ██║██║ █╗ ██║██║    ██╔████╔██║██║   ██║██║  ██║    ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝" -ForegroundColor DarkGreen
-Write-Host "  ██╔═██╗ ██║██║███╗██║██║    ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkGreen
-Write-Host "  ██║  ██╗██║╚███╔███╔╝██║    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Green
-Write-Host "  ╚═╝  ╚═╝╚═╝ ╚══╝╚══╝ ╚═╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Green
+Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
+Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
+Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
+Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
+Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
+Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ SCAN RESULTS ]" -ForegroundColor Green
+Write-Host "                                    [ SCAN RESULTS ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -817,9 +828,9 @@ $modeLabel    = if ($deepScan) { "DEEP" } else { "STANDARD" }
 $flaggedColor = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
 
 Write-Border 'top' DarkGray
-Write-RowFull ("  SCAN REPORT  ·  " + $scanTimestamp) Green DarkGray
+Write-RowFull ("  SCAN REPORT  ·  " + $scanTimestamp) Magenta DarkGray
 Write-Border 'sep' DarkGray
-Write-Row     "  Mode    : " $modeLabel                              Green      White    DarkGray
+Write-Row     "  Mode    : " $modeLabel                              Magenta    White    DarkGray
 Write-Row     "  Path    : " $modsPath                               DarkGray   Gray     DarkGray
 Write-Row     "  Files   : " "$($jars.Count) scanned"               DarkGray   White    DarkGray
 Write-Row     "  Clean   : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
@@ -991,7 +1002,7 @@ Write-Border 'bot' DarkGray
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
-Write-Host "  Special thanks to Tonynoh   ·   Kiwi Mod Analyzer" -ForegroundColor DarkGreen
+Write-Host "  Special thanks to Tonynoh   ·   Credits to MeowModAnalyzer" -ForegroundColor DarkMagenta
 Write-Host ("  " + "─" * $W) -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
