@@ -16,7 +16,7 @@ Clear-Host
 # ═══════════════════════════════════════════════════════════
 #  BANNER
 # ═══════════════════════════════════════════════════════════
-function W($t, $c) { 
+function W($t, $c) {
     [Console]::ForegroundColor = $c
     [Console]::WriteLine($t)
 }
@@ -43,7 +43,7 @@ W "                                                                        " ([S
 [Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────")
 [Console]::WriteLine("")
 
-# ═════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  PATH INPUT
 # ═══════════════════════════════════════════════════════════
 Write-Host "  Path " -ForegroundColor DarkGray -NoNewline
@@ -132,13 +132,13 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "ＳａﾇｪＡＡｮｃﾞｮﾞ", "Ｓａｆｅ Ａｮｃﾞｮﾞ", "Ａｮｃﾞｮﾞ Ｍ｡ｃﾞｮﾞ", "anchorMacro",
     "AutoTotem", "autotemem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
-    "ＡｕﾄＴｏﾃｪｭ", "Ａｕﾄ Ｔｏﾃｪｭ", "Ｈｏｶﾞﾘ Ｔｵﾃｪｭ", "Ｈｏｶﾞｰﾘｙ oｴｪｪ",
+    "ＡｕﾄＴｵﾃｪｭ", "Ａｕﾄ Ｔｵﾃｪｭ", "Ｈｵｶﾞﾘ Ｔｵﾃｪｭ", "Ｈｵｶﾞﾘｙ oｴｪｪ",
     "ＩｎｶﾝﾄﾝｮﾞｙＴｵﾃｪｭ", "Ａｕﾄ Ｉｎｶﾝｵｵﾘｙ Ｔｵﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｵｽｹ", "Ａｕﾄ Ｔｵﾃｪｭ Ｈｲｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
     "ＡｕﾄＰｵﾄ", "Ａｕﾄ Ｐｵﾄ", "Ａｕﾄ Ｐｵﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
-    "Ｓﾞｲｪﾞﾄ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾙﾄ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
+    "Ｓﾞｲｪﾞﾞ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾞﾞ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
     "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｵｳｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｵｳｂﾞﾞ Ｈ｡ﾝﾄ",
     "AutoClicker", "ＡｕﾄＣｲｯｪｹｹｰｯ",
     "Failed to switch to mace after axe!", "AutoMace", "MaceSwap", "SpearSwap",
@@ -221,7 +221,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "setHardTarget", "mixinBypass"
 )
 
- $patternRegex = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+ $patternRegex = [regex]::new('(?<![A-Za-z])(' + (($suspiciousPatterns | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
  $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
@@ -254,9 +254,9 @@ function Get-ShannonEntropy {
 function Get-ObfuscationScore {
     param([System.IO.Compression.ZipArchive]$Zip)
     $result = [PSCustomObject]@{
-        Score        = 0
-        Indicators   = [System.Collections.Generic.List[string]]::new()
-        ObfLevel     = "None"
+        Score      = 0
+        Indicators = [System.Collections.Generic.List[string]]::new()
+        ObfLevel   = "None"
     }
 
     $classEntries = @($Zip.Entries | Where-Object { $_.FullName -match '\.class$' })
@@ -303,7 +303,7 @@ function Get-ObfuscationScore {
 
     $deepPaths = @($classEntries | Where-Object {
         $parts = $_.FullName.Split('/')
-        $parts.Count -ge 3 -and ($parts[0..($parts.Count-2)] | Where-Object { $_.Length -le 1 -and $_ -cmatch '^[a-z]$' }).Count -ge 2
+        $parts.Count -ge 3 -and ($parts[0..($parts.Count - 2)] | Where-Object { $_.Length -le 1 -and $_ -cmatch '^[a-z]$' }).Count -ge 2
     })
     if ($deepPaths.Count -gt 5) {
         $result.Score += 25
@@ -344,7 +344,7 @@ function Get-ObfuscationScore {
     }
 
     $encryptedStringMarkers = @("decrypt", "deobf", "StringEncryption", "StringDecryptor",
-                                 "decryptString", "stringPool", "StringPool", "\$\$decrypt")
+                                 "decryptString", "stringPool", "StringPool", "`$\`$decrypt")
     $encCount = 0
     foreach ($ce in ($classEntries | Select-Object -First 20)) {
         try {
@@ -394,9 +394,9 @@ function Get-MinecraftStatus {
     return [PSCustomObject]@{ Running = $false; PID = 0; Uptime = "-"; RAM = "-" }
 }
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  JVM INTEGRITY CHECK
-# ═══════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
     $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
@@ -414,7 +414,7 @@ function Test-JvmIntegrity {
             if (-not $isMC) { continue }
 
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
-            $agentWhitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus","lunar","appney")
+            $agentWhitelist = @("jmxremote", "yjp", "jrebel", "newrelic", "jacoco", "hotswapagent", "theseus", "lunar", "appney")
             foreach ($m in $agentMatches) {
                 $path = $m.Groups[1].Value.Trim('"').Trim("'")
                 $name = [System.IO.Path]::GetFileName($path)
@@ -530,10 +530,10 @@ function Test-JvmIntegrity {
                 $suspiciousCpPaths = @('\.minecraft\\mods\\', '\.minecraft\mods\/', '\\AppData\\Local\\Temp\\', '\$HOME\/\.cache\/', '\\Users\\.*\\Desktop\\', '\\Users\\.*\\Downloads\\')
                 foreach ($scp in $suspiciousCpPaths) {
                     if ($cpVal -match $scp) {
-                        $key = "SUSPICIOUS_CP|$($scp.Substring(0,20))"
+                        $key = "SUSPICIOUS_CP|$($scp.Substring(0, [math]::Min(20, $scp.Length)))"
                         if (-not $foundFlags.Contains($key)) {
                             [void]$foundFlags.Add($key)
-                            $findings.Add([PSCustomObject]@{ Type = "SUSPICIOUS_CLASSPATH"; Detail = "Classpath includes suspicious path: $($scp.TrimStart('\','/'))"; Severity = "MEDIUM"; PID = $javaPid })
+                            $findings.Add([PSCustomObject]@{ Type = "SUSPICIOUS_CLASSPATH"; Detail = "Classpath includes suspicious path: $($scp.TrimStart('\', '/'))"; Severity = "MEDIUM"; PID = $javaPid })
                         }
                         break
                     }
@@ -558,7 +558,7 @@ function Test-JvmIntegrity {
     return $findings
 }
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  MOD SIGNATURE SCAN
 # ═════════════════════════════════════════════════════════
 function Get-ModSignature {
@@ -633,7 +633,7 @@ function Get-ModSignature {
     $fwPool = @($script:cheatStrings | Where-Object { $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]" })
     foreach ($h in @($hits)) {
         if ($h -match '^F\|') {
-            $fw   = $h.Substring(2)
+            $fw = $h.Substring(2)
             if ($fw.Length -lt 3) { continue }
             $best = $null
             foreach ($cs in $fwPool) {
@@ -659,13 +659,13 @@ function Get-ModSignature {
     return $cleaned
 }
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  URL SOURCE EXTRACTION
 # ═════════════════════════════════════════════════════════
 function Get-ModSources {
     param([string]$Path)
     $urls      = [System.Collections.Generic.List[string]]::new()
-    $blacklist = @("w3\.org","jsonschema\.org","fabricmc\.net","quiltmc\.net","oracle\.com","mojang\.com","minecraft\.net")
+    $blacklist = @("w3\.org", "jsonschema\.org", "fabricmc\.net", "quiltmc\.net", "oracle\.com", "mojang\.com", "minecraft\.net")
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
         foreach ($entry in $zip.Entries) {
@@ -689,7 +689,7 @@ function Get-ModSources {
     return @($urls | Select-Object -Unique)
 }
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  MAIN SCAN LOOP
 # ═════════════════════════════════════════════════════════
 try { $jars = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop }
@@ -761,18 +761,16 @@ Write-Host "  │" -ForegroundColor DarkMagenta
 foreach ($jar in $jars) {
     $i++
     $pct = [math]::Floor(($i / $total) * 100)
-    Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
-    Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
-    Write-Host "`r" -NoNewline
-
+    $padName = $jar.Name.PadRight(40).Substring(0, 40)
+    [Console]::Write("  │  $pct% $padName`r")
     $sig = Get-ModSignature -Path $jar.FullName -ScanStrings $true -ScanDeep $true
 
     if ($sig.Count -gt 0) {
-        $pats   = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
-        $strs   = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
-        $fws    = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
-        $deep_s = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
-        $entrp  = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
+        $pats    = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
+        $strs    = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
+        $fws     = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+        $deep_s  = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
+        $entrp   = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
         $sources = Get-ModSources -Path $jar.FullName
         $flagged.Add([PSCustomObject]@{
             Name      = $jar.Name
@@ -789,7 +787,7 @@ foreach ($jar in $jars) {
         })
     } else { $clean.Add($jar.Name) }
 }
-Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+Write-Host "  │  100% done                                      " -ForegroundColor DarkMagenta
 Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 
 Write-Host ""
@@ -803,9 +801,8 @@ Write-Host "  │" -ForegroundColor DarkMagenta
 foreach ($jar in $jars) {
     $oi++
     $pct = [math]::Floor(($oi / $total) * 100)
-    Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
-    Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
-    Write-Host "`r" -NoNewline
+    $padName = $jar.Name.PadRight(40).Substring(0, 40)
+    [Console]::Write("  │  $pct% $padName`r")
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($jar.FullName)
         $obfResult = Get-ObfuscationScore -Zip $zip
@@ -813,7 +810,7 @@ foreach ($jar in $jars) {
         $obfMap[$jar.Name] = $obfResult
     } catch { $obfMap[$jar.Name] = $null }
 }
-Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+Write-Host "  │  100% done                                      " -ForegroundColor DarkMagenta
 
 foreach ($mod in $flagged) {
     if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
@@ -846,9 +843,9 @@ Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundCo
 Start-Sleep -Milliseconds 300
 Clear-Host
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  CLASSIFICATION
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
  $criticalThreats = [System.Collections.Generic.List[PSObject]]::new()
  $suspiciousFiles = [System.Collections.Generic.List[PSObject]]::new()
 
@@ -856,12 +853,7 @@ foreach ($mod in $flagged) {
     $isBlatant = $false
     if ($mod.HitCount -ge 15) { $isBlatant = $true }
     foreach ($str in $mod.Strings) {
-        if ($str -match "SelfDestruct|self destruct|Blatant|Ｂｌａﾀ﾿﾿ﾀ|AutoCrystal|ＡｕﾄＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕｕｕｏＡｎｃﾞｮﾞ") {
-            $isBlatant = $true; break
-        }
-    }
-    foreach ($str in $mod.Strings) {
-        if ($str -match "cancelPacket|dropPacket|spoofPacket|setTimerSpeed|timerSpeed|fakeVersion|spoofVersion|grimBypass|ncpBypass|aacBypass|bypassAC") {
+        if ($str -match "SelfDestruct|self destruct|AutoCrystal|ＡｕﾄＣﾞｲｽﾀ｡ﾞ|Dqrkis Client|POT_CHEATS|Donut|AutoAnchor|ＡｕﾄＡｮｃﾞｮﾞ|cancelPacket|dropPacket|spoofPacket|setTimerSpeed|timerSpeed|fakeVersion|spoofVersion|grimBypass|ncpBypass|aacBypass|bypassAC|selfdestruct") {
             $isBlatant = $true; break
         }
     }
@@ -870,6 +862,9 @@ foreach ($mod in $flagged) {
 
  $W = 72
 
+# ═══════════════════════════════════════════════════════════
+#  BOX RENDERING HELPERS
+# ═══════════════════════════════════════════════════════════
 function Write-Border {
     param([string]$Type, [System.ConsoleColor]$Color)
     switch ($Type) {
@@ -888,9 +883,18 @@ function Write-Row {
         [System.ConsoleColor]$ValueColor  = [System.ConsoleColor]::White,
         [System.ConsoleColor]$BorderColor = [System.ConsoleColor]::DarkGray
     )
-    $maxVal = $W - $Label.Length - 1
-    if ($Value.Length -gt $maxVal) { $Value = $Value.Substring(0, $maxVal - 3) + "..." }
-    $pad = $W - $Label.Length - $Value.Length
+    $available = $W - $Label.Length
+    if ($available -lt 4) {
+        $truncLabel = $Label.Substring(0, [math]::Max(0, $W - 4))
+        $Value = ""
+        $pad = $W - $truncLabel.Length
+        Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
+        Write-Host $truncLabel -ForegroundColor $LabelColor -NoNewline
+        Write-Host (" " * [math]::Max(0, $pad) + "║") -ForegroundColor $BorderColor
+        return
+    }
+    if ($Value.Length -gt $available - 3) { $Value = $Value.Substring(0, [math]::Max(0, $available - 4)) + "..." }
+    $pad = [math]::Max(0, $W - $Label.Length - $Value.Length)
     Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
     Write-Host $Label -ForegroundColor $LabelColor -NoNewline
     Write-Host $Value -ForegroundColor $ValueColor -NoNewline
@@ -903,45 +907,31 @@ function Write-RowFull {
         [System.ConsoleColor]$TextColor   = [System.ConsoleColor]::White,
         [System.ConsoleColor]$BorderColor = [System.ConsoleColor]::DarkGray
     )
-    if ($Text.Length -gt $W) { $Text = $Text.Substring(0, $W - 3) + "..." }
-    $pad = $W - $Text.Length
+    if ($Text.Length -gt $W - 3) { $Text = $Text.Substring(0, [math]::Max(0, $W - 4)) + "..." }
+    $pad = [math]::Max(0, $W - $Text.Length)
     Write-Host "  ║" -ForegroundColor $BorderColor -NoNewline
     Write-Host $Text -ForegroundColor $TextColor -NoNewline
     Write-Host (" " * $pad + "║") -ForegroundColor $BorderColor
 }
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  REPORT BANNER
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 [Console]::WriteLine("")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("███    ██ ██  ██████     ███    ███  ██████  ██████                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("██   ████ ██  ██████     ██      ██  ██████  ██████                    ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                        ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                        ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  ")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkMagenta
-[Console]::WriteLine("    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                        ")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("                                                                        ")
+W "███    ██ ██  ██████     ███    ███  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
+W "████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   " ([System.ConsoleColor]::Magenta)
+W "██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
+W "██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
+W "██   ████ ██  ██████     ██      ██  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  " ([System.ConsoleColor]::Magenta)
+W "    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ " ([System.ConsoleColor]::DarkMagenta)
+W "    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  " ([System.ConsoleColor]::DarkMagenta)
+W "    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ " ([System.ConsoleColor]::Magenta)
+W "    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ " ([System.ConsoleColor]::DarkMagenta)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
+W "                                                                        " ([System.ConsoleColor]::DarkGray)
 [Console]::WriteLine("")
 [Console]::ForegroundColor = [System.ConsoleColor]::Magenta
 [Console]::WriteLine("                                    [ SCAN RESULTS ]")
@@ -968,6 +958,9 @@ if ($mcStatus.Running) {
 }
 Write-Border 'bot' DarkGray
 
+# ═══════════════════════════════════════════════════════════
+#  JVM FINDINGS
+# ═══════════════════════════════════════════════════════════
 if ($jvmResults.Count -gt 0) {
     Write-Host ""
     Write-Border 'top' Red
@@ -1002,5 +995,204 @@ if ($jvmResults.Count -gt 0) {
     Write-Border 'bot' Red
 }
 
+# ═══════════════════════════════════════════════════════════
+#  CRITICAL THREATS
+# ═══════════════════════════════════════════════════════════
 if ($criticalThreats.Count -gt 0) {
-    foreach ($
+    foreach ($mod in $criticalThreats) {
+        Write-Host ""
+        Write-Border 'top' Red
+        Write-RowFull "  ⚠  CRITICAL THREAT DETECTED" Red Red
+        Write-Border 'sep' Red
+        Write-Row "  File    : " $mod.Name White Red Red
+        Write-Row "  Size    : " "$($mod.Size) KB" DarkGray Gray Red
+        Write-Row "  Matches : " "$($mod.HitCount) signature(s)" DarkGray Red Red
+
+        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
+            $obfColor = switch ($mod.ObfResult.ObfLevel) {
+                "HEAVY"    { [System.ConsoleColor]::Red }
+                "MODERATE"  { [System.ConsoleColor]::Yellow }
+                default     { [System.ConsoleColor]::DarkYellow }
+            }
+            Write-Row "  Obf.    : " $mod.ObfResult.ObfLevel DarkGray $obfColor Red
+            foreach ($ind in $mod.ObfResult.Indicators) {
+                Write-Row "           " $ind DarkGray DarkYellow Red
+            }
+        }
+
+        if ($mod.Patterns.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  PATTERN MATCHES" DarkRed DarkRed
+            foreach ($p in ($mod.Patterns | Select-Object -First 20)) { Write-Row "  [PATH]  " $p DarkGray Red DarkRed }
+            if ($mod.Patterns.Count -gt 20) { Write-Row "  [PATH]  " "... and $($mod.Patterns.Count - 20) more" DarkGray DarkRed DarkRed }
+        }
+        if ($mod.Strings.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  CHEAT SIGNATURES" DarkRed DarkRed
+            foreach ($s in ($mod.Strings | Select-Object -First 20)) { Write-Row "  [STR]   " $s DarkGray Red DarkRed }
+            if ($mod.Strings.Count -gt 20) { Write-Row "  [STR]   " "... and $($mod.Strings.Count - 20) more" DarkGray DarkRed DarkRed }
+        }
+        if ($mod.Fullwidth.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  FULLWIDTH OBFUSCATION" DarkRed DarkRed
+            foreach ($f in $mod.Fullwidth) { Write-Row "  [FW]    " $f DarkGray Magenta DarkRed }
+        }
+        if ($mod.DeepHits.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  DEEP SCAN HITS" DarkRed DarkRed
+            foreach ($d in ($mod.DeepHits | Select-Object -First 15)) { Write-Row "  [DEEP]  " $d DarkGray Yellow DarkRed }
+            if ($mod.DeepHits.Count -gt 15) { Write-Row "  [DEEP]  " "... and $($mod.DeepHits.Count - 15) more" DarkGray DarkRed DarkRed }
+        }
+        if ($mod.Entropy.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  ENTROPY WARNINGS" DarkRed DarkRed
+            foreach ($e in ($mod.Entropy | Select-Object -First 10)) { Write-Row "  [ENT]   " $e DarkGray DarkYellow DarkRed }
+            if ($mod.Entropy.Count -gt 10) { Write-Row "  [ENT]   " "... and $($mod.Entropy.Count - 10) more" DarkGray DarkRed DarkRed }
+        }
+        if ($mod.Sources.Count -gt 0) {
+            Write-Border 'sep' DarkRed
+            Write-RowFull "  EXTRACTED URLS" DarkRed DarkRed
+            foreach ($u in ($mod.Sources | Select-Object -First 10)) { Write-Row "  [URL]   " $u DarkGray Cyan DarkRed }
+            if ($mod.Sources.Count -gt 10) { Write-Row "  [URL]   " "... and $($mod.Sources.Count - 10) more" DarkGray DarkRed DarkRed }
+        }
+        Write-Border 'bot' Red
+    }
+}
+
+# ═══════════════════════════════════════════════════════════
+#  SUSPICIOUS FILES
+# ═══════════════════════════════════════════════════════════
+if ($suspiciousFiles.Count -gt 0) {
+    foreach ($mod in $suspiciousFiles) {
+        Write-Host ""
+        Write-Border 'top' Yellow
+        Write-RowFull "  ⚑  SUSPICIOUS FILE" Yellow Yellow
+        Write-Border 'sep' Yellow
+        Write-Row "  File    : " $mod.Name White Yellow Yellow
+        Write-Row "  Size    : " "$($mod.Size) KB" DarkGray Gray Yellow
+        Write-Row "  Matches : " "$($mod.HitCount) signature(s)" DarkGray Yellow Yellow
+
+        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
+            $obfColor = switch ($mod.ObfResult.ObfLevel) {
+                "HEAVY"    { [System.ConsoleColor]::Red }
+                "MODERATE"  { [System.ConsoleColor]::Yellow }
+                default     { [System.ConsoleColor]::DarkYellow }
+            }
+            Write-Row "  Obf.    : " $mod.ObfResult.ObfLevel DarkGray $obfColor Yellow
+            foreach ($ind in $mod.ObfResult.Indicators) {
+                Write-Row "           " $ind DarkGray DarkYellow Yellow
+            }
+        }
+
+        if ($mod.Patterns.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  PATTERN MATCHES" DarkYellow DarkYellow
+            foreach ($p in ($mod.Patterns | Select-Object -First 15)) { Write-Row "  [PATH]  " $p DarkGray Yellow DarkYellow }
+            if ($mod.Patterns.Count -gt 15) { Write-Row "  [PATH]  " "... and $($mod.Patterns.Count - 15) more" DarkGray DarkYellow DarkYellow }
+        }
+        if ($mod.Strings.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  CHEAT SIGNATURES" DarkYellow DarkYellow
+            foreach ($s in ($mod.Strings | Select-Object -First 15)) { Write-Row "  [STR]   " $s DarkGray Yellow DarkYellow }
+            if ($mod.Strings.Count -gt 15) { Write-Row "  [STR]   " "... and $($mod.Strings.Count - 15) more" DarkGray DarkYellow DarkYellow }
+        }
+        if ($mod.Fullwidth.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  FULLWIDTH OBFUSCATION" DarkYellow DarkYellow
+            foreach ($f in $mod.Fullwidth) { Write-Row "  [FW]    " $f DarkGray Magenta DarkYellow }
+        }
+        if ($mod.DeepHits.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  DEEP SCAN HITS" DarkYellow DarkYellow
+            foreach ($d in ($mod.DeepHits | Select-Object -First 10)) { Write-Row "  [DEEP]  " $d DarkGray DarkYellow DarkYellow }
+            if ($mod.DeepHits.Count -gt 10) { Write-Row "  [DEEP]  " "... and $($mod.DeepHits.Count - 10) more" DarkGray DarkYellow DarkYellow }
+        }
+        if ($mod.Entropy.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  ENTROPY WARNINGS" DarkYellow DarkYellow
+            foreach ($e in ($mod.Entropy | Select-Object -First 8)) { Write-Row "  [ENT]   " $e DarkGray DarkYellow DarkYellow }
+            if ($mod.Entropy.Count -gt 8) { Write-Row "  [ENT]   " "... and $($mod.Entropy.Count - 8) more" DarkGray DarkYellow DarkYellow }
+        }
+        if ($mod.Sources.Count -gt 0) {
+            Write-Border 'sep' DarkYellow
+            Write-RowFull "  EXTRACTED URLS" DarkYellow DarkYellow
+            foreach ($u in ($mod.Sources | Select-Object -First 8)) { Write-Row "  [URL]   " $u DarkGray Cyan DarkYellow }
+            if ($mod.Sources.Count -gt 8) { Write-Row "  [URL]   " "... and $($mod.Sources.Count - 8) more" DarkGray DarkYellow DarkYellow }
+        }
+        Write-Border 'bot' Yellow
+    }
+}
+
+# ═══════════════════════════════════════════════════════════
+#  CLEAN FILES
+# ═══════════════════════════════════════════════════════════
+if ($clean.Count -gt 0) {
+    Write-Host ""
+    Write-Border 'top' DarkGray
+    Write-RowFull "  CLEAN FILES" Cyan DarkGray
+    Write-Border 'sep' DarkGray
+    $colWidth = [math]::Max(20, [math]::Floor(($W - 4) / 3))
+    $col = 0
+    $lineBuffer = ""
+    foreach ($c in ($clean | Sort-Object)) {
+        $display = if ($c.Length -gt $colWidth - 1) { $c.Substring(0, $colWidth - 2) + "…" } else { $c }
+        $padded = $display.PadRight($colWidth)
+        $lineBuffer += $padded
+        $col++
+        if ($col -ge 3) {
+            Write-Row "  " $lineBuffer.TrimEnd() DarkGray Green DarkGray
+            $lineBuffer = ""
+            $col = 0
+        }
+    }
+    if ($lineBuffer -ne "") {
+        Write-Row "  " $lineBuffer.TrimEnd() DarkGray Green DarkGray
+    }
+    Write-Border 'bot' DarkGray
+}
+
+# ═══════════════════════════════════════════════════════════
+#  VERDICT FOOTER
+# ═══════════════════════════════════════════════════════════
+Write-Host ""
+Write-Border 'top' DarkGray
+ $verdictText  = ""
+ $verdictColor = [System.ConsoleColor]::Cyan
+
+if ($criticalThreats.Count -gt 0) {
+    $verdictText  = "  VERDICT  ·  $($criticalThreats.Count) CRITICAL THREAT(S) FOUND — REMOVE IMMEDIATELY"
+    $verdictColor = [System.ConsoleColor]::Red
+} elseif ($suspiciousFiles.Count -gt 0) {
+    $verdictText  = "  VERDICT  ·  $($suspiciousFiles.Count) suspicious file(s) — MANUAL REVIEW RECOMMENDED"
+    $verdictColor = [System.ConsoleColor]::Yellow
+} elseif ($jvmResults.Count -gt 0) {
+    $highJVM = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" })
+    if ($highJVM.Count -gt 0) {
+        $verdictText  = "  VERDICT  ·  JVM anomalies detected — INVESTIGATE LAUNCH CONFIGURATION"
+        $verdictColor = [System.ConsoleColor]::Yellow
+    } else {
+        $verdictText  = "  VERDICT  ·  Minor JVM flags only — LIKELY CLEAN"
+        $verdictColor = [System.ConsoleColor]::Cyan
+    }
+} else {
+    $verdictText  = "  VERDICT  ·  ALL CLEAN — NO THREATS DETECTED"
+    $verdictColor = [System.ConsoleColor]::Cyan
+}
+
+Write-RowFull $verdictText $verdictColor $verdictColor
+Write-Border 'sep' DarkGray
+
+ $summaryParts = @()
+if ($criticalThreats.Count -gt 0) { $summaryParts += "$($criticalThreats.Count) critical" }
+if ($suspiciousFiles.Count -gt 0) { $summaryParts += "$($suspiciousFiles.Count) suspicious" }
+if ($jvmResults.Count -gt 0)      { $summaryParts += "$($jvmResults.Count) JVM issue(s)" }
+if ($obfHeavy -gt 0)               { $summaryParts += "$obfHeavy heavily obfuscated" }
+if ($clean.Count -gt 0)            { $summaryParts += "$($clean.Count) clean" }
+
+ $summaryLine = if ($summaryParts.Count -gt 0) { ($summaryParts -join "  ·  ") } else { "no findings" }
+Write-RowFull "  $summaryLine" DarkGray DarkGray
+Write-Border 'bot' DarkGray
+
+Write-Host ""
+Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
+ $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
