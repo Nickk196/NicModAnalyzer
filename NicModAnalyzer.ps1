@@ -45,25 +45,61 @@ if (-not (Test-Path $modsPath -PathType Container)) {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  DEEP SCAN PROMPT
+#  SCAN MODE SELECTION
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host "  Scan mode " -ForegroundColor DarkGray -NoNewline
+Write-Host "  Select scan modules " -ForegroundColor DarkGray -NoNewline
+Write-Host "(choose one or more)" -ForegroundColor DarkMagenta
+Write-Host ""
+Write-Host "  " -NoNewline
 Write-Host "[1]" -ForegroundColor Magenta -NoNewline
-Write-Host " Standard   " -ForegroundColor Gray -NoNewline
+Write-Host " JVM Scan                 " -ForegroundColor Gray -NoNewline
+Write-Host "Checks Java process args for injected agents & dangerous flags" -ForegroundColor DarkGray
+Write-Host "  " -NoNewline
 Write-Host "[2]" -ForegroundColor Magenta -NoNewline
-Write-Host " Deep  (all file types + entropy + obfuscation analysis)" -ForegroundColor Gray
+Write-Host " Bypass Detection         " -ForegroundColor Gray -NoNewline
+Write-Host "Scans for anti-cheat bypass patterns & spoofing strings" -ForegroundColor DarkGray
+Write-Host "  " -NoNewline
+Write-Host "[3]" -ForegroundColor Magenta -NoNewline
+Write-Host " String Analysis          " -ForegroundColor Gray -NoNewline
+Write-Host "Deep string + fullwidth unicode + cheat signature scan" -ForegroundColor DarkGray
+Write-Host "  " -NoNewline
+Write-Host "[4]" -ForegroundColor Magenta -NoNewline
+Write-Host " Advanced Obfuscation     " -ForegroundColor Gray -NoNewline
+Write-Host "Entropy, short class names, obfuscator markers & more" -ForegroundColor DarkGray
+Write-Host "  " -NoNewline
+Write-Host "[5]" -ForegroundColor Magenta -NoNewline
+Write-Host " Everything               " -ForegroundColor Gray -NoNewline
+Write-Host "Run all modules above" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $scanModeInput = Read-Host
-$deepScan = ($scanModeInput.Trim() -eq '2')
+
+$scanChoice = $scanModeInput.Trim()
+
+# Parse which modules are active
+$doJVM      = $scanChoice -eq '5' -or $scanChoice -eq '1'
+$doBypass   = $scanChoice -eq '5' -or $scanChoice -eq '2'
+$doStrings  = $scanChoice -eq '5' -or $scanChoice -eq '3'
+$doObf      = $scanChoice -eq '5' -or $scanChoice -eq '4'
+
+# deepScan = string analysis extended mode (used by Get-ModSignature)
+$deepScan = $doStrings -or $scanChoice -eq '5'
 
 Write-Host ""
-if ($deepScan) {
-    Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
-    Write-Host "DEEP SCAN" -ForegroundColor Magenta
+Write-Host "  Modules  : " -ForegroundColor DarkGray -NoNewline
+$activeModules = @()
+if ($doJVM)     { $activeModules += "JVM Scan" }
+if ($doBypass)  { $activeModules += "Bypass Detection" }
+if ($doStrings) { $activeModules += "String Analysis" }
+if ($doObf)     { $activeModules += "Advanced Obfuscation" }
+if ($activeModules.Count -eq 0) {
+    # Default to everything if invalid input
+    $doJVM = $true; $doBypass = $true; $doStrings = $true; $doObf = $true; $deepScan = $true
+    $activeModules = @("JVM Scan", "Bypass Detection", "String Analysis", "Advanced Obfuscation")
+    Write-Host "Invalid input — running all modules" -ForegroundColor Yellow
 } else {
-    Write-Host "  Mode   : " -ForegroundColor DarkGray -NoNewline
-    Write-Host "STANDARD SCAN" -ForegroundColor DarkMagenta
+    Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -608,78 +644,95 @@ if ($mcStatus.Running) {
 }
 
 # ───────────────────────────────────────────────────────────
-#  PHASE 1 — JVM Arguments
+#  PHASE 1 — JVM Scan
 # ───────────────────────────────────────────────────────────
-Write-Host ""
-Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
-Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
-Write-Host " · JVM Arguments" -ForegroundColor DarkGray
-Write-Host "  │" -ForegroundColor DarkMagenta
-Write-Host "  │  checking... " -ForegroundColor DarkGray -NoNewline
-$jvmResults = Test-JvmIntegrity
-if ($jvmResults.Count -gt 0) {
-    Write-Host "$($jvmResults.Count) issue(s) found" -ForegroundColor Red
-} else {
-    Write-Host "clean" -ForegroundColor Cyan
+$jvmResults = [System.Collections.Generic.List[PSObject]]::new()
+if ($doJVM) {
+    Write-Host ""
+    Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
+    Write-Host " · JVM Scan" -ForegroundColor DarkGray
+    Write-Host "  │" -ForegroundColor DarkMagenta
+    Write-Host "  │  checking... " -ForegroundColor DarkGray -NoNewline
+    $jvmResults = Test-JvmIntegrity
+    if ($jvmResults.Count -gt 0) {
+        Write-Host "$($jvmResults.Count) issue(s) found" -ForegroundColor Red
+    } else {
+        Write-Host "clean" -ForegroundColor Cyan
+    }
+    Write-Host "  └─ done" -ForegroundColor DarkMagenta
 }
-Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
 # ───────────────────────────────────────────────────────────
-#  PHASE 2 — Mod Signatures
+#  PHASE 2 — Bypass Detection + String Analysis
 # ───────────────────────────────────────────────────────────
-Write-Host ""
-Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
-Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
-$phaseLabel = if ($deepScan) { " · Mod Signatures + Deep Strings + Entropy" } else { " · Mod Signatures" }
-Write-Host $phaseLabel -ForegroundColor DarkGray
-Write-Host "  │" -ForegroundColor DarkMagenta
-
 $total   = $jars.Count; $i = 0
 $flagged = [System.Collections.Generic.List[PSObject]]::new()
 $clean   = [System.Collections.Generic.List[string]]::new()
 
-foreach ($jar in $jars) {
-    $i++
-    $pct = [math]::Floor(($i / $total) * 100)
-    Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
-    Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
-    Write-Host "`r" -NoNewline
+if ($doBypass -or $doStrings) {
+    Write-Host ""
+    Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
+    $phaseModules = @()
+    if ($doBypass)  { $phaseModules += "Bypass Detection" }
+    if ($doStrings) { $phaseModules += "String Analysis" }
+    Write-Host (" · " + ($phaseModules -join " + ")) -ForegroundColor DarkGray
+    Write-Host "  │" -ForegroundColor DarkMagenta
 
-    $sig = Get-ModSignature -Path $jar.FullName -Deep $deepScan
+    foreach ($jar in $jars) {
+        $i++
+        $pct = [math]::Floor(($i / $total) * 100)
+        Write-Host "  │  $pct% " -ForegroundColor DarkMagenta -NoNewline
+        Write-Host "$($jar.Name)                    " -ForegroundColor DarkGray -NoNewline
+        Write-Host "`r" -NoNewline
 
-    if ($sig.Count -gt 0) {
-        $pats   = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
-        $strs   = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
-        $fws    = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
-        $deep_s = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
-        $entrp  = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
-        $sources = Get-ModSources -Path $jar.FullName
-        $flagged.Add([PSCustomObject]@{
-            Name      = $jar.Name
-            Path      = $jar.FullName
-            Size      = [math]::Round($jar.Length / 1KB, 1)
-            Patterns  = $pats
-            Strings   = $strs
-            Fullwidth = $fws
-            DeepHits  = $deep_s
-            Entropy   = $entrp
-            HitCount  = $sig.Count
-            Sources   = $sources
-            ObfResult = $null
-        })
-    } else { $clean.Add($jar.Name) }
+        $sig = Get-ModSignature -Path $jar.FullName -Deep $doStrings
+
+        # If only bypass selected, strip out deep-string-only hits
+        if ($doBypass -and -not $doStrings) {
+            $sig = [System.Collections.Generic.HashSet[string]]::new(
+                ($sig | Where-Object { $_ -match '^P\|' -or $_ -match '^S\|' -or $_ -match '^F\|' })
+            )
+        }
+
+        if ($sig.Count -gt 0) {
+            $pats   = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
+            $strs   = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
+            $fws    = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
+            $deep_s = @($sig | Where-Object { $_ -match '^D\|' } | ForEach-Object { $_.Substring(2) })
+            $entrp  = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
+            $sources = Get-ModSources -Path $jar.FullName
+            $flagged.Add([PSCustomObject]@{
+                Name      = $jar.Name
+                Path      = $jar.FullName
+                Size      = [math]::Round($jar.Length / 1KB, 1)
+                Patterns  = $pats
+                Strings   = $strs
+                Fullwidth = $fws
+                DeepHits  = $deep_s
+                Entropy   = $entrp
+                HitCount  = $sig.Count
+                Sources   = $sources
+                ObfResult = $null
+            })
+        } else { $clean.Add($jar.Name) }
+    }
+    Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
+    Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
+} else {
+    # Neither bypass nor string selected — still populate clean list
+    foreach ($jar in $jars) { $clean.Add($jar.Name) }
 }
-Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
-Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 
 # ───────────────────────────────────────────────────────────
-#  PHASE 3 — Obfuscation Analysis (deep mode only)
+#  PHASE 3 — Advanced Obfuscation Detection
 # ───────────────────────────────────────────────────────────
-if ($deepScan) {
+if ($doObf) {
     Write-Host ""
     Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
     Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
-    Write-Host " · Obfuscation Analysis" -ForegroundColor DarkGray
+    Write-Host " · Advanced Obfuscation Detection" -ForegroundColor DarkGray
     Write-Host "  │" -ForegroundColor DarkMagenta
 
     $allJarPaths = @{}
@@ -815,17 +868,17 @@ Write-Host "   ─────────────────────�
 Write-Host ""
 
 # ── Summary bar ──────────────────────────────────────────────────────────────
-$modeLabel    = if ($deepScan) { "DEEP" } else { "STANDARD" }
-$flaggedColor = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
+$flaggedColor  = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
+$moduleSummary = ($activeModules -join "  ·  ")
 
 Write-Border 'top' DarkGray
 Write-RowFull ("  SCAN REPORT  ·  " + $scanTimestamp) Magenta DarkGray
 Write-Border 'sep' DarkGray
-Write-Row     "  Mode    : " $modeLabel                              Magenta    White    DarkGray
-Write-Row     "  Path    : " $modsPath                               DarkGray   Gray     DarkGray
-Write-Row     "  Files   : " "$($jars.Count) scanned"               DarkGray   White    DarkGray
-Write-Row     "  Clean   : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
-Write-Row     "  Flagged : " "$($flagged.Count)"                     DarkGray   $flaggedColor DarkGray
+Write-Row     "  Modules  : " $moduleSummary                          Magenta    White    DarkGray
+Write-Row     "  Path     : " $modsPath                               DarkGray   Gray     DarkGray
+Write-Row     "  Files    : " "$($jars.Count) scanned"               DarkGray   White    DarkGray
+Write-Row     "  Clean    : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
+Write-Row     "  Flagged  : " "$($flagged.Count)"                     DarkGray   $flaggedColor DarkGray
 
 if ($mcStatus.Running) {
     Write-Row "  Minecraft: " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
