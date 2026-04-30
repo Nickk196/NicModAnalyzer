@@ -15,7 +15,7 @@ Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  �
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ V4.0 - MOD ANALYZER ]" -ForegroundColor Magenta
+Write-Host "                                    [ V4.1 - MOD ANALYZER ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -45,7 +45,7 @@ Write-Host "  Scan mode " -ForegroundColor DarkGray -NoNewline
 Write-Host "[1]" -ForegroundColor Magenta -NoNewline
 Write-Host " Standard   " -ForegroundColor Gray -NoNewline
 Write-Host "[2]" -ForegroundColor Magenta -NoNewline
-Write-Host " Deep  (all file types + entropy analysis)" -ForegroundColor Gray
+Write-Host " Deep  (all file types + entropy + obfuscation analysis)" -ForegroundColor Gray
 Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $scanModeInput = Read-Host
 $deepScan = ($scanModeInput.Trim() -eq '2')
@@ -137,7 +137,7 @@ $cheatStrings = @(
     "Silent Rotations", "SilentRotations", "Ｓｉﾞｭﾝｔ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
     "Ｆ｡ｹＬａｶﾞ", "Ｆ｡ｋｅ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｅ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｍｲｉｅｽ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｅｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay", "ＥｌｙﾞＳＷａｵ", "Ｅｌｙﾄﾗａ Ｓｗｱﾞ",
@@ -153,7 +153,7 @@ $cheatStrings = @(
     "No Count Glitch", "Ｎｏ Ｃｏｕﾝｔ Ｇﾞｲｲｯﾞｃﾞ", "No Bounce", "NoBounce", "Ｎｏ Ｂｵｳﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
     "Ｒｅﾑｵｮｖｵｽ ｔｈｅ ｃｲｲｽｳｕｌ ｂｏｵｮｃｴ ａｎｲﾑａﾞｵｮ", "Place Delay", "Ｐｌａｾｵ Ｄｅﾙｱ", "Break Delay", "Ｂﾚｅａｋ Ｄｅﾙｱ",
     "Fast Mode", "Ｆ｡ｽﾄ Ｍｵﾄﾟ", "Place Chance", "Ｐｌａｾｵ Ｃｈ｡ﾝｃｴ", "Break Chance", "Ｂﾚｅａｋ Ｃｈ｡ﾝｽｴ",
-    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｸ", "damagetick", "Anti Weakness", "Ａｎﾞｨｉ Ｗｅａｋﾝｅｓｽ",
+    "Stop On Kill", "Ｓｔｵｐ Ｏｎ Ｋｲﾙｙ", "Ｄ｡ﾝｶﾞ Ｔｲｯｸ", "damagetick", "Anti Weakness", "Ａｎﾞｨｉ Ｗｅａｋﾝｅｓｓ",
     "Particle Chance", "Ｐ｡ﾒﾞｉｃﾞ Ｃｈ｡ﾝｃｴ", "Trigger Key", "Ｔｒｉｯｶﾞﾞ Ｋ｡｡", "Switch Delay", "Ｓｗｲｉｴｃｨ Ｄｅｌｱ",
     "Totem Slot", "Ｔｏｔｅｵ ｽｬｯ｡", "Smooth Rotations", "Ｓｍｵｵｔｈ ﾝｰｵｔａｵｮｽ", "Rotation Speed", "ﾛｵｰ｡ﾞｲｲﾝｮ ｽｰｵ｡ｴｰｰｄ",
     "Use Easing", "Ｕｾｵ Ｅａｽｲﾝｸ", "Easing Strength", "Ｅａｽｲｸﾞ ｽﾄｬﾞﾞｈ", "While Use", "Ｗｈｲｉｌｅ Ｕｽｪ",
@@ -178,46 +178,41 @@ $cheatStrings = @(
     "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
-    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｋｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｋｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
-    "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｋｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
+    "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｫｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｫｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
+    "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｷｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
-# Deep scan extra strings — broader mixin hooks, suspicious reflection, config keys
+# ═══════════════════════════════════════════════════════════
+#  DEEP SCAN STRINGS — precise hooks only, no generic terms
+# ═══════════════════════════════════════════════════════════
 $deepCheatStrings = @(
-    # Mixin hooks that legit mods don't typically use
+    # Mixin hooks that cheat clients use but legit mods almost never do
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
     "callAttackEntity", "callUseItem",
-    "getReachDistance", "setReachDistance",
-    "networkHandler.sendPacket", "sendPacket(new Hand",
     "getAttackCooldownProgress", "resetLastAttackedTicks",
-    "setSprinting", "setVelocity", "addVelocity",
-    # Reflection/dynamic class loading abuse
-    "Class.forName(", "getDeclaredMethod(", "setAccessible(true)",
-    "MethodHandles.lookup", "Unsafe.getUnsafe",
-    # Config / GUI strings common in clients
-    "cheat", "hack", "esp", "wallhack", "killaura", "kill aura",
-    "bhop", "bunnyhop", "bunny hop", "speedhack", "speed hack",
-    "xray", "x-ray", "freecam", "free cam", "noclip", "no clip",
-    "scaffold", "tower", "towerplace", "tower place",
-    "velocity", "antikb", "anti kb", "reach", "hitbox",
-    "tracers", "cave finder", "cavefinder", "ore esp",
-    "fullbright", "full bright", "nuker", "anti-afk", "antiafk",
-    # Network-level manipulation
-    "C03PacketPlayer", "C09PacketHeldItemChange", "CPacketPlayer",
-    "CPacketHeldItemChange", "ServerboundMovePlayerPacket",
-    "spoofPacket", "cancelPacket", "dropPacket",
-    # Obfuscation/evasion patterns
-    "System.exit(0)", "Runtime.getRuntime().exec(",
-    "ProcessBuilder", "shutdownNow(", "deleteOnExit(",
-    # Timer manipulation
-    "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
-    # Module/feature registration patterns from known clients
+    # Reflection abuse patterns (exact combos uncommon in legit mods)
+    "getDeclaredMethod(", "setAccessible(true)",
+    "MethodHandles.lookup",
+    # Client-specific registration patterns
     "ModuleManager", "FeatureManager", "HackList",
-    "getModules()", "isEnabled()", "toggle()",
-    "CommandManager.register", "EventBus.subscribe",
-    # Screen / GUI injection
-    "GuiHacks", "ClickGui", "AltManager", "SessionStealer"
+    "CommandManager.register",
+    "GuiHacks", "ClickGui", "AltManager", "SessionStealer",
+    # Packet manipulation
+    "spoofPacket", "cancelPacket", "dropPacket",
+    "CPacketHeldItemChange", "ServerboundMovePlayerPacket",
+    # Timer abuse
+    "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
+    # Runtime exec abuse
+    "Runtime.getRuntime().exec(",
+    # Dangerous JNDI flags (Log4Shell vectors)
+    "com.sun.jndi.rmi.object.trustURLCodebase=true",
+    "com.sun.jndi.ldap.object.trustURLCodebase=true",
+    # Remote debug attachment
+    "-Xrunjdwp:", "agentlib:jdwp",
+    # Known cheat-specific class patterns
+    "dev.gambleclient", "xyz.greaj", "org.chainlibs",
+    "dev.krypton", "Dqrkis", "dqrkis", "lvstrng"
 )
 
 $patternRegex   = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
@@ -247,6 +242,138 @@ function Get-ShannonEntropy {
 }
 
 # ═══════════════════════════════════════════════════════════
+#  OBFUSCATION ANALYSIS (deep scan)
+# ═══════════════════════════════════════════════════════════
+function Get-ObfuscationScore {
+    param([System.IO.Compression.ZipArchive]$Zip)
+    $result = [PSCustomObject]@{
+        Score        = 0
+        Indicators   = [System.Collections.Generic.List[string]]::new()
+        ObfLevel     = "None"
+    }
+
+    $classEntries  = @($Zip.Entries | Where-Object { $_.FullName -match '\.class$' })
+    $totalClasses  = $classEntries.Count
+    if ($totalClasses -eq 0) { return $result }
+
+    # 1. Ratio of very short class names (1-2 chars = obfuscated)
+    $shortNames = @($classEntries | Where-Object {
+        $name = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)
+        $name.Length -le 2 -and $name -cmatch '^[a-zA-Z]+$'
+    })
+    $shortRatio = [math]::Round(($shortNames.Count / $totalClasses) * 100, 1)
+    if ($shortRatio -ge 60) {
+        $result.Score += 40
+        $result.Indicators.Add("Short class names: $shortRatio% of $totalClasses classes are 1-2 chars")
+    } elseif ($shortRatio -ge 30) {
+        $result.Score += 20
+        $result.Indicators.Add("Partial name obfuscation: $shortRatio% short class names")
+    }
+
+    # 2. Known obfuscator markers in MANIFEST or config files
+    $obfuscatorSigs = @{
+        "Allatori"   = "Allatori"
+        "Zelix"      = "Zelix"
+        "ProGuard"   = "Obfuscated-By: ProGuard"
+        "Stringer"   = "Stringer Java Obfuscator"
+        "Skidfuscator"= "skidfuscator"
+        "Radon"      = "Radon"
+        "BisGuard"   = "BisGuard"
+        "QProtect"   = "QProtect"
+        "Paramorphism"= "paramorphism"
+    }
+    foreach ($entry in ($Zip.Entries | Where-Object { $_.FullName -match 'MANIFEST\.MF$|\.json$|\.toml$' })) {
+        try {
+            $st = $entry.Open(); $buf = New-Object System.IO.MemoryStream
+            $st.CopyTo($buf); $st.Close()
+            $text = [System.Text.Encoding]::UTF8.GetString($buf.ToArray()); $buf.Dispose()
+            foreach ($kv in $obfuscatorSigs.GetEnumerator()) {
+                if ($text -match [regex]::Escape($kv.Value)) {
+                    $result.Score += 30
+                    $result.Indicators.Add("Obfuscator marker: $($kv.Key)")
+                }
+            }
+        } catch { }
+    }
+
+    # 3. Alphabet soup package names (all single-char path segments)
+    $deepPaths = @($classEntries | Where-Object {
+        $parts = $_.FullName.Split('/')
+        $parts.Count -ge 3 -and ($parts[0..($parts.Count-2)] | Where-Object { $_.Length -le 1 -and $_ -cmatch '^[a-z]$' }).Count -ge 2
+    })
+    if ($deepPaths.Count -gt 5) {
+        $result.Score += 25
+        $result.Indicators.Add("Obfuscated package tree: $($deepPaths.Count) classes in single-char packages")
+    }
+
+    # 4. Missing SourceFile attributes (intentionally stripped)
+    $strippedCount = 0
+    $sampleSize    = [math]::Min($totalClasses, 30)
+    $sampled       = $classEntries | Select-Object -First $sampleSize
+    foreach ($ce in $sampled) {
+        try {
+            $st = $ce.Open(); $buf = New-Object System.IO.MemoryStream
+            $st.CopyTo($buf); $st.Close()
+            $bytes = $buf.ToArray(); $buf.Dispose()
+            # SourceFile attribute tag is 0x00 0x01 in class constant pool header area
+            # Simpler heuristic: check if the string "SourceFile" is absent in a non-trivial class
+            if ($bytes.Length -gt 200) {
+                $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+                if (-not ($ascii -match "SourceFile")) { $strippedCount++ }
+            }
+        } catch { }
+    }
+    $strippedRatio = [math]::Round(($strippedCount / $sampleSize) * 100, 1)
+    if ($strippedRatio -ge 70) {
+        $result.Score += 20
+        $result.Indicators.Add("SourceFile attributes stripped: $strippedRatio% of sampled classes")
+    } elseif ($strippedRatio -ge 40) {
+        $result.Score += 10
+        $result.Indicators.Add("Partial SourceFile stripping: $strippedRatio% of sampled classes")
+    }
+
+    # 5. Unicode/invisible identifier abuse in class names
+    $unicodeNames = @($classEntries | Where-Object {
+        $_.FullName -match '[\u0080-\uFFFF]' -and $_.FullName -notmatch '[\u3041-\u3096]'
+    })
+    if ($unicodeNames.Count -gt 0) {
+        $result.Score += 35
+        $result.Indicators.Add("Unicode identifier obfuscation: $($unicodeNames.Count) class(es) with unusual characters")
+    }
+
+    # 6. String encryption markers (common in Skidfuscator / Stringer output)
+    $encryptedStringMarkers = @("decrypt", "deobf", "StringEncryption", "StringDecryptor",
+                                 "decryptString", "stringPool", "StringPool", "\$\$decrypt")
+    $encCount = 0
+    foreach ($ce in ($classEntries | Select-Object -First 20)) {
+        try {
+            $st = $ce.Open(); $buf = New-Object System.IO.MemoryStream
+            $st.CopyTo($buf); $st.Close()
+            $ascii = [System.Text.Encoding]::ASCII.GetString($buf.ToArray()); $buf.Dispose()
+            foreach ($marker in $encryptedStringMarkers) {
+                if ($ascii -match $marker) { $encCount++; break }
+            }
+        } catch { }
+    }
+    if ($encCount -ge 3) {
+        $result.Score += 30
+        $result.Indicators.Add("String encryption detected in $encCount class(es)")
+    } elseif ($encCount -ge 1) {
+        $result.Score += 15
+        $result.Indicators.Add("Possible string encryption in $encCount class(es)")
+    }
+
+    # Classify
+    $result.ObfLevel = switch ($true) {
+        ($result.Score -ge 70) { "HEAVY" }
+        ($result.Score -ge 35) { "MODERATE" }
+        ($result.Score -ge 10) { "LIGHT" }
+        default                { "None" }
+    }
+    return $result
+}
+
+# ═══════════════════════════════════════════════════════════
 #  MINECRAFT PROCESS STATUS
 # ═══════════════════════════════════════════════════════════
 function Get-MinecraftStatus {
@@ -268,7 +395,7 @@ function Get-MinecraftStatus {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  JVM INTEGRITY CHECK (expanded)
+#  JVM INTEGRITY CHECK
 # ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
@@ -280,7 +407,6 @@ function Test-JvmIntegrity {
         $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
         $cmd = $wmi.CommandLine
         if ($cmd) {
-            # ----- Java Agents -----
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
             $whitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus")
             foreach ($m in $agentMatches) {
@@ -291,37 +417,25 @@ function Test-JvmIntegrity {
                 if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "AGENT"; Detail = $name; Severity = "HIGH" }) }
             }
 
-            # ----- Extended JVM Flag Checks -----
             $flags = @(
-                # Original flags
                 @{ F = "-Xbootclasspath/p:";        T = "BOOTCLASS_PREPEND";      S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader" },
                 @{ F = "-Xbootclasspath/a:";        T = "BOOTCLASS_APPEND";       S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
                 @{ F = "-Dfabric.addMods=";         T = "FABRIC_INJECT";          S = "HIGH";   D = "Injects extra mods via Fabric property" },
                 @{ F = "-Dfabric.loadMods=";        T = "FABRIC_MANIPULATE";      S = "MEDIUM"; D = "Overrides Fabric mod loading" },
                 @{ F = "-Djava.security.manager=";  T = "SEC_BYPASS";             S = "HIGH";   D = "Disables or replaces Java Security Manager" },
                 @{ F = "-Dclient.brand=";           T = "BRAND_SPOOF";            S = "LOW";    D = "Spoofs client brand string" },
-                # New flags
                 @{ F = "-Xverify:none";             T = "BYTECODE_VERIFY_OFF";    S = "HIGH";   D = "Disables JVM bytecode verification — allows tampered classes" },
                 @{ F = "-noverify";                 T = "NOVERIFY";               S = "HIGH";   D = "Alias for -Xverify:none, disables class verification" },
-                @{ F = "-XX:+DisableAttachMechanism"; T = "ATTACH_DISABLED";      S = "LOW";    D = "Blocks JVM attach (uncommon, can hide debugging)" },
-                @{ F = "-XX:-OmitStackTraceInFastThrow"; T = "STACK_TRACE_FORCED"; S = "LOW";   D = "Minor flag, sometimes used in obfuscated builds" },
-                @{ F = "-Djava.class.path=";        T = "CLASSPATH_OVERRIDE";     S = "MEDIUM"; D = "Manually overrides classpath — can inject classes" },
-                @{ F = "-Djava.ext.dirs=";          T = "EXT_DIR_OVERRIDE";       S = "HIGH";   D = "Overrides JVM extension directory — deprecated injection vector" },
                 @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader — severe injection risk" },
                 @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent library — can hook anything" },
                 @{ F = "-agentpath:";               T = "NATIVE_AGENT_PATH";      S = "HIGH";   D = "Loads native agent by path — deep JVM access" },
-                @{ F = "-Xshare:off";               T = "CDS_DISABLED";           S = "LOW";    D = "Disables class-data sharing, sometimes used to avoid detection" },
-                @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path — can load malicious .dll/.so" },
+                @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path" },
                 @{ F = "-Dsun.misc.URLClassPath.disableJarChecking=true"; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" },
-                @{ F = "-Dlog4j.configurationFile="; T = "LOG4J_CONFIG";          S = "MEDIUM"; D = "Custom log4j config — historical exploit vector" },
                 @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "Enables JNDI RMI codebase — Log4Shell-style attack vector" },
                 @{ F = "-Dcom.sun.jndi.ldap.object.trustURLCodebase=true"; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "Enables JNDI LDAP codebase — Log4Shell variant" },
-                @{ F = "-XX:+UnlockDiagnosticVMOptions"; T = "DIAGNOSTIC_UNLOCK"; S = "LOW";   D = "Unlocks diagnostic JVM options — rarely needed in legit clients" },
-                @{ F = "-XX:CompileCommand=exclude"; T = "JIT_EXCLUDE";           S = "MEDIUM"; D = "Excludes methods from JIT — can hide code from analysis" },
-                @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode — suspicious in packaged clients" },
+                @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode" },
                 @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Enables remote debugging — allows arbitrary code injection" },
-                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "Java Debug Wire Protocol agent — remote code execution risk" },
-                @{ F = "-Djdk.attach.allowAttachSelf=true"; T = "SELF_ATTACH";    S = "MEDIUM"; D = "Allows JVM to attach to itself — used by some injection tools" }
+                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "Java Debug Wire Protocol agent — remote code execution risk" }
             )
             foreach ($fl in $flags) {
                 if ($cmd -match [regex]::Escape($fl.F)) {
@@ -340,6 +454,7 @@ function Get-ModSignature {
     param([string]$Path, [bool]$Deep = $false)
     $hits = [System.Collections.Generic.HashSet[string]]::new()
     $entropyWarnings = [System.Collections.Generic.List[string]]::new()
+    $obfResult = $null
     try {
         $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
         foreach ($e in $zip.Entries) { foreach ($m in $patternRegex.Matches($e.FullName)) { [void]$hits.Add("P|$($m.Value)") } }
@@ -356,7 +471,6 @@ function Get-ModSignature {
             } catch { }
         }
 
-        # Determine which extensions to scan
         $scanExtensions = '\.(class|json)$|MANIFEST\.MF'
         if ($Deep) { $scanExtensions = '\.(class|json|toml|yml|yaml|txt|cfg|properties|xml|html|js|ts|kt|groovy)$|MANIFEST\.MF' }
 
@@ -369,7 +483,6 @@ function Get-ModSignature {
                     $a = [System.Text.Encoding]::ASCII.GetString($raw)
                     $u = [System.Text.Encoding]::UTF8.GetString($raw)
 
-                    # Standard patterns
                     foreach ($m in $patternRegex.Matches($a)) { [void]$hits.Add("P|$($m.Value)") }
                     foreach ($cs in $cheatStringSet) {
                         if ($a.Contains($cs)) { [void]$hits.Add("S|$cs"); continue }
@@ -377,13 +490,11 @@ function Get-ModSignature {
                     }
                     foreach ($m in $fullwidthRegex.Matches($u)) { [void]$hits.Add("F|$($m.Value)") }
 
-                    # Deep scan extras
                     if ($Deep) {
                         foreach ($ds in $deepCheatStringSet) {
                             if ($a.Contains($ds)) { [void]$hits.Add("D|$ds"); continue }
                             if ($u.Contains($ds))  { [void]$hits.Add("D|$ds") }
                         }
-                        # Entropy check on .class files only (packed/encrypted = high entropy)
                         if ($entry.FullName -match '\.class$' -and $raw.Length -gt 512) {
                             $ent = Get-ShannonEntropy -Data $raw
                             if ($ent -gt 7.2) {
@@ -395,6 +506,12 @@ function Get-ModSignature {
                 } catch { }
             }
         }
+
+        # Run obfuscation analysis in deep mode
+        if ($Deep) {
+            $obfResult = Get-ObfuscationScore -Zip $zip
+        }
+
         foreach ($n in $nested) { try { $n.Dispose() } catch { } }
         $zip.Dispose()
     } catch { }
@@ -425,9 +542,9 @@ function Get-ModSignature {
         if ($h -match '^F\|') { if ($fwUnique.Contains($h.Substring(2))) { [void]$cleaned.Add($h) } }
         else { [void]$cleaned.Add($h) }
     }
-    # Add entropy warnings as hits
     foreach ($ew in $entropyWarnings) { [void]$cleaned.Add("E|$ew") }
-    return $cleaned
+
+    return [PSCustomObject]@{ Hits = $cleaned; Obf = $obfResult }
 }
 
 # ═══════════════════════════════════════════════════════════
@@ -517,8 +634,11 @@ foreach ($jar in $jars) {
     Write-Host "$($jar.Name)" -ForegroundColor DarkGray -NoNewline
     Write-Host "`r" -NoNewline
 
-    $sig = Get-ModSignature -Path $jar.FullName -Deep $deepScan
-    if ($sig.Count -gt 0) {
+    $scanResult = Get-ModSignature -Path $jar.FullName -Deep $deepScan
+    $sig        = $scanResult.Hits
+    $obf        = $scanResult.Obf
+
+    if ($sig.Count -gt 0 -or ($obf -and $obf.ObfLevel -ne "None")) {
         $pats    = @($sig | Where-Object { $_ -match '^P\|' } | ForEach-Object { $_.Substring(2) })
         $strs    = @($sig | Where-Object { $_ -match '^S\|' } | ForEach-Object { $_.Substring(2) })
         $fws     = @($sig | Where-Object { $_ -match '^F\|' } | ForEach-Object { $_.Substring(2) })
@@ -526,15 +646,16 @@ foreach ($jar in $jars) {
         $entrp   = @($sig | Where-Object { $_ -match '^E\|' } | ForEach-Object { $_.Substring(2) })
         $sources = Get-ModSources -Path $jar.FullName
         $flagged.Add([PSCustomObject]@{
-            Name     = $jar.Name
-            Size     = [math]::Round($jar.Length / 1KB, 1)
-            Patterns = $pats
-            Strings  = $strs
-            Fullwidth= $fws
-            DeepHits = $deep_s
-            Entropy  = $entrp
-            HitCount = $sig.Count
-            Sources  = $sources
+            Name        = $jar.Name
+            Size        = [math]::Round($jar.Length / 1KB, 1)
+            Patterns    = $pats
+            Strings     = $strs
+            Fullwidth   = $fws
+            DeepHits    = $deep_s
+            Entropy     = $entrp
+            HitCount    = $sig.Count
+            Sources     = $sources
+            ObfResult   = $obf
         })
     } else { $clean.Add($jar.Name) }
 }
@@ -560,9 +681,9 @@ foreach ($mod in $flagged) {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  HELPER — fixed-width box printer (no broken borders)
+#  HELPER — fixed-width box printer
 # ═══════════════════════════════════════════════════════════
-$W = 72   # inner width (between │ and │)
+$W = 72
 
 function Write-Border {
     param([string]$Type, [System.ConsoleColor]$Color)
@@ -582,7 +703,6 @@ function Write-Row {
         [System.ConsoleColor]$ValueColor  = [System.ConsoleColor]::White,
         [System.ConsoleColor]$BorderColor = [System.ConsoleColor]::DarkGray
     )
-    # truncate value so the row never overflows the box
     $maxVal = $W - $Label.Length - 1
     if ($Value.Length -gt $maxVal) { $Value = $Value.Substring(0, $maxVal - 3) + "..." }
     $pad = $W - $Label.Length - $Value.Length
@@ -606,15 +726,21 @@ function Write-RowFull {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  REPORT BANNER
+#  REPORT BANNER  (same as launch banner)
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
-Write-Host " ███╗   ██╗██╗ ██████╗    ███╗   ███╗ ██████╗ ██████╗      █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗ " -ForegroundColor Magenta
-Write-Host " ████╗  ██║██║██╔════╝    ████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗" -ForegroundColor Magenta
-Write-Host " ██╔██╗ ██║██║██║         ██╔████╔██║██║   ██║██║  ██║    ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝" -ForegroundColor DarkMagenta
-Write-Host " ██║╚██╗██║██║██║         ██║╚██╔╝██║██║   ██║██║  ██║    ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗" -ForegroundColor DarkMagenta
-Write-Host " ██║ ╚████║██║╚██████╗    ██║ ╚═╝ ██║╚██████╔╝██████╔╝    ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║" -ForegroundColor Magenta
-Write-Host " ╚═╝  ╚═══╝╚═╝ ╚═════╝   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝" -ForegroundColor Magenta
+Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
+Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
+Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
+Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
+Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
+Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
+Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
+Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
+Write-Host ""
+Write-Host "                                    [ SCAN RESULTS ]" -ForegroundColor Magenta
+Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
 # ── Summary bar ──────────────────────────────────────────────────────────────
@@ -630,7 +756,6 @@ Write-Row     "  Files   : " "$($jars.Count) scanned"               DarkGray   W
 Write-Row     "  Clean   : " "$($clean.Count)"                       DarkGray   Cyan     DarkGray
 Write-Row     "  Flagged : " "$($flagged.Count)"                     DarkGray   $flaggedColor DarkGray
 
-# Minecraft status inline
 if ($mcStatus.Running) {
     Write-Row "  Minecraft: " "RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
 } else {
@@ -699,6 +824,15 @@ if ($criticalThreats.Count -gt 0) {
             }
         }
 
+        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
+            Write-Border 'sep' Red
+            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
+            Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Red
+            foreach ($ind in $mod.ObfResult.Indicators) {
+                Write-Row "    · " $ind DarkGray DarkGray Red
+            }
+        }
+
         Write-Border 'bot' Red
     }
 }
@@ -742,6 +876,15 @@ if ($suspiciousFiles.Count -gt 0) {
             Write-RowFull "  High Entropy Classes" DarkGray Yellow
             foreach ($e in $mod.Entropy) {
                 Write-Row "    · " $e DarkGray DarkGray Yellow
+            }
+        }
+
+        if ($mod.ObfResult -and $mod.ObfResult.ObfLevel -ne "None") {
+            Write-Border 'sep' Yellow
+            $obfColor = switch ($mod.ObfResult.ObfLevel) { "HEAVY" { [System.ConsoleColor]::Red } "MODERATE" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
+            Write-Row "  Obfuscation : " "$($mod.ObfResult.ObfLevel)  (score: $($mod.ObfResult.Score))" DarkGray $obfColor Yellow
+            foreach ($ind in $mod.ObfResult.Indicators) {
+                Write-Row "    · " $ind DarkGray DarkGray Yellow
             }
         }
 
