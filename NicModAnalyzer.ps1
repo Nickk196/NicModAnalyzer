@@ -15,7 +15,7 @@ Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  �
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
 Write-Host "          ░  ░  ░ ░                ░       ░ ░     ░              ░  ░         ░       ░  ░    ░  ░  ░  ░░    ░ ░       ░  ░   ░      " -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "                                    [ V4.1 - MOD ANALYZER ]" -ForegroundColor Magenta
+Write-Host "                                    [ - MOD ANALYZER ]" -ForegroundColor Magenta
 Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -27,12 +27,22 @@ Write-Host "(leave blank for default)" -ForegroundColor DarkMagenta
 Write-Host "  > " -ForegroundColor Magenta -NoNewline
 $modsPath = Read-Host
 
+# FIX 5: Improved path validation with detailed error message
 if ([string]::IsNullOrWhiteSpace($modsPath)) {
     $modsPath = "$env:USERPROFILE\AppData\Roaming\.minecraft\mods"
+    Write-Host "  Continuing with " -ForegroundColor DarkGray -NoNewline
+    Write-Host $modsPath -ForegroundColor White
+    Write-Host ""
 }
 
 if (-not (Test-Path $modsPath -PathType Container)) {
-    Write-Host '  Invalid path.' -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  x Invalid path!" -ForegroundColor Red
+    Write-Host "  The directory does not exist or is not accessible." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Tried: $modsPath" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  Press any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     exit 1
 }
@@ -137,7 +147,7 @@ $cheatStrings = @(
     "Silent Rotations", "SilentRotations", "Ｓｉﾞｭﾝｔ ﾝｵﾀｴｵ｝",
     "FakeInv", "swapBackToOriginalSlot", "FakeLag", "pingspoof", "ping spoof",
     "Ｆ｡ｹＬａｶﾞ", "Ｆ｡ｋｅ Ｌ｡ｶﾞ", "fakePunch", "Fake Punch", "Ｆ｡ｋｅ Ｐｕﾝｳﾞﾞ",
-    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｅｽ",
+    "webmacro", "web macro", "AntiWeb", "AutoWeb", "Ａｎﾄｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ", "Ｐｌ｡ｾｪｽ Ｗｅｂｽ Ｏｎ Ｅﾇｭｲｉｴｽ",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer", "Ｗａｌｋｽｙ Ｏﾟﾄｵﾞ", "autoCrystalPlaceClock",
     "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay", "ＥｌｙﾞＳＷａｵ", "Ｅｌｙﾄﾗａ Ｓｗｱﾞ",
@@ -177,40 +187,31 @@ $cheatStrings = @(
     "Holding Web", "ﾎｵﾙﾄｨﾝｷﾞ ﾂｪｳ", "Not When Affects Player", "Ｎｏｴ Ｗｈｅﾝ ａｆﾂｃｴｕｽ Ｐｌ｡ﾀｬﾞｲ", "Hit Delay", "Ｈｲｲ ﾃ｡ﾞｱｲ",
     "Ｓｗｲｲｃｈ Ｂａｃｷ", "Require Hold Axe", "ﾛｅｸｵｲｵｲｪ ﾛｵﾬｄ Ａｘｪ", "Fake Punch", "ﾌｧﾞｹ Ｐｕﾝｰﾞﾞ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
-    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｋＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
+    "ｐﾟ｡ｾｅＩﾝｔｪﾞｲｖ｡ｙ", "ｂﾞｅａｸＩｎｔｪﾞﾞｲｖ｡ｙ", "ｓｔｏｐＯＯｎＫｋｌﾞ", "ａｃﾞｲ｡ｔｪＯｎＲｉｃｋ",
     "ｄ｡ｾｶﾞｇﾞｔｉｃｋ", "ｈｏﾞﾄＣﾞｲｽ｡", "ｆ｡ｫｪＰｕﾞＰｕﾝｳﾞ", "ｆ｡ｫｪＰＰｕＰｮ", "Ｐｌ｡ｾｵｽ ｡ｮｃｈｏﾞ ｐｏｔｉｏｮｽ",
     "Ｐｌ｡ｾｵｽ ｱﾞｶｺｨｵ， ｃﾞｬｰｾｇｉﾄ， ｐﾞｵｼﾞﾄｰｷｵ， ｡ｮﾄﾞ ｪｸｰｌｵｄｪｽ", "Ａｕｔｏ ｽｗ｡ｐ ｔｏ ｽｐｪ｡ﾞ ｏｮ ｡ｴｴ｡ｃｸ",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍ｡ｸｮｏ Ｋ｡ｙ"
 )
 
 # ═══════════════════════════════════════════════════════════
-#  DEEP SCAN STRINGS — precise hooks only, no generic terms
+#  DEEP SCAN STRINGS
 # ═══════════════════════════════════════════════════════════
 $deepCheatStrings = @(
-    # Mixin hooks that cheat clients use but legit mods almost never do
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
     "callAttackEntity", "callUseItem",
     "getAttackCooldownProgress", "resetLastAttackedTicks",
-    # Reflection abuse patterns (exact combos uncommon in legit mods)
     "getDeclaredMethod(", "setAccessible(true)",
     "MethodHandles.lookup",
-    # Client-specific registration patterns
     "ModuleManager", "FeatureManager", "HackList",
     "CommandManager.register",
     "GuiHacks", "ClickGui", "AltManager", "SessionStealer",
-    # Packet manipulation
     "spoofPacket", "cancelPacket", "dropPacket",
     "CPacketHeldItemChange", "ServerboundMovePlayerPacket",
-    # Timer abuse
     "Timer.timerSpeed", "timerSpeed", "setTimerSpeed",
-    # Runtime exec abuse
     "Runtime.getRuntime().exec(",
-    # Dangerous JNDI flags (Log4Shell vectors)
     "com.sun.jndi.rmi.object.trustURLCodebase=true",
     "com.sun.jndi.ldap.object.trustURLCodebase=true",
-    # Remote debug attachment
     "-Xrunjdwp:", "agentlib:jdwp",
-    # Known cheat-specific class patterns
     "dev.gambleclient", "xyz.greaj", "org.chainlibs",
     "dev.krypton", "Dqrkis", "dqrkis", "lvstrng"
 )
@@ -257,30 +258,32 @@ function Get-ObfuscationScore {
     if ($totalClasses -eq 0) { return $result }
 
     # 1. Ratio of very short class names (1-2 chars = obfuscated)
+    # FIX 1: Raised thresholds from 60/30 to 75/50 to reduce false positives
     $shortNames = @($classEntries | Where-Object {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)
         $name.Length -le 2 -and $name -cmatch '^[a-zA-Z]+$'
     })
     $shortRatio = [math]::Round(($shortNames.Count / $totalClasses) * 100, 1)
-    if ($shortRatio -ge 60) {
+    if ($shortRatio -ge 75) {
         $result.Score += 40
         $result.Indicators.Add("Short class names: $shortRatio% of $totalClasses classes are 1-2 chars")
-    } elseif ($shortRatio -ge 30) {
+    } elseif ($shortRatio -ge 50) {
         $result.Score += 20
         $result.Indicators.Add("Partial name obfuscation: $shortRatio% short class names")
     }
 
     # 2. Known obfuscator markers in MANIFEST or config files
+    # FIX 2: Tightened Radon signature to require "Obfuscated-By: Radon" header
     $obfuscatorSigs = @{
-        "Allatori"   = "Allatori"
-        "Zelix"      = "Zelix"
-        "ProGuard"   = "Obfuscated-By: ProGuard"
-        "Stringer"   = "Stringer Java Obfuscator"
-        "Skidfuscator"= "skidfuscator"
-        "Radon"      = "Radon"
-        "BisGuard"   = "BisGuard"
-        "QProtect"   = "QProtect"
-        "Paramorphism"= "paramorphism"
+        "Allatori"    = "Allatori"
+        "Zelix"       = "Zelix"
+        "ProGuard"    = "Obfuscated-By: ProGuard"
+        "Stringer"    = "Stringer Java Obfuscator"
+        "Skidfuscator" = "skidfuscator"
+        "Radon"       = "Obfuscated-By: Radon"
+        "BisGuard"    = "BisGuard"
+        "QProtect"    = "QProtect"
+        "Paramorphism" = "paramorphism"
     }
     foreach ($entry in ($Zip.Entries | Where-Object { $_.FullName -match 'MANIFEST\.MF$|\.json$|\.toml$' })) {
         try {
@@ -306,7 +309,8 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Obfuscated package tree: $($deepPaths.Count) classes in single-char packages")
     }
 
-    # 4. Missing SourceFile attributes (intentionally stripped)
+    # 4. Missing SourceFile attributes
+    # FIX 3: Raised thresholds from 70/40 to 90/65 — many release-build mods strip these legitimately
     $strippedCount = 0
     $sampleSize    = [math]::Min($totalClasses, 30)
     $sampled       = $classEntries | Select-Object -First $sampleSize
@@ -315,8 +319,6 @@ function Get-ObfuscationScore {
             $st = $ce.Open(); $buf = New-Object System.IO.MemoryStream
             $st.CopyTo($buf); $st.Close()
             $bytes = $buf.ToArray(); $buf.Dispose()
-            # SourceFile attribute tag is 0x00 0x01 in class constant pool header area
-            # Simpler heuristic: check if the string "SourceFile" is absent in a non-trivial class
             if ($bytes.Length -gt 200) {
                 $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
                 if (-not ($ascii -match "SourceFile")) { $strippedCount++ }
@@ -324,20 +326,15 @@ function Get-ObfuscationScore {
         } catch { }
     }
     $strippedRatio = [math]::Round(($strippedCount / $sampleSize) * 100, 1)
-    if ($strippedRatio -ge 70) {
+    if ($strippedRatio -ge 90) {
         $result.Score += 20
         $result.Indicators.Add("SourceFile attributes stripped: $strippedRatio% of sampled classes")
-    } elseif ($strippedRatio -ge 40) {
+    } elseif ($strippedRatio -ge 65) {
         $result.Score += 10
         $result.Indicators.Add("Partial SourceFile stripping: $strippedRatio% of sampled classes")
     }
 
     # 5. Unicode/invisible identifier abuse in class names
-    # Only flag codepoints that have no legitimate use in Java identifiers:
-    #   - Zero-width / invisible glue chars (U+200B–U+200D, U+2060, U+FEFF, U+00AD)
-    #   - Private Use Area (U+E000–U+F8FF) — used by some obfuscators as fake chars
-    #   - Unicode control chars embedded in paths (U+0001–U+001F, U+007F–U+009F)
-    # Deliberately NOT flagging CJK, Cyrillic, accented Latin, etc. — all valid in package names.
     $suspiciousUniRx = [regex]::new(
         '[\u00AD\u200B\u200C\u200D\u2060\uFEFF]|[\uE000-\uF8FF]|[\u0001-\u001F\u007F-\u009F]',
         [System.Text.RegularExpressions.RegexOptions]::Compiled
@@ -348,7 +345,8 @@ function Get-ObfuscationScore {
         $result.Indicators.Add("Invisible/PUA identifier chars: $($unicodeNames.Count) class(es) with zero-width or private-use codepoints")
     }
 
-    # 6. String encryption markers (common in Skidfuscator / Stringer output)
+    # 6. String encryption markers
+    # FIX 4: Raised thresholds from 3/1 to 5/3 — a single decrypt helper is common in legit mods
     $encryptedStringMarkers = @("decrypt", "deobf", "StringEncryption", "StringDecryptor",
                                  "decryptString", "stringPool", "StringPool", "\$\$decrypt")
     $encCount = 0
@@ -362,10 +360,10 @@ function Get-ObfuscationScore {
             }
         } catch { }
     }
-    if ($encCount -ge 3) {
+    if ($encCount -ge 5) {
         $result.Score += 30
         $result.Indicators.Add("String encryption detected in $encCount class(es)")
-    } elseif ($encCount -ge 1) {
+    } elseif ($encCount -ge 3) {
         $result.Score += 15
         $result.Indicators.Add("Possible string encryption in $encCount class(es)")
     }
@@ -517,7 +515,6 @@ function Get-ModSignature {
         $zip.Dispose()
     } catch { }
 
-    # Fullwidth deduplication
     $fwPool = @($script:cheatStrings | Where-Object { $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]" })
     foreach ($h in @($hits)) {
         if ($h -match '^F\|') {
@@ -688,7 +685,6 @@ if ($deepScan) {
     Write-Host " · Obfuscation Analysis" -ForegroundColor DarkGray
     Write-Host "  │" -ForegroundColor DarkMagenta
 
-    # Run over ALL jars (flagged + clean) so hidden-only-obfuscated ones surface
     $allJarPaths = @{}
     foreach ($jar in $jars) { $allJarPaths[$jar.Name] = $jar.FullName }
 
@@ -709,11 +705,9 @@ if ($deepScan) {
     }
     Write-Host "  │  100% done                              " -ForegroundColor DarkMagenta
 
-    # Merge obf results into flagged mods
     foreach ($mod in $flagged) {
         if ($obfMap.ContainsKey($mod.Name)) { $mod.ObfResult = $obfMap[$mod.Name] }
     }
-    # Promote clean-but-heavily-obfuscated mods to suspicious
     foreach ($jar in $jars) {
         if ($clean -contains $jar.Name) {
             $obf = $obfMap[$jar.Name]
@@ -806,7 +800,7 @@ function Write-RowFull {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  REPORT BANNER  (same as launch banner)
+#  REPORT BANNER
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 Write-Host " ███▄    █  ██▓ ▄████▄      ███▄ ▄███▓ ▒█████  ▓█████▄     ▄▄▄       ███▄    █  ▄▄▄       ██▓   ▓██   ██▓▒███████▒▓█████  ██▀███  " -ForegroundColor Magenta
