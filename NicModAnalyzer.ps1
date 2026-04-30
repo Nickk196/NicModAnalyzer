@@ -34,8 +34,8 @@ if ([string]::IsNullOrWhiteSpace($modsPath)) {
     Write-Host
 }
 if (-not (Test-Path $modsPath -PathType Container)) {
-    Write-Host "❌ Invalid Path!" -ForegroundColor Red
-    Write-Host "The directory does not exist or is not accessible." -ForegroundColor Yellow
+    Write-Host " Invalid Path!" -ForegroundColor Red
+    Write-Host "The path does not exist or is not accessible." -ForegroundColor Yellow
     Write-Host
     Write-Host "Tried to access: $modsPath" -ForegroundColor Gray
     Write-Host
