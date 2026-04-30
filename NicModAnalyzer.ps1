@@ -97,7 +97,6 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 #  CHEAT + BYPASS STRING SIGNATURES
 # ═══════════════════════════════════════════════════════════
  $cheatStrings = @(
-    # ── Cheat signatures ─────────────────────────────────────
     'AutoCrystal', 'autocrystal', 'auto crystal', 'cw crystal',
     'dontPlaceCrystal', 'dontBreakCrystal',
     'AutoHitCrystal', 'autohitcrystal', 'canPlaceCrystalServer', 'healPotSlot',
@@ -144,7 +143,6 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "No Count Glitch", "Ｎｏ Ｃｏｕﾝｴ Ｇﾞｲｲｯﾞｃﾞ", "NoBounce", "Ｎｏ Ｂｵｕﾞｼｴ", "ＮｏＢｏｕｎｃｅｵｼｴ",
     "placeInterval", "breakInterval", "stopOnKill", "activateOnRightClick", "holdCrystal",
     "Macro Key", "Ｍ｡ｋｮｏ Ｋ｡ｙ",
-    # ── Bypass / evasion signatures ─────────────────────────
     "fakeVersion", "spoofVersion",
     "brandOverride", "overrideBrand", "setBrand", "fakeClientBrand", "brandSpoof", "versionSpoof",
     "net.minecraft.client.ClientBrandRetriever",
@@ -199,7 +197,6 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "setHardTarget", "mixinBypass"
 )
 
-# ── Compile pattern regex and lookup sets ──────────────────
  $patternRegex = [regex]::new('(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
  $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
@@ -374,55 +371,181 @@ function Get-MinecraftStatus {
 }
 
 # ═══════════════════════════════════════════════════════════
-#  JVM INTEGRITY CHECK
+#  JVM INTEGRITY CHECK  (EXPANDED — Fabric/Forge/Security)
 # ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
-    $javaProc = Get-Process javaw -ErrorAction SilentlyContinue
-    if (-not $javaProc) { $javaProc = Get-Process java -ErrorAction SilentlyContinue }
-    if (-not $javaProc) { return $findings }
-    $javaPid = ($javaProc | Select-Object -First 1).Id
-    try {
-        $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
-        $cmd = $wmi.CommandLine
-        if ($cmd) {
+    $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
+
+    $javaProcs = @(Get-Process javaw -ErrorAction SilentlyContinue) + @(Get-Process java -ErrorAction SilentlyContinue)
+    if ($javaProcs.Count -eq 0) { return $findings }
+
+    foreach ($javaProc in $javaProcs) {
+        $javaPid = $javaProc.Id
+        try {
+            $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
+            $cmd = $wmi.CommandLine
+            if (-not $cmd) { continue }
+
+            $isMC = ($cmd -match "net\.minecraft" -or $cmd -match "Minecraft")
+            if (-not $isMC) { continue }
+
+            # ── Agent detection ───────────────────────────────────────────────
             $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
-            $whitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus")
+            $agentWhitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus","lunar","appney")
             foreach ($m in $agentMatches) {
                 $path = $m.Groups[1].Value.Trim('"').Trim("'")
                 $name = [System.IO.Path]::GetFileName($path)
                 $safe = $false
-                foreach ($w in $whitelist) { if ($name -match $w) { $safe = $true; break } }
-                if (-not $safe) { $findings.Add([PSCustomObject]@{ Type = "AGENT"; Detail = $name; Severity = "HIGH" }) }
-            }
-
-            $flags = @(
-                @{ F = "-Xbootclasspath/p:";        T = "BOOTCLASS_PREPEND";      S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader" },
-                @{ F = "-Xbootclasspath/a:";        T = "BOOTCLASS_APPEND";       S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
-                @{ F = "-Dfabric.addMods=";         T = "FABRIC_INJECT";          S = "HIGH";   D = "Injects extra mods via Fabric property" },
-                @{ F = "-Dfabric.loadMods=";        T = "FABRIC_MANIPULATE";      S = "MEDIUM"; D = "Overrides Fabric mod loading" },
-                @{ F = "-Djava.security.manager=";  T = "SEC_BYPASS";             S = "HIGH";   D = "Disables or replaces Java Security Manager" },
-                @{ F = "-Dclient.brand=";           T = "BRAND_SPOOF";            S = "LOW";    D = "Spoofs client brand string" },
-                @{ F = "-Xverify:none";             T = "BYTECODE_VERIFY_OFF";    S = "HIGH";   D = "Disables JVM bytecode verification" },
-                @{ F = "-noverify";                 T = "NOVERIFY";               S = "HIGH";   D = "Alias for -Xverify:none" },
-                @{ F = "-Djava.system.class.loader="; T = "CLASSLOADER_REPLACE";  S = "HIGH";   D = "Replaces the system classloader" },
-                @{ F = "-agentlib:";                T = "NATIVE_AGENT";           S = "HIGH";   D = "Loads a native JVMTI agent" },
-                @{ F = "-agentpath:";               T = "NATIVE_AGENT_PATH";      S = "HIGH";   D = "Loads native agent by path" },
-                @{ F = "-Djava.library.path=";      T = "NATIVE_LIB_PATH";        S = "MEDIUM"; D = "Overrides native library search path" },
-                @{ F = "-Dsun.misc.URLClassPath.disableJarChecking=true"; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking" },
-                @{ F = "-Dcom.sun.jndi.rmi.object.trustURLCodebase=true"; T = "JNDI_EXPLOIT"; S = "HIGH"; D = "JNDI RMI codebase — Log4Shell vector" },
-                @{ F = "-Dcom.sun.jndi.ldap.object.trustURLCodebase=true"; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "JNDI LDAP codebase — Log4Shell variant" },
-                @{ F = "-Xdebug";                   T = "DEBUG_MODE";             S = "MEDIUM"; D = "Enables JVM debug mode" },
-                @{ F = "-Xrunjdwp:";                T = "REMOTE_DEBUG";           S = "HIGH";   D = "Remote debugging — code injection risk" },
-                @{ F = "-agentlib:jdwp";            T = "JDWP_AGENT";             S = "HIGH";   D = "JDWP agent — remote code execution risk" }
-            )
-            foreach ($fl in $flags) {
-                if ($cmd -match [regex]::Escape($fl.F)) {
-                    $findings.Add([PSCustomObject]@{ Type = $fl.T; Detail = $fl.D; Severity = $fl.S })
+                foreach ($w in $agentWhitelist) { if ($name -match $w) { $safe = $true; break } }
+                if (-not $safe) {
+                    $key = "AGENT|$name"
+                    if (-not $foundFlags.Contains($key)) {
+                        [void]$foundFlags.Add($key)
+                        $findings.Add([PSCustomObject]@{ Type = "JAVA_AGENT"; Detail = "Untrusted javaagent loaded: $name"; Severity = "HIGH"; PID = $javaPid })
+                    }
                 }
             }
-        }
-    } catch { }
+
+            # ── FABRIC INJECTION PATTERNS ─────────────────────────────────────
+            $fabricFlags = @(
+                @{ R = '-Dfabric\.addMods=';                           T = "FABRIC_ADD_MODS";          S = "HIGH";   D = "Injects extra mod JARs at runtime — can load cheats outside mods folder" },
+                @{ R = '-Dfabric\.loadMods=';                          T = "FABRIC_LOAD_MODS";         S = "HIGH";   D = "Overrides Fabric mod loading — can force-load arbitrary JARs" },
+                @{ R = '-Dfabric\.classPathGroups=';                   T = "FABRIC_CLASSPATH_GROUPS";  S = "MEDIUM"; D = "Manipulates Fabric classpath group resolution" },
+                @{ R = '-Dfabric\.skipMcProvider=';                    T = "FABRIC_SKIP_MCPROVIDER";   S = "MEDIUM"; D = "Skips Minecraft provider — unusual, can bypass version checks" },
+                @{ R = '-Dfabric\.allowUnsupportedVersion=';          T = "FABRIC_UNSUPPORTED_VER";   S = "LOW";    D = "Allows loading mods for unsupported MC versions" },
+                @{ R = '-Dfabric\.remapClasspathFile=';               T = "FABRIC_REMAP_CLASSPATH";   S = "MEDIUM"; D = "Remaps classpath from external file — can inject classes" },
+                @{ R = '-Dfabric\.skipIntermediary=';                 T = "FABRIC_SKIP_INTERMEDIARY"; S = "MEDIUM"; D = "Skips intermediary remapping — can load unverified code" },
+                @{ R = '-Dfabric\.mixin\.hotSwap=';                    T = "FABRIC_MIXIN_HOTSWAP";     S = "HIGH";   D = "Enables Mixin hot-swap — can modify game code at runtime" },
+                @{ R = '-Dfabric\.mixin\.configs=';                    T = "FABRIC_MIXIN_CONFIGS";     S = "MEDIUM"; D = "Injects additional Mixin configs externally" },
+                @{ R = '-Dfabric\.mixin\.debug\.export=';             T = "FABRIC_MIXIN_DEBUG";       S = "LOW";    D = "Exports Mixin debug data — unusual in production" },
+                @{ R = '-Dfabric\.mixin\.debug\.verbose=';            T = "FABRIC_MIXIN_VERBOSE";     S = "LOW";    D = "Verbose Mixin debugging — unusual in production" },
+                @{ R = '-Dfabric\.forceVersion=';                      T = "FABRIC_FORCE_VERSION";     S = "LOW";    D = "Forces Fabric game version — can be used for version spoofing" },
+                @{ R = '-Dfabric\.autoDetectVersion=';                T = "FABRIC_AUTODETECT_VER";    S = "LOW";    D = "Overrides auto version detection" },
+                @{ R = '-Dfabric\.customModList=';                     T = "FABRIC_CUSTOM_MODLIST";    S = "MEDIUM"; D = "Loads mods from a custom list file — bypasses normal discovery" },
+                @{ R = '-Dfabric\.resolve\.modFiles=';                 T = "FABRIC_RESOLVE_MODFILES";  S = "MEDIUM"; D = "Overrides mod file resolution" },
+                @{ R = '-Dfabric\.skipDependencyResolution=';         T = "FABRIC_SKIP_DEPS";         S = "MEDIUM"; D = "Skips dependency resolution — can load incomplete mods" },
+                @{ R = '-Dfabric\.loader\.entrypoints=';               T = "FABRIC_ENTRYPOINTS";       S = "MEDIUM"; D = "Overrides loader entrypoints — can inject custom code" },
+                @{ R = '-Dfabric\.language\.providers=';               T = "FABRIC_LANG_PROVIDERS";    S = "MEDIUM"; D = "Overrides language providers — can load non-standard code" },
+                @{ R = '-Dfabric\.development=';                       T = "FABRIC_DEV_MODE";          S = "LOW";    D = "Fabric development mode active — should not be in production" },
+                @{ R = '-Dfabric\.debug\.dumpClasspath=';             T = "FABRIC_DUMP_CLASSPATH";    S = "LOW";    D = "Dumps classpath for debugging — unusual in production" },
+                @{ R = '-Dfabric\.gameJarPath=';                       T = "FABRIC_GAME_JAR_PATH";     S = "LOW";    D = "Custom game JAR path specified" },
+                @{ R = '-Dfabric\.mods\.toml\.path=';                  T = "FABRIC_MODS_TOML";        S = "MEDIUM"; D = "External mods.toml path — can inject mod metadata" },
+                @{ R = '-Dfabric\.configDir=';                         T = "FABRIC_CONFIG_DIR";        S = "INFO";   D = "Custom config directory set" },
+                @{ R = '-Dfabric\.loader\.config=';                    T = "FABRIC_LOADER_CONFIG";     S = "INFO";   D = "Custom loader config path" },
+                @{ R = '-Dfabric\.log\.level=';                        T = "FABRIC_LOG_LEVEL";         S = "INFO";   D = "Custom Fabric log level" },
+                @{ R = '-Dfabric\.log\.config=';                       T = "FABRIC_LOG_CONFIG";        S = "INFO";   D = "Custom Fabric log config" },
+                @{ R = '-Dfabric\.dli\.config=';                       T = "FABRIC_DLI_CONFIG";        S = "INFO";   D = "Dev Launcher Integration config" },
+                @{ R = '-Dfabric\.launcher\.name=';                    T = "FABRIC_LAUNCHER_NAME";     S = "INFO";   D = "Fabric launcher name" },
+                @{ R = '-Dfabric\.launcher\.brand=';                   T = "FABRIC_LAUNCHER_BRAND";    S = "INFO";   D = "Fabric launcher brand" },
+                @{ R = '-Dfabric\.gameVersion=';                       T = "FABRIC_GAME_VERSION";      S = "INFO";   D = "Fabric game version" }
+            )
+
+            # ── FORGE INJECTION PATTERNS ──────────────────────────────────────
+            $forgeFlags = @(
+                @{ R = '-Dforge\.addMods=';                            T = "FORGE_ADD_MODS";           S = "HIGH";   D = "Injects extra mod JARs at runtime — can load cheats" },
+                @{ R = '-Dforge\.mods=';                               T = "FORGE_MODS";               S = "HIGH";   D = "Overrides Forge mod list — can force-load JARs" },
+                @{ R = '-Dfml\.coreMods\.load=';                       T = "FORGE_COREMODS_LOAD";      S = "HIGH";   D = "Loads core mods via JVM flag — deep code injection" },
+                @{ R = '-Dforge\.coreMods\.dir=';                      T = "FORGE_COREMODS_DIR";       S = "MEDIUM"; D = "Custom core mods directory — can inject code" },
+                @{ R = '-Dforge\.modDir=';                             T = "FORGE_MOD_DIR";            S = "MEDIUM"; D = "Custom mod directory specified" },
+                @{ R = '-Dforge\.modsDirectories=';                    T = "FORGE_MODS_DIRS";          S = "MEDIUM"; D = "Additional mod directories — can hide cheats" },
+                @{ R = '-Dfml\.customModList=';                        T = "FORGE_CUSTOM_MODLIST";     S = "MEDIUM"; D = "Loads mods from custom list — bypasses normal discovery" },
+                @{ R = '-Dforge\.disableModScan=';                     T = "FORGE_DISABLE_MODSCAN";    S = "HIGH";   D = "Disables mod scanning — can hide injected mods" },
+                @{ R = '-Dforge\.modList=';                            T = "FORGE_MODLIST";            S = "MEDIUM"; D = "Overrides mod list directly" },
+                @{ R = '-Dforge\.forceVersion=';                       T = "FORGE_FORCE_VERSION";      S = "LOW";    D = "Forces Forge version — version spoofing potential" },
+                @{ R = '-Dforge\.disableUpdateCheck=';                 T = "FORGE_NO_UPDATE_CHECK";    S = "LOW";    D = "Disables Forge update check" },
+                @{ R = '-Dforge\.mixin\.hotSwap=';                     T = "FORGE_MIXIN_HOTSWAP";      S = "HIGH";   D = "Enables Mixin hot-swap — runtime code modification" },
+                @{ R = '-Dforge\.logging\.mojang\.level=';             T = "FORGE_LOG_LEVEL";          S = "INFO";   D = "Custom Forge log level" },
+                @{ R = '-Dforge\.resourcePack=';                       T = "FORGE_RESOURCE_PACK";      S = "INFO";   D = "Custom resource pack path" },
+                @{ R = '-Dforge\.defaultResourcePack=';                T = "FORGE_DEFAULT_RP";         S = "INFO";   D = "Default resource pack override" },
+                @{ R = '-Dforge\.texturePacks=';                       T = "FORGE_TEXTURE_PACKS";      S = "INFO";   D = "Custom texture packs path" },
+                @{ R = '-Dforge\.assetIndex=';                         T = "FORGE_ASSET_INDEX";        S = "INFO";   D = "Custom asset index" },
+                @{ R = '-Dforge\.assetsDir=';                          T = "FORGE_ASSETS_DIR";         S = "INFO";   D = "Custom assets directory" }
+            )
+
+            # ── SECURITY BYPASS PATTERNS ──────────────────────────────────────
+            $securityFlags = @(
+                @{ R = '-Djava\.security\.manager=';                   T = "SEC_MANAGER_DISABLED";     S = "HIGH";   D = "Disables or replaces Java Security Manager — removes sandbox" },
+                @{ R = '-Djava\.security\.policy=';                    T = "SEC_POLICY_OVERRIDE";      S = "MEDIUM"; D = "Overrides Java security policy — weakens permissions" }
+            )
+
+            # ── CLASSPATH MANIPULATION ────────────────────────────────────────
+            $classpathFlags = @(
+                @{ R = '-Xbootclasspath/p:';                           T = "BOOTCLASS_PREPEND";        S = "HIGH";   D = "Prepends untrusted JAR to bootstrap classloader — core class replacement" },
+                @{ R = '-Xbootclasspath/a:';                           T = "BOOTCLASS_APPEND";         S = "MEDIUM"; D = "Appends JAR to bootstrap classloader" },
+                @{ R = '-Djava\.system\.class\.loader=';               T = "CLASSLOADER_REPLACE";      S = "HIGH";   D = "Replaces the system classloader — full control over class loading" },
+                @{ R = '-Djava\.library\.path=';                       T = "NATIVE_LIB_PATH";          S = "MEDIUM"; D = "Overrides native library search path" }
+            )
+
+            # ── BRAND / VERSION SPOOF ─────────────────────────────────────────
+            $spoofFlags = @(
+                @{ R = '-Dclient\.brand=';                             T = "BRAND_SPOOF";             S = "LOW";    D = "Spoofs client brand string" }
+            )
+
+            # ── BYTECODE VERIFICATION ─────────────────────────────────────────
+            $verifyFlags = @(
+                @{ R = '-Xverify:none';                                T = "BYTECODE_VERIFY_OFF";     S = "HIGH";   D = "Disables JVM bytecode verification — unsafe classes load unchecked" },
+                @{ R = '-noverify';                                    T = "NOVERIFY";                S = "HIGH";   D = "Alias for -Xverify:none — disables class verification" }
+            )
+
+            # ── NATIVE AGENT LOADING ──────────────────────────────────────────
+            $nativeFlags = @(
+                @{ R = '(?<!\w)-agentlib:';                            T = "NATIVE_AGENT_LIB";        S = "HIGH";   D = "Loads native JVMTI agent — can hook any JVM function" },
+                @{ R = '-agentpath:';                                  T = "NATIVE_AGENT_PATH";       S = "HIGH";   D = "Loads native agent by absolute path — deep JVM access" }
+            )
+
+            # ── DEBUG / REMOTE ACCESS ─────────────────────────────────────────
+            $debugFlags = @(
+                @{ R = '-Xdebug';                                      T = "DEBUG_MODE";              S = "MEDIUM"; D = "JVM debug mode enabled" },
+                @{ R = '-Xrunjdwp:';                                   T = "REMOTE_DEBUG";            S = "HIGH";   D = "Remote debugging enabled — arbitrary code injection risk" },
+                @{ R = '(?<!\w)agentlib:jdwp';                         T = "JDWP_AGENT";              S = "HIGH";   D = "JDWP agent — remote code execution risk" }
+            )
+
+            # ── JAR SIGNATURE BYPASS ──────────────────────────────────────────
+            $jarFlags = @(
+                @{ R = '-Dsun\.misc\.URLClassPath\.disableJarChecking=true'; T = "JAR_CHECK_DISABLED"; S = "HIGH"; D = "Disables JAR signature checking — tampered JARs load unchecked" }
+            )
+
+            # ── JNDI EXPLOIT VECTORS ──────────────────────────────────────────
+            $jndiFlags = @(
+                @{ R = '-Dcom\.sun\.jndi\.rmi\.object\.trustURLCodebase=true';  T = "JNDI_RMI_EXPLOIT";  S = "HIGH"; D = "JNDI RMI codebase enabled — Log4Shell attack vector" },
+                @{ R = '-Dcom\.sun\.jndi\.ldap\.object\.trustURLCodebase=true'; T = "JNDI_LDAP_EXPLOIT"; S = "HIGH"; D = "JNDI LDAP codebase enabled — Log4Shell variant" }
+            )
+
+            # ── CUSTOM CLASSPATH (via -cp) pointing to suspicious locations ───
+            $cpMatches = [regex]::Matches($cmd, '-cp\s+["'']?([^\s"'']+)["'']?')
+            foreach ($cpm in $cpMatches) {
+                $cpVal = $cpm.Groups[1].Value
+                $suspiciousCpPaths = @('\.minecraft\\mods\\', '\.minecraft\mods\/', '\\AppData\\Local\\Temp\\', '\$HOME\/\.cache\/', '\\Users\\.*\\Desktop\\', '\\Users\\.*\\Downloads\\')
+                foreach $scp in $suspiciousCpPaths {
+                    if ($cpVal -match $scp) {
+                        $key = "SUSPICIOUS_CP|$($scp.Substring(0,20))"
+                        if (-not $foundFlags.Contains($key)) {
+                            [void]$foundFlags.Add($key)
+                            $findings.Add([PSCustomObject]@{ Type = "SUSPICIOUS_CLASSPATH"; Detail = "Classpath includes suspicious path: $($scp.TrimStart('\','/'))"; Severity = "MEDIUM"; PID = $javaPid })
+                        }
+                        break
+                    }
+                }
+            }
+
+            # ── Run all flag categories ───────────────────────────────────────
+            $allFlagSets = @($fabricFlags, $forgeFlags, $securityFlags, $classpathFlags, $spoofFlags, $verifyFlags, $nativeFlags, $debugFlags, $jarFlags, $jndiFlags)
+            foreach ($flagSet in $allFlagSets) {
+                foreach ($fl in $flagSet) {
+                    if ($cmd -match $fl.R) {
+                        if (-not $foundFlags.Contains($fl.T)) {
+                            [void]$foundFlags.Add($fl.T)
+                            if ($fl.S -ne "INFO") {
+                                $findings.Add([PSCustomObject]@{ Type = $fl.T; Detail = $fl.D; Severity = $fl.S; PID = $javaPid })
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch { }
+    }
     return $findings
 }
 
@@ -594,18 +717,25 @@ if ($mcStatus.Running) {
 }
 
 # ───────────────────────────────────────────────────────────
-#  PHASE 1 — JVM Scan
+#  PHASE 1 — JVM Scan (Expanded)
 # ───────────────────────────────────────────────────────────
  $jvmResults = [System.Collections.Generic.List[PSObject]]::new()
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
 Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
-Write-Host " · JVM Scan" -ForegroundColor DarkGray
+Write-Host " · JVM Integrity Scan" -ForegroundColor DarkGray
 Write-Host "  │" -ForegroundColor DarkMagenta
 Write-Host "  │  checking... " -ForegroundColor DarkGray -NoNewline
  $jvmResults = Test-JvmIntegrity
 if ($jvmResults.Count -gt 0) {
-    Write-Host "$($jvmResults.Count) issue(s) found" -ForegroundColor Red
+    $highCount = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" }).Count
+    $medCount  = @($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" }).Count
+    $lowCount  = @($jvmResults | Where-Object { $_.Severity -eq "LOW" }).Count
+    $parts = @()
+    if ($highCount -gt 0) { $parts += "$highCount HIGH" }
+    if ($medCount -gt 0)  { $parts += "$medCount MEDIUM" }
+    if ($lowCount -gt 0)  { $parts += "$lowCount LOW" }
+    Write-Host "$($jvmResults.Count) issue(s) found ($($parts -join ', '))" -ForegroundColor Red
 } else {
     Write-Host "clean" -ForegroundColor Cyan
 }
@@ -791,7 +921,7 @@ Write-Host " ███▄    █  ██▓ ▄████▄      ███▄
 Write-Host "  ██ ▀█   █ ▓██▒▒██▀ ▀█     ▓██▒▀█▀ ██▒▒██▒  ██▒▒██▀ ██▌   ▒████▄     ██ ▀█   █ ▒████▄    ▓██▒    ▒██  ██▒▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒" -ForegroundColor Magenta
 Write-Host " ▓██  ▀█ ██▒▒██▒▒▓█    ▄    ▓██    ▓██░▒██░  ██▒░██   █▌   ▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒██░     ▒██ ██░░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒" -ForegroundColor DarkMagenta
 Write-Host " ▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒   ▒██    ▒██ ▒██   ██░░▓█▄   ▌   ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░     ░ ▐██▓░  ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  " -ForegroundColor DarkMagenta
-Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██▒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
+Write-Host " ▒██░   ▓██░░██░▒ ▓███▀ ░   ▒██▒   ░██╒░ ████▓▒░░▒████▓     ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░██████▒ ░ ██▒▓░▒███████▒░▒████▒░██▓ ▒██▒" -ForegroundColor Magenta
 Write-Host " ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░   ░ ▒░   ░  ░░ ▒░▒░▒░  ▒▒▓  ▒     ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░  ██▒▒▒ ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░" -ForegroundColor DarkGray
 Write-Host " ░ ░░   ░ ▒░ ▒ ░  ░  ▒      ░  ░      ░  ░ ▒ ▒░  ░ ▒  ▒      ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░▓██ ░▒░ ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░" -ForegroundColor DarkGray
 Write-Host "    ░   ░ ░  ▒ ░░           ░      ░   ░ ░ ░ ▒   ░ ░  ░      ░   ▒      ░   ░ ░   ░   ▒     ░ ░   ▒ ▒ ░░  ░ ░ ░ ░ ░   ░     ░░   ░ " -ForegroundColor DarkGray
@@ -828,11 +958,32 @@ if ($jvmResults.Count -gt 0) {
     Write-Border 'top' Red
     Write-RowFull "  JVM INTEGRITY ISSUES" Red Red
     Write-Border 'sep' Red
-    foreach ($j in $jvmResults) {
-        $sev = $j.Severity.PadRight(6)
-        $lc  = switch ($j.Severity) { "HIGH" { [System.ConsoleColor]::Red } "MEDIUM" { [System.ConsoleColor]::Yellow } default { [System.ConsoleColor]::DarkGray } }
-        Write-Row "  [$sev]  $($j.Type.PadRight(26))" $j.Detail $lc DarkGray Red
+
+    $highJVM = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" })
+    $medJVM  = @($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" })
+    $lowJVM  = @($jvmResults | Where-Object { $_.Severity -eq "LOW" })
+
+    if ($highJVM.Count -gt 0) {
+        Write-RowFull "  HIGH SEVERITY" Red Red
+        foreach ($j in $highJVM) {
+            Write-Row "  [HIGH]  $($j.Type.PadRight(30))" $j.Detail Red DarkGray Red
+        }
     }
+    if ($medJVM.Count -gt 0) {
+        Write-Border 'sep' Yellow
+        Write-RowFull "  MEDIUM SEVERITY" Yellow Yellow
+        foreach ($j in $medJVM) {
+            Write-Row "  [MED]   $($j.Type.PadRight(30))" $j.Detail Yellow DarkGray Yellow
+        }
+    }
+    if ($lowJVM.Count -gt 0) {
+        Write-Border 'sep' DarkGray
+        Write-RowFull "  LOW SEVERITY" DarkGray DarkGray
+        foreach ($j in $lowJVM) {
+            Write-Row "  [LOW]   $($j.Type.PadRight(30))" $j.Detail DarkGray DarkGray DarkGray
+        }
+    }
+
     Write-Border 'bot' Red
 }
 
@@ -977,14 +1128,21 @@ Write-Border 'bot' DarkGray
 # ═══════════════════════════════════════════════════════════
 Write-Host ""
 
-if ($criticalThreats.Count -gt 0) {
+# JVM issues factor into verdict
+ $jvmHighCount = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" }).Count
+ $jvmMedCount  = @($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" }).Count
+
+if ($criticalThreats.Count -gt 0 -or $jvmHighCount -gt 0) {
     $verdictColor  = [System.ConsoleColor]::Red
     $verdictLabel  = "BAN RECOMMENDED"
-    $verdictReason = "Critical cheat signatures detected in $($criticalThreats.Count) mod(s). Evidence is strong."
-} elseif ($suspiciousFiles.Count -ge 3) {
+    $reasonParts = @()
+    if ($criticalThreats.Count -gt 0) { $reasonParts += "critical cheat signatures in $($criticalThreats.Count) mod(s)" }
+    if ($jvmHighCount -gt 0)         { $reasonParts += "$jvmHighCount HIGH severity JVM issue(s)" }
+    $verdictReason = "Detected: " + ($reasonParts -join ", ") + "."
+} elseif ($suspiciousFiles.Count -ge 3 -or ($suspiciousFiles.Count -ge 1 -and $jvmMedCount -ge 2)) {
     $verdictColor  = [System.ConsoleColor]::Red
     $verdictLabel  = "BAN RECOMMENDED"
-    $verdictReason = "$($suspiciousFiles.Count) suspicious mods found. High probability of cheating."
+    $verdictReason = "$($suspiciousFiles.Count) suspicious mods found with JVM anomalies. High probability of cheating."
 } elseif ($suspiciousFiles.Count -gt 0 -or $jvmResults.Count -gt 0) {
     $verdictColor  = [System.ConsoleColor]::Yellow
     $verdictLabel  = "MANUAL REVIEW RECOMMENDED"
@@ -1013,6 +1171,20 @@ if ($suspiciousFiles.Count -gt 0) {
     Write-RowFull "  Suspicious mods:" DarkGray $verdictColor
     foreach ($mod in $suspiciousFiles) {
         Write-Row "    · " $mod.Name DarkGray Yellow $verdictColor
+    }
+}
+if ($jvmHighCount -gt 0) {
+    Write-Border 'sep' $verdictColor
+    Write-RowFull "  HIGH severity JVM issues:" DarkGray $verdictColor
+    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "HIGH" })) {
+        Write-Row "    · " "$($j.Type)" DarkGray Red $verdictColor
+    }
+}
+if ($jvmMedCount -gt 0) {
+    Write-Border 'sep' $verdictColor
+    Write-RowFull "  MEDIUM severity JVM issues:" DarkGray $verdictColor
+    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" })) {
+        Write-Row "    · " "$($j.Type)" DarkGray Yellow $verdictColor
     }
 }
 
