@@ -16,33 +16,24 @@ Clear-Host
 # ═══════════════════════════════════════════════════════════
 #  BANNER
 # ═══════════════════════════════════════════════════════════
-function W($t, $c) {
-    [Console]::ForegroundColor = $c
-    [Console]::WriteLine($t)
-}
-
-[Console]::WriteLine("")
-W "███    ██ ██  ██████     ███    ███  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
-W "████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   " ([System.ConsoleColor]::Magenta)
-W "██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
-W "██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
-W "██   ████ ██  ██████     ██      ██  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  " ([System.ConsoleColor]::Magenta)
-W "    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ " ([System.ConsoleColor]::DarkMagenta)
-W "    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  " ([System.ConsoleColor]::DarkMagenta)
-W "    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ " ([System.ConsoleColor]::Magenta)
-W "    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ " ([System.ConsoleColor]::DarkMagenta)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-[Console]::WriteLine("")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                                    [ — FULL SCAN ]")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────")
-[Console]::WriteLine("")
-
+Write-Host ""
+Write-Host "   ┌──────────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor DarkGray
+Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
+Write-Host "   │" -ForegroundColor DarkGray -NoNewline
+Write-Host "      NicModAnalyzer " -ForegroundColor Magenta -NoNewline
+Write-Host "│ " -ForegroundColor DarkGray -NoNewline
+Write-Host "v1.0" -ForegroundColor DarkGray -NoNewline
+Write-Host "                                               │" -ForegroundColor DarkGray
+Write-Host "   │" -ForegroundColor DarkGray -NoNewline
+Write-Host "      Minecraft Mod Security Scanner " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "│" -ForegroundColor DarkGray
+Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
+Write-Host "   └──────────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor DarkGray
+Write-Host ""
+Write-Host "       " -NoNewline
+Write-Host "[ — FULL SCAN ]" -ForegroundColor Magenta
+Write-Host "   ─────────────────────────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host "  For any errors, contact me on Discord" -ForegroundColor DarkMagenta
 Write-Host ""
 
@@ -71,16 +62,16 @@ if (-not (Test-Path $modsPath -PathType Container)) {
     exit 1
 }
 
- $activeModules = @("JVM Scan", "String Analysis", "Deep Scan", "Advanced Obfuscation")
+ $activeModules = @("JVM Scan", "String Analysis", "Deep Scan", "Advanced Obfuscation", "Disallowed Mods", "Prefetch Forensics")
 Write-Host ""
 Write-Host "  Modules  : " -ForegroundColor DarkGray -NoNewline
 Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 #  SUSPICIOUS PATTERNS (filename/class path matching)
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
  $suspiciousPatterns = @(
     'AimAssist', 'AutoAnchor', 'AutoCrystal', 'AutoDoubleHand',
     'AutoHitCrystal', 'AutoPot', 'AutoTotem', 'AutoArmor', 'InventoryTotem',
@@ -122,7 +113,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 # ═══════════════════════════════════════════════════════════
 #  CHEAT + BYPASS STRING SIGNATURES
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
  $cheatStrings = @(
     'AutoCrystal', 'autocrystal', 'auto crystal', 'cw crystal',
     'dontPlaceCrystal', 'dontBreakCrystal',
@@ -136,14 +127,14 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "AutoTotem", "autotemem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
     "ＡｕﾄＴｵﾃｪｭ", "Ａｕﾄ Ｔｵﾃｪｭ", "Ｈｵｶﾞﾘ Ｔｵﾃｪｭ", "Ｈｵｶﾞﾘｙ oｴｪｪ",
-    "ＩｎｶﾝﾄﾝｮﾞｙＴｵﾃｪｭ", "Ａｕﾄ Ｉｎｶﾝｵｵﾘｙ Ｔｵﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｵｽｹ", "Ａｕﾄ Ｔｵﾃｪｭ Ｈｲｴ",
+    "ＩｎｶﾝﾄﾝｮﾞｙＴｵﾃｪｭ", "Ａｕﾄ Ｉｶﾝｵｵﾘｙ Ｔｵﾃｪｭ", "Ａｕﾄ Ｈｲｴﾇﾝｵｵｽｹ", "Ａｕﾄ Ｔｵﾃｪｭ Ｈｲｴ",
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
     "ＡｕﾄＰｵﾄ", "Ａｕﾄ Ｐｵﾄ", "Ａｕﾄ Ｐｵﾄ ２ｪﾌｲﾞ", "AutoPotRefill", "ＡｕﾄＡｾﾞ", "Ａｕﾄ Ａｾﾞ",
     "preventSwordBlockBreaking", "preventSwordBlockAttack", "ShieldDisabler", "ShieldBreaker",
     "Ｓﾞｲｪﾞﾞ＄ｲｻ｡ｂﾞ", "Ｓﾞｲｪﾞﾞ ＄ｲｻ｡ｂﾞ", "Breaking shield with axe...",
     "AutoDoubleHand", "autodoublehand", "auto double hand", "Ａｕﾄ＄ｵｳｂﾞﾞＨ｡ﾝﾄ", "Ａｕﾄ ＄ｵｳｂﾞﾞ Ｈ｡ﾝﾄ",
-    "AutoClicker", "ＡｕﾄＣｲｯｪｹｹｰｯ",
+    "AutoClicker", "ＡｕﾄＣｲｯｪｹｹーｯ",
     "Failed to switch to mace after axe!", "AutoMace", "MaceSwap", "SpearSwap",
     "ＡｕﾄＭ｡ｃｪ", "Ｍ｡ｃｪＳｗ｡ﾇ", "Ｓﾟｪｱｒ Ｓｗ｡ﾇ", "Ｓﾄｰﾝ Ｓﾞ｡ｭ", "StunSlam",
     "Donut", "JumpReset", "axespam", "axe spam", "EndCrystalItemMixin",
@@ -202,7 +193,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 # ═══════════════════════════════════════════════════════════
 #  DEEP SCAN STRINGS
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
  $deepCheatStrings = @(
     "invokeAttackEntity", "invokeUseItem", "invokeStopUsingItem",
     "callAttackEntity", "callUseItem",
@@ -223,6 +214,53 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "unsafe.allocateInstance", "Unsafe.getUnsafe",
     "setHardTarget", "mixinBypass"
 )
+
+# ═══════════════════════════════════════════════════════════
+#  DISALLOWED MODS LIST
+# ═══════════════════════════════════════════════════════════
+ $disallowedMods = @{
+    "auto-clicker"                 = @{ Names = @("Auto Clicker","AutoClicker","autoclicker","auto-clicker","auto_clicker","Auto-Clicker") }
+    "freecam"                      = @{ Names = @("Freecam","freecam","FreeCam","Free Cam","freecammod","FreecamMod") }
+    "vivecraft"                    = @{ Names = @("Vivecraft","vivecraft","ViveCraft","vivecraftmod") }
+    "geyser"                       = @{ Names = @("Geyser","geyser","GeyserMC","geysermc","GeyserFabric","GeyserForge") }
+    "tweakeroo"                    = @{ Names = @("Tweakeroo","tweakeroo","TweakerooMod") }
+    "shoulder-surfing-reloaded"    = @{ Names = @("Shoulder Surfing","ShoulderSurfing","Shoulder Surfing Reloaded","shoulder-surfing","shouldersurfing") }
+    "flours-various-tweaks"        = @{ Names = @("Flour's Various Tweaks","Flours Various Tweaks","FloursTweaks","flours-tweaks","floursvarious") }
+    "inventory-profiles-next"      = @{ Names = @("Inventory Profiles Next","InventoryProfilesNext","inventory-profiles","inventoryprofilesnext") }
+    "inventory-control-tweaks"     = @{ Names = @("Inventory Control Tweaks","InventoryControlTweaks","inventory-control","inventorycontrol") }
+    "better-third-person"          = @{ Names = @("Better Third Person","BetterThirdPerson","better-third-person","betterthirdperson") }
+    "camera-utils"                 = @{ Names = @("Camera Utils","CameraUtils","camera-utils","camerautils") }
+    "mouse-wheelie"                = @{ Names = @("Mouse Wheelie","MouseWheelie","mouse-wheelie","mousewheelie") }
+    "clickcrystals"                = @{ Names = @("ClickCrystals","clickcrystals","Click Crystals","click-crystals") }
+    "itemscroller"                 = @{ Names = @("Item Scroller","ItemScroller","itemscroller","item-scroller") }
+    "double-hotbar"                = @{ Names = @("Double Hotbar","DoubleHotbar","double-hotbar","doublehotbar") }
+    "invmove"                      = @{ Names = @("InvMove","invmove","Inv Move","inv-move") }
+    "arrow-shifter"                = @{ Names = @("Arrow Shifter","ArrowShifter","arrow-shifter","arrowshifter") }
+    "clientcommands"               = @{ Names = @("clientcommands","ClientCommands","client commands","client-commands") }
+    "walksycrystaloptimizer"       = @{ Names = @("WalksyCrystalOptimizer","walksycrystaloptimizer","Walksy Crystal Optimizer") }
+    "fluidlogged"                  = @{ Names = @("Fluidlogged","fluidlogged","FluidLogged","fluid-logged") }
+    "quick-elytra"                 = @{ Names = @("Quick Elytra","QuickElytra","quick-elytra","quickelytra") }
+    "quick-hotkeys"                = @{ Names = @("Quick Hotkeys","QuickHotkeys","quick-hotkeys","quickhotkeys") }
+    "sort"                         = @{ Names = @("Sort","sort","SortMod","sortmod") }
+    "bridging-mod"                 = @{ Names = @("Bridging Mod","BridgingMod","bridging-mod","bridgingmod","SlothPixel") }
+    "toggle-sneak-sprint"          = @{ Names = @("Toggle Sneak","Toggle Sprint","ToggleSneak","ToggleSprint","toggle-sneak","toggle-sprint","Togglesneak","Togglesprint") }
+    "slot-cycler"                  = @{ Names = @("Slot Cycler","SlotCycler","slot-cycler","slotcycler") }
+    "frostbyte-improved-inventory" = @{ Names = @("Frostbyte's Improved Inventory","Frostbyte Improved Inventory","FrostbyteInventory","frostbyte-improved") }
+    "inventory-management"         = @{ Names = @("Inventory Management","InventoryManagement","inventory-management","inventorymanagement") }
+    "omniscience"                  = @{ Names = @("Omniscience","omniscience","OmniscienceMod") }
+    "switchtotems"                 = @{ Names = @("SwitchTotems","switchtotems","Switch Totems","switch-totems") }
+    "bedrockify"                   = @{ Names = @("Bedrockify","bedrockify","BedrockifyMod") }
+    "d-hand"                       = @{ Names = @("D-hand","Dhand","d-hand","D Hand","dhandmod") }
+    "fast-xp"                      = @{ Names = @("Fast Xp","FastXP","fast-xp","FastXp","fastxp") }
+    "quick-exp"                    = @{ Names = @("Quick Exp","QuickExp","quick-exp","QuickEXP","quickexp") }
+    "viafabric"                    = @{ Names = @("ViaFabric","viafabric","ViaFabricPlus","viafabricplus","ViaFabric+") }
+    "viaforge"                     = @{ Names = @("ViaForge","viaforge","Via Forge") }
+    "dokkos-hotbar-optimizer"      = @{ Names = @("Dokko's Hotbar Optimizer","Dokkos Hotbar Optimizer","DokkoHotbar","dokko-hotbar","dokkohotbar") }
+    "no-delay-optimizer"           = @{ Names = @("No Delay Optimizer","NoDelayOptimizer","no-delay-optimizer","NoDelay","nodelay") }
+    "hazel-crystal-optimizer"      = @{ Names = @("Hazel Crystal Optimizer","HazelCrystalOptimizer","hazel-crystal","hazelcrystal") }
+    "no-input-lag-tick-rate"       = @{ Names = @("No Input Lag","NoInputLag","no-input-lag","NoInputLagMod","TickRateOptimizer","tick-rate") }
+    "multi-key-bindings"           = @{ Names = @("Multi Key Bindings","MultiKeyBindings","multi-key-bindings","multikeybindings") }
+}
 
  $patternRegex = [regex]::new('(?<![A-Za-z])(' + (($suspiciousPatterns | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
@@ -252,8 +290,59 @@ function Get-ShannonEntropy {
 }
 
 # ═══════════════════════════════════════════════════════════
+#  MOD INFO EXTRACTOR (for disallowed mods detection)
+# ═══════════════════════════════════════════════════════════
+function Get-Mod-Info-From-Jar {
+    param([string]$jarPath)
+    $result = [PSCustomObject]@{ ModId = $null; Name = $null; Version = $null }
+    try {
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($jarPath)
+
+        $fabricEntry = $zip.Entries | Where-Object { $_.FullName -match 'fabric\.mod\.json$' } | Select-Object -First 1
+        if ($fabricEntry) {
+            try {
+                $st = $fabricEntry.Open(); $buf = New-Object System.IO.MemoryStream
+                $st.CopyTo($buf); $st.Close()
+                $json = [System.Text.Encoding]::UTF8.GetString($buf.ToArray()); $buf.Dispose()
+                if ($json -match '"id"\s*:\s*"([^"]+)"') { $result.ModId = $Matches[1] }
+                if ($json -match '"name"\s*:\s*"([^"]+)"') { $result.Name = $Matches[1] }
+            } catch {}
+        }
+
+        if (-not $result.ModId) {
+            $tomlEntry = $zip.Entries | Where-Object { $_.FullName -match 'META-INF/mods\.toml$' } | Select-Object -First 1
+            if ($tomlEntry) {
+                try {
+                    $st = $tomlEntry.Open(); $buf = New-Object System.IO.MemoryStream
+                    $st.CopyTo($buf); $st.Close()
+                    $text = [System.Text.Encoding]::UTF8.GetString($buf.ToArray()); $buf.Dispose()
+                    if ($text -match 'modId\s*=\s*"([^"]+)"') { $result.ModId = $Matches[1] }
+                    if ($text -match 'displayName\s*=\s*"([^"]+)"') { $result.Name = $Matches[1] }
+                } catch {}
+            }
+        }
+
+        if (-not $result.ModId) {
+            $quiltEntry = $zip.Entries | Where-Object { $_.FullName -match 'quilt\.mod\.json$' } | Select-Object -First 1
+            if ($quiltEntry) {
+                try {
+                    $st = $quiltEntry.Open(); $buf = New-Object System.IO.MemoryStream
+                    $st.CopyTo($buf); $st.Close()
+                    $json = [System.Text.Encoding]::UTF8.GetString($buf.ToArray()); $buf.Dispose()
+                    if ($json -match '"id"\s*:\s*"([^"]+)"') { $result.ModId = $Matches[1] }
+                    if ($json -match '"name"\s*:\s*"([^"]+)"') { $result.Name = $Matches[1] }
+                } catch {}
+            }
+        }
+
+        $zip.Dispose()
+    } catch {}
+    return $result
+}
+
+# ═══════════════════════════════════════════════════════════
 #  OBFUSCATION ANALYSIS
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 function Get-ObfuscationScore {
     param([System.IO.Compression.ZipArchive]$Zip)
     $result = [PSCustomObject]@{
@@ -399,7 +488,7 @@ function Get-MinecraftStatus {
 
 # ═══════════════════════════════════════════════════════════
 #  JVM INTEGRITY CHECK
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
     $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
@@ -563,7 +652,7 @@ function Test-JvmIntegrity {
 
 # ═══════════════════════════════════════════════════════════
 #  MOD SIGNATURE SCAN
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 function Get-ModSignature {
     param(
         [string]$Path,
@@ -664,7 +753,7 @@ function Get-ModSignature {
 
 # ═══════════════════════════════════════════════════════════
 #  URL SOURCE EXTRACTION
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 function Get-ModSources {
     param([string]$Path)
     $urls      = [System.Collections.Generic.List[string]]::new()
@@ -693,8 +782,290 @@ function Get-ModSources {
 }
 
 # ═══════════════════════════════════════════════════════════
+#  DISALLOWED MODS SCANNER
+# ═══════════════════════════════════════════════════════════
+function Find-DisallowedMods {
+    param([string]$Path, [array]$JarFiles)
+    $disallowedModsFound = [System.Collections.Generic.List[PSObject]]::new()
+
+    foreach ($file in $JarFiles) {
+        $fileName = $file.Name.ToLower()
+        $modInfo = Get-Mod-Info-From-Jar -jarPath $file.FullName
+
+        foreach ($modSlug in $disallowedMods.Keys) {
+            $modData = $disallowedMods[$modSlug]
+            $isDisallowed = $false
+            $matchSource = ""
+
+            # Check mod ID from metadata (most reliable)
+            if ($modInfo.ModId -and $modInfo.ModId.ToLower() -match [regex]::Escape($modSlug.ToLower())) {
+                $isDisallowed = $true
+                $matchSource = "mod ID"
+            }
+            # Check mod name from metadata
+            elseif ($modInfo.Name -and $modInfo.Name.ToLower() -match [regex]::Escape($modSlug.ToLower().Replace('-', ' '))) {
+                $isDisallowed = $true
+                $matchSource = "mod name"
+            }
+            # Check filename against all known name variants
+            else {
+                foreach ($name in $modData.Names) {
+                    $nameLower = $name.ToLower()
+                    $nameNoSpace = $nameLower -replace '\s', ''
+                    $slugLower = $modSlug.ToLower()
+
+                    if ($fileName -eq "$nameLower.jar" -or
+                        $fileName -eq "$nameNoSpace.jar" -or
+                        $fileName -eq "$slugLower.jar" -or
+                        $fileName -match [regex]::Escape($nameNoSpace) -replace '\.', '\.' -replace '-', '[-_]' |
+                        $fileName -match [regex]::Escape($slugLower)) {
+                        $isDisallowed = $true
+                        $matchSource = "filename"
+                        break
+                    }
+                }
+            }
+
+            if ($isDisallowed) {
+                $disallowedModsFound.Add([PSCustomObject]@{
+                    FileName   = $file.Name
+                    ModName    = $modData.Names[0]
+                    Slug       = $modSlug
+                    MatchedBy  = $matchSource
+                    DetectedId = if ($modInfo.ModId) { $modInfo.ModId } else { "-" }
+                    DetectedName = if ($modInfo.Name) { $modInfo.Name } else { "-" }
+                })
+                break
+            }
+        }
+    }
+    return $disallowedModsFound
+}
+
+# ═══════════════════════════════════════════════════════════
+#  PREFETCH FORENSIC ANALYSIS
+# ═══════════════════════════════════════════════════════════
+function Invoke-PrefetchForensics {
+    $prefetchResults = [PSCustomObject]@{
+        DeletedEvidence   = [System.Collections.Generic.List[string]]::new()
+        ClearedCommands   = [System.Collections.Generic.List[string]]::new()
+        JavaPrefetchJars  = [System.Collections.Generic.List[PSObject]]::new()
+        ModifiedExts      = [System.Collections.Generic.List[PSObject]]::new()
+        MissingJars       = [System.Collections.Generic.List[string]]::new()
+        DcomLaunchHits    = [System.Collections.Generic.List[string]]::new()
+        EvidenceFound     = $false
+        PrefetchAccessible = $false
+    }
+
+    $logonTime = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction SilentlyContinue).LastBootUpTime
+    if (-not $logonTime) { $logonTime = (Get-Date).AddHours(-24) }
+
+    $prefetchFolder = "C:\Windows\Prefetch"
+
+    # ── Check if prefetch folder is accessible ──
+    try {
+        $testAccess = Get-ChildItem -Path $prefetchFolder -Filter *.pf -ErrorAction Stop | Select-Object -First 1
+        $prefetchResults.PrefetchAccessible = $true
+    } catch {
+        $prefetchResults.DeletedEvidence.Add("Prefetch folder not accessible (admin required)")
+        $prefetchResults.EvidenceFound = $true
+        return $prefetchResults
+    }
+
+    # ════════════════════════════════════════════════════
+    #  METHOD 1: Event Logs for file deletions
+    # ════════════════════════════════════════════════════
+    try {
+        $eventLogs = @('Security', 'Microsoft-Windows-PowerShell/Operational', 'System')
+        foreach ($log in $eventLogs) {
+            try {
+                $events = Get-WinEvent -LogName $log -MaxEvents 200 -ErrorAction SilentlyContinue |
+                    Where-Object {
+                        ($_.Id -eq 4660 -or $_.Id -eq 4656 -or $_.Id -eq 4103) -and
+                        $_.Message -match "Prefetch.*\.pf" -and
+                        $_.TimeCreated -gt $logonTime
+                    }
+                if ($events.Count -gt 0) {
+                    foreach ($event in ($events | Select-Object -First 5)) {
+                        $prefetchResults.DeletedEvidence.Add("Event Log [$log]: ID $($event.Id) at $($event.TimeCreated)")
+                    }
+                    $prefetchResults.EvidenceFound = $true
+                }
+            } catch { }
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  METHOD 2: USN Journal for .pf deletions
+    # ════════════════════════════════════════════════════
+    try {
+        $usnInfo = fsutil usn queryjournal C: 2>$null
+        if ($usnInfo) {
+            $usnData = fsutil usn readjournal C: 2>$null | Select-String "\.pf" | Select-String "DELETE"
+            if ($usnData) {
+                foreach ($line in ($usnData | Select-Object -First 5)) {
+                    $prefetchResults.DeletedEvidence.Add("USN Journal: $line")
+                }
+                $prefetchResults.EvidenceFound = $true
+            }
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  METHOD 3: MFT residual — missing prefetch for known Java
+    # ════════════════════════════════════════════════════
+    try {
+        $sources = @()
+        try {
+            $recentCommands = Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -ErrorAction SilentlyContinue
+            if ($recentCommands) {
+                $recentCommands.PSObject.Properties | Where-Object {
+                    $_.Name -notmatch '^PS' -and $_.Value -match "\.exe"
+                } | ForEach-Object {
+                    $exeName = [System.IO.Path]::GetFileNameWithoutExtension($_.Value)
+                    if ($exeName) { $sources += $exeName }
+                }
+            }
+        } catch { }
+
+        Get-Process -ErrorAction SilentlyContinue |
+            Where-Object { $_.ProcessName -match "java|javaw" } |
+            ForEach-Object { $sources += $_.ProcessName }
+
+        $existingPrefetch = Get-ChildItem -Path $prefetchFolder -Filter *.pf -ErrorAction SilentlyContinue |
+            ForEach-Object { $_.BaseName.Split('-')[0] }
+
+        $missingFiles = $sources | Where-Object { $_ -and $_ -notin $existingPrefetch } | Select-Object -Unique
+        if ($missingFiles.Count -gt 0) {
+            foreach ($mf in $missingFiles) {
+                $prefetchResults.DeletedEvidence.Add("Missing prefetch: $mf (expected but not found)")
+            }
+            $prefetchResults.EvidenceFound = $true
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  METHOD 4: Volume Shadow Copies
+    # ════════════════════════════════════════════════════
+    try {
+        $shadows = vssadmin list shadows 2>$null
+        if ($shadows -match "Shadow Copy Volume") {
+            $prefetchResults.DeletedEvidence.Add("Volume Shadow Copies exist — deleted prefetch may be recoverable")
+            $prefetchResults.EvidenceFound = $true
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  METHOD 5: Prefetch clearing commands in history
+    # ════════════════════════════════════════════════════
+    try {
+        $clearingPatterns = @(
+            "del.*prefetch", "remove.*\.pf", "clear.*prefetch",
+            "cmd\.*/c.*del.*pf", "powershell.*prefetch",
+            "Remove-Item.*prefetch", "rm.*prefetch"
+        )
+        $psHistoryPath = "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
+        if (Test-Path $psHistoryPath) {
+            $history = Get-Content $psHistoryPath -Tail 200 -ErrorAction SilentlyContinue
+            foreach ($pattern in $clearingPatterns) {
+                $matches = $history | Select-String -Pattern $pattern -ErrorAction SilentlyContinue
+                if ($matches) {
+                    foreach ($m in ($matches | Select-Object -First 3)) {
+                        $prefetchResults.ClearedCommands.Add($m.Line.Trim())
+                    }
+                    $prefetchResults.EvidenceFound = $true
+                    break
+                }
+            }
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  ANALYZE EXISTING JAVA PREFETCH FILES
+    # ════════════════════════════════════════════════════
+    try {
+        $allPfFiles = Get-ChildItem -Path $prefetchFolder -Filter *.pf -ErrorAction SilentlyContinue
+        $javaPfFiles = $allPfFiles | Where-Object {
+            ($_.Name -match "java|javaw") -and ($_.LastWriteTime -gt $logonTime)
+        }
+
+        if ($javaPfFiles.Count -gt 0) {
+            foreach ($pf in $javaPfFiles) {
+                $jarRefs = [System.Collections.Generic.List[string]]::new()
+
+                # Extract strings from prefetch file looking for .jar paths
+                try {
+                    $rawBytes = [System.IO.File]::ReadAllBytes($pf.FullName)
+                    $asciiStr = [System.Text.Encoding]::ASCII.GetString($rawBytes)
+                    $jarMatches = [regex]::Matches($asciiStr, '[A-Za-z]:\\[^\x00-\x1F"<>|]*\.jar')
+                    foreach ($jm in $jarMatches) {
+                        $jarPath = $jm.Value
+                        # Normalize path
+                        $jarPath = $jarPath -replace '\\VOLUME\{[^}]+\}', 'C:'
+                        $jarRefs.Add($jarPath)
+                    }
+                } catch { }
+
+                foreach ($jarPath in $jarRefs) {
+                    if (Test-Path $jarPath) {
+                        try {
+                            $firstBytes = Get-Content $jarPath -Encoding Byte -TotalCount 4 -ErrorAction Stop
+                            # PK header: 50 4B 03 04
+                            if ($firstBytes[0] -eq 0x50 -and $firstBytes[1] -eq 0x4B -and $firstBytes[2] -eq 0x03 -and $firstBytes[3] -eq 0x04) {
+                                if ($jarPath -notmatch '\.jar$') {
+                                    $prefetchResults.ModifiedExts.Add([PSCustomObject]@{
+                                        PrefetchFile = $pf.Name
+                                        JarPath      = $jarPath
+                                        Issue        = "Valid JAR with modified extension"
+                                    })
+                                    $prefetchResults.EvidenceFound = $true
+                                } else {
+                                    $prefetchResults.JavaPrefetchJars.Add([PSCustomObject]@{
+                                        PrefetchFile = $pf.Name
+                                        JarPath      = $jarPath
+                                        Status       = "Valid JAR"
+                                    })
+                                }
+                            }
+                        } catch {}
+                    } else {
+                        $prefetchResults.MissingJars.Add($jarPath)
+                        $prefetchResults.EvidenceFound = $true
+                    }
+                }
+            }
+        }
+    } catch { }
+
+    # ════════════════════════════════════════════════════
+    #  DcomLaunch MEMORY SCAN for -jar references
+    # ════════════════════════════════════════════════════
+    try {
+        $dcomService = Get-CimInstance -ClassName Win32_Service -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq 'DcomLaunch' }
+        if ($dcomService -and $dcomService.ProcessId) {
+            $pidDcom = $dcomService.ProcessId
+            try {
+                $dcomProcess = Get-Process -Id $pidDcom -ErrorAction Stop
+                $dcomBytes = $dcomProcess.Modules | ForEach-Object {
+                    try { $_.FileName } catch { }
+                }
+                # Scan command line of all processes for hidden -jar
+                Get-CimInstance -ClassName Win32_Process -ErrorAction SilentlyContinue |
+                    Where-Object { $_.CommandLine -match "-jar" -and $_.CommandLine -match "java|javaw" } |
+                    ForEach-Object {
+                        $prefetchResults.DcomLaunchHits.Add("PID $($_.ProcessId): $($_.CommandLine.Substring(0, [math]::Min(200, $_.CommandLine.Length)))")
+                        $prefetchResults.EvidenceFound = $true
+                    }
+            } catch { }
+        }
+    } catch { }
+
+    return $prefetchResults
+}
+
+# ═══════════════════════════════════════════════════════════
 #  MAIN SCAN LOOP
-# ═════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
 try { $jars = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop }
 catch {
     Write-Host "  Cannot read directory." -ForegroundColor Red
@@ -728,6 +1099,7 @@ if ($mcStatus.Running) {
     Write-Host "Not running" -ForegroundColor DarkGray
 }
 
+# ── Phase 1: JVM Integrity ──
  $jvmResults = [System.Collections.Generic.List[PSObject]]::new()
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
@@ -750,6 +1122,7 @@ if ($jvmResults.Count -gt 0) {
 }
 Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
+# ── Phase 2: String Analysis + Deep Scan ──
  $total   = $jars.Count
  $i       = 0
  $flagged = [System.Collections.Generic.List[PSObject]]::new()
@@ -793,6 +1166,7 @@ foreach ($jar in $jars) {
 Write-Host "  │  100% done                                      " -ForegroundColor DarkMagenta
 Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -ForegroundColor DarkMagenta
 
+# ── Phase 3: Advanced Obfuscation Detection ──
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
 Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
@@ -842,6 +1216,41 @@ foreach ($jar in $jars) {
 
  $obfHeavy = ($obfMap.Values | Where-Object { $_ -and $_.ObfLevel -eq "HEAVY" }).Count
 Write-Host "  └─ $obfHeavy heavily obfuscated jar(s) detected" -ForegroundColor DarkMagenta
+
+# ── Phase 4: Disallowed Mods Detection ──
+Write-Host ""
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 4" -ForegroundColor Magenta -NoNewline
+Write-Host " · Disallowed Mods Detection" -ForegroundColor DarkGray
+Write-Host "  │" -ForegroundColor DarkMagenta
+Write-Host "  │  scanning $($jars.Count) file(s)... " -ForegroundColor DarkGray -NoNewline
+ $disallowedFound = Find-DisallowedMods -Path $modsPath -JarFiles $jars
+if ($disallowedFound.Count -gt 0) {
+    Write-Host "$($disallowedFound.Count) disallowed mod(s) found" -ForegroundColor Red
+} else {
+    Write-Host "clean" -ForegroundColor Cyan
+}
+Write-Host "  └─ done" -ForegroundColor DarkMagenta
+
+# ── Phase 5: Prefetch Forensic Analysis ──
+Write-Host ""
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 5" -ForegroundColor Magenta -NoNewline
+Write-Host " · Prefetch Forensic Analysis" -ForegroundColor DarkGray
+Write-Host "  │" -ForegroundColor DarkMagenta
+Write-Host "  │  analyzing... " -ForegroundColor DarkGray -NoNewline
+ $prefetchResults = Invoke-PrefetchForensics
+if ($prefetchResults.EvidenceFound) {
+    $issueCount = $prefetchResults.DeletedEvidence.Count +
+                  $prefetchResults.ClearedCommands.Count +
+                  $prefetchResults.ModifiedExts.Count +
+                  $prefetchResults.MissingJars.Count +
+                  $prefetchResults.DcomLaunchHits.Count
+    Write-Host "$issueCount forensic indicator(s) found" -ForegroundColor Red
+} else {
+    Write-Host "clean" -ForegroundColor Cyan
+}
+Write-Host "  └─ done" -ForegroundColor DarkMagenta
 
 Start-Sleep -Milliseconds 300
 Clear-Host
@@ -919,27 +1328,17 @@ function Write-RowFull {
 # ═══════════════════════════════════════════════════════════
 #  REPORT BANNER
 # ═══════════════════════════════════════════════════════════
-[Console]::WriteLine("")
-W "███    ██ ██  ██████     ███    ███  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
-W "████   ██ ██ ██          ████  ████ ██    ██ ██   ██                   " ([System.ConsoleColor]::Magenta)
-W "██ ██  ██ ██ ██          ██ ████ ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
-W "██  ██ ██ ██ ██          ██  ██  ██ ██    ██ ██   ██                   " ([System.ConsoleColor]::DarkMagenta)
-W "██   ████ ██  ██████     ██      ██  ██████  ██████                    " ([System.ConsoleColor]::Magenta)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "     █████  ███    ██  █████  ██      ██    ██ ███████ ███████ ██████  " ([System.ConsoleColor]::Magenta)
-W "    ██   ██ ████   ██ ██   ██ ██       ██  ██     ███  ██      ██   ██ " ([System.ConsoleColor]::DarkMagenta)
-W "    ███████ ██ ██  ██ ███████ ██        ████     ███   █████   ██████  " ([System.ConsoleColor]::DarkMagenta)
-W "    ██   ██ ██  ██ ██ ██   ██ ██         ██     ███    ██      ██   ██ " ([System.ConsoleColor]::Magenta)
-W "    ██   ██ ██   ████ ██   ██ ███████    ██    ███████ ███████ ██   ██ " ([System.ConsoleColor]::DarkMagenta)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-W "                                                                        " ([System.ConsoleColor]::DarkGray)
-[Console]::WriteLine("")
-[Console]::ForegroundColor = [System.ConsoleColor]::Magenta
-[Console]::WriteLine("                                    [ SCAN RESULTS ]")
-[Console]::ForegroundColor = [System.ConsoleColor]::DarkGray
-[Console]::WriteLine("   ─────────────────────────────────────────────────────────────────────────────────────────────────────────")
-[Console]::WriteLine("")
+Write-Host ""
+Write-Host "   ┌──────────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor DarkGray
+Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
+Write-Host "   │" -ForegroundColor DarkGray -NoNewline
+Write-Host "      NicModAnalyzer " -ForegroundColor Magenta -NoNewline
+Write-Host "│ " -ForegroundColor DarkGray -NoNewline
+Write-Host "SCAN RESULTS" -ForegroundColor Magenta -NoNewline
+Write-Host "                                   │" -ForegroundColor DarkGray
+Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
+Write-Host "   └──────────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor DarkGray
+Write-Host ""
 
  $flaggedColor  = if ($flagged.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }
  $moduleSummary = ($activeModules -join "  ·  ")
@@ -952,6 +1351,7 @@ Write-Row "  Path     : " $modsPath                                DarkGray   Gr
 Write-Row "  Files    : " "$($jars.Count) scanned"                DarkGray   White         DarkGray
 Write-Row "  Clean    : " "$($clean.Count)"                        DarkGray   Cyan          DarkGray
 Write-Row "  Flagged  : " "$($flagged.Count)"                      DarkGray   $flaggedColor DarkGray
+Write-Row "  Disallowed: " "$($disallowedFound.Count)"             DarkGray   $(if ($disallowedFound.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }) DarkGray
 
 if ($mcStatus.Running) {
     Write-Row "  Minecraft: " " RUNNING   PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" DarkGray Cyan DarkGray
@@ -991,6 +1391,103 @@ if ($jvmResults.Count -gt 0) {
         Write-RowFull "  LOW SEVERITY" DarkGray DarkGray
         foreach ($j in $lowJVM) {
             Write-Row "  [LOW]   $($j.Type.PadRight(30))" $j.Detail DarkGray DarkGray DarkGray
+        }
+    }
+
+    Write-Border 'bot' Red
+}
+
+# ═══════════════════════════════════════════════════════════
+#  DISALLOWED MODS
+# ═══════════════════════════════════════════════════════════
+if ($disallowedFound.Count -gt 0) {
+    Write-Host ""
+    Write-Border 'top' Yellow
+    Write-RowFull "  ⛔  DISALLOWED MODS DETECTED" Yellow Yellow
+    Write-Border 'sep' Yellow
+    foreach ($dm in $disallowedFound) {
+        Write-Row "  [BAN]  " $dm.FileName White Yellow Yellow
+        Write-Row "         " "Mod: $($dm.ModName)  ·  Matched by: $($dm.MatchedBy)" DarkGray DarkYellow Yellow
+        if ($dm.DetectedId -ne "-") {
+            Write-Row "         " "Mod ID: $($dm.DetectedId)" DarkGray DarkYellow Yellow
+        }
+        if ($dm.DetectedName -ne "-") {
+            Write-Row "         " "Meta name: $($dm.DetectedName)" DarkGray DarkYellow Yellow
+        }
+        if ($dm -ne $disallowedFound[-1]) { Write-Border 'sep' DarkYellow }
+    }
+    Write-Border 'bot' Yellow
+}
+
+# ═══════════════════════════════════════════════════════════
+#  PREFETCH FORENSICS
+# ═══════════════════════════════════════════════════════════
+if ($prefetchResults.EvidenceFound) {
+    Write-Host ""
+    Write-Border 'top' Red
+    Write-RowFull "  🔍  PREFETCH FORENSIC FINDINGS" Red Red
+    Write-Border 'sep' Red
+
+    # Deleted prefetch evidence
+    if ($prefetchResults.DeletedEvidence.Count -gt 0) {
+        Write-RowFull "  DELETED PREFETCH EVIDENCE" Red Red
+        foreach ($ev in ($prefetchResults.DeletedEvidence | Select-Object -First 15)) {
+            Write-Row "  [DEL]  " $ev DarkGray Red Red
+        }
+        if ($prefetchResults.DeletedEvidence.Count -gt 15) {
+            Write-Row "  [DEL]  " "... and $($prefetchResults.DeletedEvidence.Count - 15) more" DarkGray DarkRed Red
+        }
+    }
+
+    # Prefetch clearing commands
+    if ($prefetchResults.ClearedCommands.Count -gt 0) {
+        Write-Border 'sep' Red
+        Write-RowFull "  PREFETCH CLEARING COMMANDS IN HISTORY" Red Red
+        foreach ($cmd in ($prefetchResults.ClearedCommands | Select-Object -First 10)) {
+            Write-Row "  [CMD]  " $cmd DarkGray Red Red
+        }
+    }
+
+    # Modified extensions
+    if ($prefetchResults.ModifiedExts.Count -gt 0) {
+        Write-Border 'sep' Red
+        Write-RowFull "  JAR FILES WITH MODIFIED EXTENSIONS" Red Red
+        foreach ($me in $prefetchResults.ModifiedExts) {
+            Write-Row "  [MOD]  " "$($me.JarPath)" DarkGray Red Red
+            Write-Row "         " "Found in: $($me.PrefetchFile) — $($me.Issue)" DarkGray DarkRed Red
+        }
+    }
+
+    # Missing JARs from prefetch
+    if ($prefetchResults.MissingJars.Count -gt 0) {
+        Write-Border 'sep' DarkRed
+        Write-RowFull "  JAR FILES IN PREFETCH BUT MISSING FROM DISK" DarkRed DarkRed
+        foreach ($mj in ($prefetchResults.MissingJars | Select-Object -First 15)) {
+            Write-Row "  [MISS] " $mj DarkGray Red DarkRed
+        }
+        if ($prefetchResults.MissingJars.Count -gt 15) {
+            Write-Row "  [MISS] " "... and $($prefetchResults.MissingJars.Count - 15) more" DarkGray DarkRed DarkRed
+        }
+    }
+
+    # DcomLaunch / hidden -jar references
+    if ($prefetchResults.DcomLaunchHits.Count -gt 0) {
+        Write-Border 'sep' Red
+        Write-RowFull "  HIDDEN -JAR PROCESS REFERENCES" Red Red
+        foreach ($dh in ($prefetchResults.DcomLaunchHits | Select-Object -First 10)) {
+            Write-Row "  [PROC] " $dh DarkGray Red Red
+        }
+    }
+
+    # Java prefetch valid JARs (info only)
+    if ($prefetchResults.JavaPrefetchJars.Count -gt 0) {
+        Write-Border 'sep' DarkGray
+        Write-RowFull "  JAVA PREFETCH JAR REFERENCES (valid)" DarkGray DarkGray
+        foreach ($jp in ($prefetchResults.JavaPrefetchJars | Select-Object -First 10)) {
+            Write-Row "  [JAR]  " $jp.JarPath DarkGray Gray DarkGray
+        }
+        if ($prefetchResults.JavaPrefetchJars.Count -gt 10) {
+            Write-Row "  [JAR]  " "... and $($prefetchResults.JavaPrefetchJars.Count - 10) more" DarkGray DarkGray DarkGray
         }
     }
 
