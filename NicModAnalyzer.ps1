@@ -482,13 +482,80 @@ function Invoke-ObfuscationFlags { param([string]$FilePath)
 }
 
 # ═══════════════════════════════════════════════════════
-#  ENHANCED JVM SCAN (with memory scanning)
+#  ENHANCED JVM SCAN (with memory scanning & argument injection)
 # ═══════════════════════════════════════════════════════
 function Test-JvmIntegrity {
     $findings = [System.Collections.Generic.List[PSObject]]::new()
     $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
     $javaProcs = @(Get-Process javaw -EA 0)+(Get-Process java -EA 0)
     if ($javaProcs.Count -eq 0) { return $findings }
+
+    # Comprehensive Fabric/Forge injection patterns
+    $suspiciousPatternsList = @(
+        # Fabric specific
+        @('-Dfabric\.addMods=', 'FABRIC_ADD_MODS', 'HIGH', 'Injects extra Fabric mod JARs at runtime'),
+        @('-Dfabric\.loadMods=', 'FABRIC_LOAD_MODS', 'HIGH', 'Overrides Fabric mod loading mechanism'),
+        @('-Dfabric\.classPathGroups=', 'FABRIC_CLASSPATH_GROUPS', 'HIGH', 'Manipulates Fabric classpath groups'),
+        @('-Dfabric\.gameJarPath=', 'FABRIC_GAME_JAR_PATH', 'MEDIUM', 'Redirects Minecraft game JAR path'),
+        @('-Dfabric\.skipMcProvider=', 'FABRIC_SKIP_MC_PROVIDER', 'HIGH', 'Skips Minecraft provider checks'),
+        @('-Dfabric\.development=', 'FABRIC_DEV_MODE', 'LOW', 'Enables Fabric development mode'),
+        @('-Dfabric\.allowUnsupportedVersion=', 'FABRIC_UNSUPPORTED_VERSION', 'MEDIUM', 'Allows unsupported Minecraft versions'),
+        @('-Dfabric\.remapClasspathFile=', 'FABRIC_REMAP_CLASSPATH', 'HIGH', 'Redirects remap classpath file'),
+        @('-Dfabric\.skipIntermediary=', 'FABRIC_SKIP_INTERMEDIARY', 'HIGH', 'Skips intermediary mappings'),
+        @('-Dfabric\.configDir=', 'FABRIC_CONFIG_DIR', 'MEDIUM', 'Changes Fabric config directory'),
+        @('-Dfabric\.loader\.config=', 'FABRIC_LOADER_CONFIG', 'MEDIUM', 'Redirects Fabric loader config'),
+        @('-Dfabric\.log\.level=', 'FABRIC_LOG_LEVEL', 'LOW', 'Changes Fabric log level'),
+        @('-Dfabric\.debug\.dumpClasspath=', 'FABRIC_DEBUG_DUMP', 'LOW', 'Enables debug classpath dumping'),
+        @('-Dfabric\.log\.config=', 'FABRIC_LOG_CONFIG', 'LOW', 'Redirects log config file'),
+        @('-Dfabric\.dli\.config=', 'FABRIC_DLI_CONFIG', 'MEDIUM', 'Changes data loader injector config'),
+        @('-Dfabric\.mixin\.configs=', 'FABRIC_MIXIN_CONFIGS', 'HIGH', 'Injects custom Mixin configs'),
+        @('-Dfabric\.mixin\.hotSwap=', 'FABRIC_MIXIN_HOTSWAP', 'HIGH', 'Enables Mixin hot swapping (runtime code injection)'),
+        @('-Dfabric\.mixin\.debug\.export=', 'FABRIC_MIXIN_DEBUG_EXPORT', 'LOW', 'Exports debug Mixin info'),
+        @('-Dfabric\.mixin\.debug\.verbose=', 'FABRIC_MIXIN_DEBUG_VERBOSE', 'LOW', 'Enables verbose Mixin logging'),
+        @('-Dfabric\.gameVersion=', 'FABRIC_GAME_VERSION', 'MEDIUM', 'Overrides Fabric game version'),
+        @('-Dfabric\.forceVersion=', 'FABRIC_FORCE_VERSION', 'HIGH', 'Forces a specific game version'),
+        @('-Dfabric\.autoDetectVersion=', 'FABRIC_AUTO_DETECT_VERSION', 'LOW', 'Enables version auto-detection'),
+        @('-Dfabric\.launcher\.name=', 'FABRIC_LAUNCHER_NAME', 'LOW', 'Overrides launcher name'),
+        @('-Dfabric\.launcher\.brand=', 'FABRIC_LAUNCHER_BRAND', 'LOW', 'Overrides launcher brand'),
+        @('-Dfabric\.mods\.toml\.path=', 'FABRIC_MODS_TOML_PATH', 'HIGH', 'Redirects Fabric mods.toml path'),
+        @('-Dfabric\.customModList=', 'FABRIC_CUSTOM_MOD_LIST', 'HIGH', 'Injects custom mod list'),
+        @('-Dfabric\.resolve\.modFiles=', 'FABRIC_RESOLVE_MODFILES', 'MEDIUM', 'Forces mod file resolution'),
+        @('-Dfabric\.skipDependencyResolution=', 'FABRIC_SKIP_DEP_RESOLUTION', 'HIGH', 'Skips dependency resolution'),
+        @('-Dfabric\.loader\.entrypoints=', 'FABRIC_LOADER_ENTRYPOINTS', 'HIGH', 'Injects custom entrypoints'),
+        @('-Dfabric\.language\.providers=', 'FABRIC_LANGUAGE_PROVIDERS', 'HIGH', 'Injects custom language providers'),
+        # Forge specific
+        @('-Dforge\.addMods=', 'FORGE_ADD_MODS', 'HIGH', 'Injects extra Forge mod JARs at runtime'),
+        @('-Dforge\.mods=', 'FORGE_MODS', 'HIGH', 'Overrides Forge mod list'),
+        @('-Dfml\.coreMods\.load=', 'FORGE_COREMODS', 'HIGH', 'Loads Forge core mods via JVM flag'),
+        @('-Dforge\.coreMods\.dir=', 'FORGE_COREMODS_DIR', 'HIGH', 'Redirects core mods directory'),
+        @('-Dforge\.modDir=', 'FORGE_MOD_DIR', 'HIGH', 'Redirects mod directory'),
+        @('-Dforge\.modsDirectories=', 'FORGE_MODS_DIRECTORIES', 'HIGH', 'Adds extra mod directories'),
+        @('-Dfml\.customModList=', 'FORGE_CUSTOM_MOD_LIST', 'HIGH', 'Injects custom Forge mod list'),
+        @('-Dforge\.disableModScan=', 'FORGE_DISABLE_MODSCAN', 'HIGH', 'Disables Forge mod scanning'),
+        @('-Dforge\.modList=', 'FORGE_MOD_LIST', 'HIGH', 'Overrides Forge mod list'),
+        @('-Dforge\.forceVersion=', 'FORGE_FORCE_VERSION', 'HIGH', 'Forces Forge version'),
+        @('-Dforge\.disableUpdateCheck=', 'FORGE_DISABLE_UPDATE', 'MEDIUM', 'Disables Forge update checks'),
+        @('-Dforge\.logging\.mojang\.level=', 'FORGE_MOJANG_LOG_LEVEL', 'LOW', 'Changes Mojang log level'),
+        @('-Dforge\.mixin\.hotSwap=', 'FORGE_MIXIN_HOTSWAP', 'HIGH', 'Enables Forge Mixin hot swapping'),
+        @('-Dforge\.resourcePack=', 'FORGE_RESOURCE_PACK', 'MEDIUM', 'Injects resource pack'),
+        @('-Dforge\.defaultResourcePack=', 'FORGE_DEFAULT_RESOURCE_PACK', 'MEDIUM', 'Injects default resource pack'),
+        @('-Dforge\.texturePacks=', 'FORGE_TEXTURE_PACKS', 'MEDIUM', 'Injects texture packs'),
+        @('-Dforge\.assetIndex=', 'FORGE_ASSET_INDEX', 'MEDIUM', 'Overrides asset index'),
+        @('-Dforge\.assetsDir=', 'FORGE_ASSETS_DIR', 'MEDIUM', 'Redirects assets directory'),
+        # Security bypasses
+        @('-Djava\.security\.manager=', 'SECURITY_MANAGER_DISABLED', 'HIGH', 'Disables Java Security Manager'),
+        @('-Djava\.security\.policy=', 'SECURITY_POLICY_OVERRIDE', 'HIGH', 'Overrides security policy (possible permissions bypass)'),
+        # Classpath manipulation
+        @('-Xbootclasspath', 'BOOTCLASSPATH_MODIFY', 'HIGH', 'Modifies boot classpath (critical system classes)'),
+        @('-Djava\.system\.class\.loader=', 'CUSTOM_CLASSLOADER', 'HIGH', 'Replaces system classloader'),
+        @('-Djava\.class\.path=', 'CLASSPATH_OVERRIDE', 'HIGH', 'Overrides Java classpath'),
+        @('-cp\s+["''][^"'';]*\.jar', 'CLASSPATH_JAR_INJECTION', 'HIGH', 'Injects JAR via classpath'),
+        # Debug/remote access
+        @('-Xrunjdwp:', 'REMOTE_DEBUG', 'HIGH', 'Remote debugging enabled (possible RCE)'),
+        @('agentlib:jdwp', 'JDWP_AGENT', 'HIGH', 'JDWP agent (debugger can execute arbitrary code)'),
+        @('-agentlib:', 'NATIVE_AGENT', 'HIGH', 'Loads native JVMTI agent'),
+        @('-agentpath:', 'NATIVE_AGENT_PATH', 'HIGH', 'Loads native agent by path')
+    )
 
     foreach ($javaProc in $javaProcs) {
         $javaPid = $javaProc.Id
@@ -508,41 +575,12 @@ function Test-JvmIntegrity {
                     $findings.Add([PSCustomObject]@{Type="JAVA_AGENT";Detail="Untrusted javaagent: $name";Severity="HIGH";PID=$javaPid})}}
             }
 
-            # Suspicious JVM flags
-            $suspFlags = @(
-                @('-Xbootclasspath/p:', 'BOOTCLASS_PREPEND', 'HIGH', 'Prepends to bootstrap classpath'),
-                @('-Xbootclasspath/a:', 'BOOTCLASS_APPEND', 'MEDIUM', 'Appends to bootstrap classpath'),
-                @('-Djava.system.class.loader=', 'CLASSLOADER_REPLACE', 'HIGH', 'Replaces system classloader'),
-                @('-Xverify:none', 'BYTECODE_VERIFY_OFF', 'HIGH', 'Disables bytecode verification'),
-                @('-noverify', 'NOVERIFY', 'HIGH', 'Disables class verification'),
-                @('(?<!\w)-agentlib:', 'NATIVE_AGENT_LIB', 'HIGH', 'Loads native JVMTI agent'),
-                @('-agentpath:', 'NATIVE_AGENT_PATH', 'HIGH', 'Loads native agent by path'),
-                @('-Xrunjdwp:', 'REMOTE_DEBUG', 'HIGH', 'Remote debugging enabled'),
-                @('agentlib:jdwp', 'JDWP_AGENT', 'HIGH', 'JDWP agent — RCE risk'),
-                @('-Djava.security.manager=', 'SEC_MANAGER_DISABLED', 'HIGH', 'Disables Java Security Manager'),
-                @('-Dcom.sun.jndi.rmi.object.trustURLCodebase=true', 'JNDI_RMI', 'HIGH', 'Log4Shell vector'),
-                @('-Dcom.sun.jndi.ldap.object.trustURLCodebase=true', 'JNDI_LDAP', 'HIGH', 'Log4Shell variant')
-            )
-            foreach($sf in $suspFlags){
+            # Suspicious JVM flags from the comprehensive list
+            foreach($sf in $suspiciousPatternsList){
                 if($cmd -match $sf[0]){if(-not $foundFlags.Contains($sf[1])){
                     [void]$foundFlags.Add($sf[1])
-                    $findings.Add([PSCustomObject]@{Type=$sf[1];Detail=$sf[3];Severity=$sf[2];PID=$javaPid})}}}
-
-            # Fabric/Forge flags
-            $modFlags = @(
-                @('-Dfabric\.addMods=', 'FABRIC_ADD_MODS', 'HIGH', 'Injects extra mod JARs at runtime'),
-                @('-Dfabric\.loadMods=', 'FABRIC_LOAD_MODS', 'HIGH', 'Overrides Fabric mod loading'),
-                @('-Dfabric\.mixin\.hotSwap=', 'FABRIC_MIXIN_HOTSWAP', 'HIGH', 'Mixin hot-swap — runtime code modification'),
-                @('-Dforge\.addMods=', 'FORGE_ADD_MODS', 'HIGH', 'Injects extra Forge mod JARs'),
-                @('-Dfml\.coreMods\.load=', 'FORGE_COREMODS', 'HIGH', 'Loads core mods via JVM flag'),
-                @('-Dforge\.disableModScan=', 'FORGE_DISABLE_MODSCAN', 'HIGH', 'Disables mod scanning'),
-                @('-Dforge\.mixin\.hotSwap=', 'FORGE_MIXIN_HOTSWAP', 'HIGH', 'Forge Mixin hot-swap'),
-                @('-Dclient\.brand=', 'BRAND_SPOOF', 'LOW', 'Spoofs client brand')
-            )
-            foreach($mf in $modFlags){
-                if($cmd -match $mf[0]){if(-not $foundFlags.Contains($mf[1])){
-                    [void]$foundFlags.Add($mf[1])
-                    $findings.Add([PSCustomObject]@{Type=$mf[1];Detail=$mf[3];Severity=$mf[2];PID=$javaPid})}}}
+                    $findings.Add([PSCustomObject]@{Type=$sf[1];Detail=$sf[3];Severity=$sf[2];PID=$javaPid})}}
+            }
 
             # Localhost listener check
             try {
@@ -730,7 +768,6 @@ function Run-SystemChecks {
 # ═══════════════════════════════════════════════════════
 function Run-ServiceCheck {
     $results=[System.Collections.Generic.List[PSObject]]::new()
-    # FIXED: use arrays instead of hashtables
     $svcTable = @(
         @("SysMain", "Superfetch/SysMain", "Running"),
         @("PcaSvc", "Program Compatibility Assistant", "Running"),
@@ -808,9 +845,9 @@ if($jars.Count -eq 0){Write-Host "  No JAR files found." -ForegroundColor Yellow
 Write-Host "";Write-Host "  $scanTimestamp" -ForegroundColor DarkGray;Write-Host "  $modsPath" -ForegroundColor DarkGray;Write-Host "  $($jars.Count) file(s) found" -ForegroundColor DarkGray;Write-Host ""
 if($mcStatus.Running){Write-Host "  Minecraft  " -ForegroundColor DarkGray -NoNewline;Write-Host "● " -ForegroundColor Magenta -NoNewline;Write-Host "Running  " -ForegroundColor White -NoNewline;Write-Host "PID $($mcStatus.PID)   $($mcStatus.Uptime)   $($mcStatus.RAM) RAM" -ForegroundColor DarkGray}else{Write-Host "  Minecraft  " -ForegroundColor DarkGray -NoNewline;Write-Host "○ " -ForegroundColor DarkGray -NoNewline;Write-Host "Not running" -ForegroundColor DarkGray}
 
-# Phase 1: JVM
+# Phase 1: JVM (includes the enhanced argument injection scanner)
  $jvmResults=[System.Collections.Generic.List[PSObject]]::new()
-Write-Host "";Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline;Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline;Write-Host " · JVM Integrity + Memory Scan" -ForegroundColor DarkGray
+Write-Host "";Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline;Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline;Write-Host " · JVM Integrity + Memory Scan + Argument Injection" -ForegroundColor DarkGray
 Write-Host "  │" -ForegroundColor DarkMagenta;Write-Host "  │  scanning... " -ForegroundColor DarkGray -NoNewline
  $jvmResults=Test-JvmIntegrity
  $memSigs=@($jvmResults|Where-Object{$_.Type -eq "MEMORY_SIGNATURE"})
