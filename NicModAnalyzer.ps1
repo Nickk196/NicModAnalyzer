@@ -26,14 +26,14 @@ Write-Host "  > " -ForegroundColor Magenta -NoNewline; $modsPath = Read-Host
 if ([string]::IsNullOrWhiteSpace($modsPath)) { $modsPath = "$env:USERPROFILE\AppData\Roaming\.minecraft\mods"; Write-Host "Continuing with " -NoNewline; Write-Host $modsPath -ForegroundColor White; Write-Host }
 if (-not (Test-Path $modsPath -PathType Container)) { Write-Host "❌ Invalid Path!" -ForegroundColor Red; Write-Host "Press any key to exit..." -ForegroundColor Gray; $null=$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown"); exit 1 }
 
- $activeModules = @("JVM Scan","String Analysis","Deep Scan","Obfuscation","Disallowed Mods","Prefetch","System","Services","PC Scan")
+$activeModules = @("JVM Scan","String Analysis","Deep Scan","Obfuscation","Disallowed Mods","Prefetch","System","Services","PC Scan")
 Write-Host ""; Write-Host "  Modules  : " -ForegroundColor DarkGray -NoNewline; Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 # ═════════════════════════════════════════════════════════
 #  DATA LISTS
 # ═════════════════════════════════════════════════════════
- $suspiciousPatterns = @(
+$suspiciousPatterns = @(
     'AimAssist','AutoAnchor','AutoCrystal','AutoDoubleHand','AutoHitCrystal','AutoPot','AutoTotem','AutoArmor','InventoryTotem',
     'JumpReset','LegitTotem','PingSpoof','SelfDestruct','ShieldBreaker','TriggerBot','AxeSpam','WebMacro',
     'WalskyOptimizer','WalksyOptimizer','walsky.optimizer','WalksyCrystalOptimizerMod','Donut','Replace Mod',
@@ -53,7 +53,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     'org.chainlibs.module.impl.modules.Blatant.cj','org.chainlibs.module.impl.modules.Blatant.dk'
 )
 
- $script:cheatStrings = @(
+$script:cheatStrings = @(
     "AutoCrystal","autocrystal","auto crystal","cw crystal","dontPlaceCrystal","dontBreakCrystal",
     "AutoHitCrystal","autohitcrystal","canPlaceCrystalServer","healPotSlot",
     "AutoAnchor","autoanchor","auto anchor","DoubleAnchor","hasGlowstone","HasAnchor",
@@ -152,7 +152,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "Ａｵﾄ Ｂﾚｾ｡ｃﾞ","Ｆｲｵｪｪﾞｽﾞ Ｐﾞｱｴﾞｪｲ"
 )
 
- $script:knownCheatFileTokens = @(
+$script:knownCheatFileTokens = @(
     "doomsday","doomsdayclient","doomsday-client","doomsday_client","darik","dariks","dqrkis","dqrk",
     "vape","vapeclient","vape-client","vape_client","vapelite","vape-lite","vapepro",
     "meteor","meteorclient","meteor-client","meteor_client","meteordev","meteor-dev",
@@ -212,7 +212,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "skidhack"
 )
 
- $deepCheatStrings = @(
+$deepCheatStrings = @(
     "invokeAttackEntity","invokeUseItem","invokeStopUsingItem","callAttackEntity","callUseItem",
     "getAttackCooldownProgress","resetLastAttackedTicks","ModuleManager","FeatureManager","HackList",
     "CommandManager.register","GuiHacks","ClickGui","AltManager","SessionStealer","spoofPacket",
@@ -225,7 +225,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "getOutputStream","getInputStream",".execute(","ProcessBuilder","Runtime.exec"
 )
 
- $disallowedMods = @{
+$disallowedMods = @{
     "auto-clicker"=@{Names=@("Auto Clicker","AutoClicker","autoclicker","auto-clicker","Auto-Clicker")}
     "freecam"=@{Names=@("Freecam","freecam","FreeCam","Free Cam")}
     "vivecraft"=@{Names=@("Vivecraft","vivecraft","ViveCraft")}
@@ -269,7 +269,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "multi-key-bindings"=@{Names=@("Multi Key Bindings","MultiKeyBindings")}
 }
 
- $script:processWhitelist = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$script:processWhitelist = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 @("System","Idle","smss","csrss","wininit","winlogon","services","lsass","svchost","dwm","explorer","taskmgr",
 "taskhostw","sihost","ctfmon","RuntimeBroker","ShellExperienceHost","StartMenuExperienceHost","SearchApp",
 "SearchIndexer","SearchHost","SearchUI","ApplicationFrameHost","SystemSettingsBroker","SettingsSyncHost",
@@ -295,7 +295,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 "CrystalDiskInfo","Greenshot","ShareX","NZXT CAM","GameBar","GameBarFTServer","XboxGameBarSpotify"
 ) | ForEach-Object { [void]$script:processWhitelist.Add($_) }
 
- $script:cheatProcessNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$script:cheatProcessNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 @("liquidbounce","meteor-client","wurst","vape","vapelite","sigmaclient","sigma","rise","baritone",
 "aristois","huzuni","inertia","impact","salhack","killaura","aimbot","xray","freecam","ghostclient",
 "nofall","nofalldmg","antibot","autoclicker","jitterclick","butterfly","triggerbot","scaffold","cheat-engine",
@@ -308,14 +308,14 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 "blaze","autocrystal","crystalaura","anchorbot","anchormacro","macroclient","autoanchor"
 ) | ForEach-Object { [void]$script:cheatProcessNames.Add($_) }
 
- $script:suspiciousProcessPatterns = @('^[a-z]{1,4}\d{3,}$','^[a-zA-Z0-9]{32}$','^[a-zA-Z0-9]{16,}$','^tmp[a-zA-Z0-9]+$','^svc[a-zA-Z0-9]{4,}$','^win[a-zA-Z0-9]{5,}$','^sys[a-zA-Z0-9]{5,}$','^upd[a-zA-Z0-9]{4,}$','^[a-z]{2}\d{4,}$')
+$script:suspiciousProcessPatterns = @('^[a-z]{1,4}\d{3,}$','^[a-zA-Z0-9]{32}$','^[a-zA-Z0-9]{16,}$','^tmp[a-zA-Z0-9]+$','^svc[a-zA-Z0-9]{4,}$','^win[a-zA-Z0-9]{5,}$','^sys[a-zA-Z0-9]{5,}$','^upd[a-zA-Z0-9]{4,}$','^[a-z]{2}\d{4,}$')
 
- $script:suspiciousStartupPatterns = @('AppData\\Roaming\\[^\\]+\.exe','AppData\\Local\\Temp\\',
+$script:suspiciousStartupPatterns = @('AppData\\Roaming\\[^\\]+\.exe','AppData\\Local\\Temp\\',
 'AppData\\Local\\(?!Discord|Spotify|Programs|Microsoft|Packages|GitHubDesktop|Slack|Notion|Steam|Epic|cursor|Claude)[^\\]+\\[^\\]+\.exe',
 '\\Temp\\.*\.exe','\\Temp\\.*\.bat','\\Temp\\.*\.ps1','powershell.*-enc','powershell.*hidden',
 'cmd.*\/c.*start','wscript.*\.vbs','mshta.*\.hta','regsvr32.*/s.*/u','rundll32.*javascript')
 
- $script:knownCheatFolders = @(
+$script:knownCheatFolders = @(
     "$env:APPDATA\LiquidBounce","$env:APPDATA\Meteor Client","$env:APPDATA\Wurst","$env:APPDATA\Vape",
     "$env:APPDATA\.vape","$env:APPDATA\Sigma","$env:APPDATA\Rise","$env:APPDATA\Aristois","$env:APPDATA\Huzuni",
     "$env:APPDATA\Inertia","$env:APPDATA\Impact","$env:APPDATA\SalHack","$env:APPDATA\Baritone",
@@ -336,13 +336,13 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
     "$env:TEMP\prestige","$env:TEMP\prestigeclient"
 )
 
- $patternRegex = [regex]::new('(?<![A-Za-z])(' + (($suspiciousPatterns | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
- $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$patternRegex = [regex]::new('(?<![A-Za-z])(' + (($suspiciousPatterns | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?![A-Za-z])', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+$cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $script:cheatStrings) { [void]$cheatStringSet.Add($s) }
- $deepCheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$deepCheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $deepCheatStrings) { [void]$deepCheatStringSet.Add($s) }
- $fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
- $tokenRegex = [regex]::new('(' + (($script:knownCheatFileTokens | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+$fullwidthRegex = [regex]::new("[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}", [System.Text.RegularExpressions.RegexOptions]::Compiled)
+$tokenRegex = [regex]::new('(' + (($script:knownCheatFileTokens | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')', [System.Text.RegularExpressions.RegexOptions]::Compiled)
 
 # ═══════════════════════════════════════════════════════
 #  MEMORY SCAN P/INVOKE SETUP
@@ -508,7 +508,7 @@ function Test-JvmIntegrity {
                     $findings.Add([PSCustomObject]@{Type="JAVA_AGENT";Detail="Untrusted javaagent: $name";Severity="HIGH";PID=$javaPid})}}
             }
 
-            # Suspicious JVM flags (fixed syntax)
+            # Suspicious JVM flags
             $suspFlags = @(
                 @('-Xbootclasspath/p:', 'BOOTCLASS_PREPEND', 'HIGH', 'Prepends to bootstrap classpath'),
                 @('-Xbootclasspath/a:', 'BOOTCLASS_APPEND', 'MEDIUM', 'Appends to bootstrap classpath'),
@@ -528,7 +528,7 @@ function Test-JvmIntegrity {
                     [void]$foundFlags.Add($sf[1])
                     $findings.Add([PSCustomObject]@{Type=$sf[1];Detail=$sf[3];Severity=$sf[2];PID=$javaPid})}}}
 
-            # Fabric/Forge flags (fixed syntax)
+            # Fabric/Forge flags
             $modFlags = @(
                 @('-Dfabric\.addMods=', 'FABRIC_ADD_MODS', 'HIGH', 'Injects extra mod JARs at runtime'),
                 @('-Dfabric\.loadMods=', 'FABRIC_LOAD_MODS', 'HIGH', 'Overrides Fabric mod loading'),
@@ -730,22 +730,29 @@ function Run-SystemChecks {
 # ═══════════════════════════════════════════════════════
 function Run-ServiceCheck {
     $results=[System.Collections.Generic.List[PSObject]]::new()
-    $svcTable=@(
-        @{"SysMain";"Superfetch/SysMain";"Running"},
-        @{"PcaSvc";"Program Compatibility Assistant";"Running"},
-        @{"EventLog";"Windows Event Log";"Running"},
-        @{"Schedule";"Task Scheduler";"Running"},
-        @{"WinDefend";"Windows Defender Antivirus";"Running"},
-        @{"MpsSvc";"Windows Firewall";"Running"},
-        @{"wscsvc";"Security Center";"Running"},
-        @{"Appinfo";"Application Information (UAC)";"Running"},
-        @{"DcomLaunch";"DCOM Server Process Launcher";"Running"},
-        @{"PlugPlay";"Plug and Play";"Running"}
+    # FIXED: use arrays instead of hashtables
+    $svcTable = @(
+        @("SysMain", "Superfetch/SysMain", "Running"),
+        @("PcaSvc", "Program Compatibility Assistant", "Running"),
+        @("EventLog", "Windows Event Log", "Running"),
+        @("Schedule", "Task Scheduler", "Running"),
+        @("WinDefend", "Windows Defender Antivirus", "Running"),
+        @("MpsSvc", "Windows Firewall", "Running"),
+        @("wscsvc", "Security Center", "Running"),
+        @("Appinfo", "Application Information (UAC)", "Running"),
+        @("DcomLaunch", "DCOM Server Process Launcher", "Running"),
+        @("PlugPlay", "Plug and Play", "Running")
     )
-    $svcNames=$svcTable|ForEach-Object{$_[0]};$allSvcs=Get-Service -Name $svcNames -EA SilentlyContinue
-    $svcLookup=@{};foreach($s in $allSvcs){$svcLookup[$s.Name]=$s.Status.ToString()}
-    foreach($svc in $svcTable){$status=if($svcLookup.ContainsKey($svc[0])){$svcLookup[$svc[0]]}else{"Not Found"}
-        if($status -ne $svc[2]){$results.Add([PSCustomObject]@{Name=$svc[1];Status=$status;Expected=$svc[2]})}}
+    $svcNames = $svcTable | ForEach-Object { $_[0] }
+    $allSvcs = Get-Service -Name $svcNames -EA SilentlyContinue
+    $svcLookup = @{}
+    foreach ($s in $allSvcs) { $svcLookup[$s.Name] = $s.Status.ToString() }
+    foreach ($svc in $svcTable) {
+        $status = if ($svcLookup.ContainsKey($svc[0])) { $svcLookup[$svc[0]] } else { "Not Found" }
+        if ($status -ne $svc[2]) {
+            $results.Add([PSCustomObject]@{ Name = $svc[1]; Status = $status; Expected = $svc[2] })
+        }
+    }
     return $results
 }
 
