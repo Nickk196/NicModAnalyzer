@@ -10,10 +10,10 @@ Clear-Host
 Write-Host ""
 Write-Host "   ┌──────────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor DarkGray
 Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
-Write-Host "   │" -ForegroundColor DarkGray -NoNewline; Write-Host "      NicModAnalyzer " -ForegroundColor Magenta -NoNewline
-Write-Host "│ " -ForegroundColor DarkGray -NoNewline; Write-Host "v1.2" -ForegroundColor DarkGray -NoNewline
+Write-Host "   │" -ForegroundColor DarkGray -NoNewline; Write-Host "      BlablablModAnalyzer " -ForegroundColor Magenta -NoNewline
+Write-Host "│ " -ForegroundColor DarkGray -NoNewline; Write-Host "v1.3" -ForegroundColor DarkGray -NoNewline
 Write-Host "                                               │" -ForegroundColor DarkGray
-Write-Host "   │" -ForegroundColor DarkGray -NoNewline; Write-Host "      Minecraft Mod Security Scanner " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "   │" -ForegroundColor DarkGray -NoNewline; Write-Host "     Blablabla  " -ForegroundColor DarkMagenta -NoNewline
 Write-Host "│" -ForegroundColor DarkGray
 Write-Host "   │                                                                                      │" -ForegroundColor DarkGray
 Write-Host "   └──────────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor DarkGray
@@ -36,7 +36,7 @@ if (-not (Test-Path $modsPath -PathType Container)) {
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown"); exit 1
 }
 
-$activeModules = @("String Analysis", "Deep Scan", "Obfuscation", "Disallowed Mods")
+$activeModules = @("JVM Scan", "String Analysis", "Deep Scan", "Obfuscation", "Disallowed Mods")
 Write-Host ""; Write-Host "  Modules  : " -ForegroundColor DarkGray -NoNewline
 Write-Host ($activeModules -join "  ·  ") -ForegroundColor Magenta
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -635,6 +635,130 @@ function Find-DisallowedMods { param([string]$Path, [array]$JarFiles)
 }
 
 # ═══════════════════════════════════════════════════════
+#  JVM ARGUMENT SCANNER
+# ═══════════════════════════════════════════════════════
+function Test-JvmArguments {
+    $findings   = [System.Collections.Generic.List[PSObject]]::new()
+    $foundFlags = [System.Collections.Generic.HashSet[string]]::new()
+    $javaProcs  = @(Get-Process javaw -EA 0) + @(Get-Process java -EA 0)
+    if ($javaProcs.Count -eq 0) { return $findings }
+
+    $suspiciousArgsList = @(
+        # Fabric mod injection
+        @('-Dfabric\.addMods=',                  'FABRIC_ADD_MODS',              'HIGH',   'Injects extra Fabric mod JARs at runtime'),
+        @('-Dfabric\.loadMods=',                 'FABRIC_LOAD_MODS',             'HIGH',   'Overrides Fabric mod loading mechanism'),
+        @('-Dfabric\.classPathGroups=',          'FABRIC_CLASSPATH_GROUPS',      'HIGH',   'Manipulates Fabric classpath groups'),
+        @('-Dfabric\.gameJarPath=',              'FABRIC_GAME_JAR_PATH',         'MEDIUM', 'Redirects Minecraft game JAR path'),
+        @('-Dfabric\.skipMcProvider=',           'FABRIC_SKIP_MC_PROVIDER',      'HIGH',   'Skips Minecraft provider checks'),
+        @('-Dfabric\.remapClasspathFile=',       'FABRIC_REMAP_CLASSPATH',       'HIGH',   'Redirects remap classpath file'),
+        @('-Dfabric\.skipIntermediary=',         'FABRIC_SKIP_INTERMEDIARY',     'HIGH',   'Skips intermediary mappings'),
+        @('-Dfabric\.mixin\.configs=',           'FABRIC_MIXIN_CONFIGS',         'HIGH',   'Injects custom Mixin configs'),
+        @('-Dfabric\.mixin\.hotSwap=',           'FABRIC_MIXIN_HOTSWAP',         'HIGH',   'Enables Mixin hot-swapping (runtime code injection)'),
+        @('-Dfabric\.forceVersion=',             'FABRIC_FORCE_VERSION',         'HIGH',   'Forces a specific game version'),
+        @('-Dfabric\.customModList=',            'FABRIC_CUSTOM_MOD_LIST',       'HIGH',   'Injects custom mod list'),
+        @('-Dfabric\.skipDependencyResolution=', 'FABRIC_SKIP_DEP_RESOLUTION',   'HIGH',   'Skips dependency resolution'),
+        @('-Dfabric\.loader\.entrypoints=',      'FABRIC_LOADER_ENTRYPOINTS',    'HIGH',   'Injects custom entrypoints'),
+        @('-Dfabric\.language\.providers=',      'FABRIC_LANGUAGE_PROVIDERS',    'HIGH',   'Injects custom language providers'),
+        @('-Dfabric\.mods\.toml\.path=',         'FABRIC_MODS_TOML_PATH',        'HIGH',   'Redirects Fabric mods.toml path'),
+        @('-Dfabric\.resolve\.modFiles=',        'FABRIC_RESOLVE_MODFILES',      'MEDIUM', 'Forces mod file resolution'),
+        @('-Dfabric\.loader\.config=',           'FABRIC_LOADER_CONFIG',         'MEDIUM', 'Redirects Fabric loader config'),
+        @('-Dfabric\.configDir=',                'FABRIC_CONFIG_DIR',            'MEDIUM', 'Changes Fabric config directory'),
+        @('-Dfabric\.gameVersion=',              'FABRIC_GAME_VERSION',          'MEDIUM', 'Overrides Fabric game version'),
+        @('-Dfabric\.allowUnsupportedVersion=',  'FABRIC_UNSUPPORTED_VERSION',   'MEDIUM', 'Allows unsupported Minecraft versions'),
+        @('-Dfabric\.dli\.config=',              'FABRIC_DLI_CONFIG',            'MEDIUM', 'Changes data loader injector config'),
+        @('-Dfabric\.development=',              'FABRIC_DEV_MODE',              'LOW',    'Enables Fabric development mode'),
+        # Forge mod injection
+        @('-Dforge\.addMods=',                   'FORGE_ADD_MODS',               'HIGH',   'Injects extra Forge mod JARs at runtime'),
+        @('-Dforge\.mods=',                      'FORGE_MODS',                   'HIGH',   'Overrides Forge mod list'),
+        @('-Dfml\.coreMods\.load=',              'FORGE_COREMODS',               'HIGH',   'Loads Forge core mods via JVM flag'),
+        @('-Dforge\.coreMods\.dir=',             'FORGE_COREMODS_DIR',           'HIGH',   'Redirects core mods directory'),
+        @('-Dforge\.modDir=',                    'FORGE_MOD_DIR',                'HIGH',   'Redirects mod directory'),
+        @('-Dforge\.modsDirectories=',           'FORGE_MODS_DIRECTORIES',       'HIGH',   'Adds extra mod directories'),
+        @('-Dfml\.customModList=',               'FORGE_CUSTOM_MOD_LIST',        'HIGH',   'Injects custom Forge mod list'),
+        @('-Dforge\.disableModScan=',            'FORGE_DISABLE_MODSCAN',        'HIGH',   'Disables Forge mod scanning'),
+        @('-Dforge\.modList=',                   'FORGE_MOD_LIST',               'HIGH',   'Overrides Forge mod list'),
+        @('-Dforge\.mixin\.hotSwap=',            'FORGE_MIXIN_HOTSWAP',          'HIGH',   'Enables Forge Mixin hot-swapping'),
+        @('-Dforge\.forceVersion=',              'FORGE_FORCE_VERSION',          'HIGH',   'Forces Forge version'),
+        @('-Dforge\.disableUpdateCheck=',        'FORGE_DISABLE_UPDATE',         'MEDIUM', 'Disables Forge update checks'),
+        # Security bypasses
+        @('-Djava\.security\.manager=',          'SECURITY_MANAGER_DISABLED',    'HIGH',   'Disables Java Security Manager'),
+        @('-Djava\.security\.policy=',           'SECURITY_POLICY_OVERRIDE',     'HIGH',   'Overrides security policy (permissions bypass)'),
+        # Classpath manipulation
+        @('-Xbootclasspath',                     'BOOTCLASSPATH_MODIFY',         'HIGH',   'Modifies boot classpath (critical system classes)'),
+        @('-Djava\.system\.class\.loader=',      'CUSTOM_CLASSLOADER',           'HIGH',   'Replaces system classloader'),
+        @('-Djava\.class\.path=',                'CLASSPATH_OVERRIDE',           'HIGH',   'Overrides Java classpath'),
+        @('-cp\s+[^ ].*\.jar',                   'CLASSPATH_JAR_INJECTION',      'HIGH',   'Injects JAR via -cp classpath flag'),
+        # Remote debug / agent
+        @('-Xrunjdwp:',                          'REMOTE_DEBUG',                 'HIGH',   'Remote debugging enabled (possible RCE)'),
+        @('agentlib:jdwp',                       'JDWP_AGENT',                   'HIGH',   'JDWP agent attached — debugger can execute arbitrary code'),
+        @('-agentlib:',                          'NATIVE_AGENT',                 'HIGH',   'Loads native JVMTI agent'),
+        @('-agentpath:',                         'NATIVE_AGENT_PATH',            'HIGH',   'Loads native agent by path'),
+        # Cheat client brand spoofing
+        @('-D(client|launcher)\.brand=(Wurst|Aristois|Impact|Future|Lambda|Rusher|Konas|Phobos|Salhack|Meteor|Async|Wolfram|Huzuni|Rise|Flux|Gamesense|Intent|Remix|Vape|Ghost|Inertia|Sigma|Novoline|Ares|Prestige|Entropy)',
+          'CHEAT_CLIENT_BRAND', 'HIGH', 'Cheat client brand spoofed in JVM arguments')
+    )
+
+    $agentWhitelist = @("jmxremote","yjp","jrebel","newrelic","jacoco","hotswapagent","theseus","lunar","appney")
+
+    foreach ($javaProc in $javaProcs) {
+        $javaPid = $javaProc.Id
+        try {
+            $wmi = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -EA Stop
+            $cmd = $wmi.CommandLine
+            if (-not $cmd -or -not ($cmd -match "net\.minecraft|Minecraft")) { continue }
+
+            # javaagent check
+            $agentMatches = [regex]::Matches($cmd, '-javaagent:([^\s"]+)')
+            foreach ($m in $agentMatches) {
+                $agPath = $m.Groups[1].Value.Trim('"').Trim("'")
+                $agName = [System.IO.Path]::GetFileName($agPath)
+                $safe   = $false
+                foreach ($w in $agentWhitelist) { if ($agName -match $w) { $safe = $true; break } }
+                if (-not $safe) {
+                    $key = "AGENT|$agName"
+                    if ($foundFlags.Add($key)) {
+                        $findings.Add([PSCustomObject]@{ Type = "JAVA_AGENT"; Detail = "Untrusted javaagent loaded: $agName"; Severity = "HIGH"; PID = $javaPid })
+                    }
+                }
+            }
+
+            # Pattern checks
+            foreach ($sf in $suspiciousArgsList) {
+                if ($cmd -match $sf[0]) {
+                    $key = "$($sf[1])|$javaPid"
+                    if ($foundFlags.Add($key)) {
+                        $findings.Add([PSCustomObject]@{ Type = $sf[1]; Detail = $sf[3]; Severity = $sf[2]; PID = $javaPid })
+                    }
+                }
+            }
+
+            # URL-encoded shell metacharacters
+            if ($cmd -match '(%3B|%26%26|%7C%7C|%7C|%60|%24|%3C|%3E)') {
+                $key = "URL_ENCODE|$javaPid"
+                if ($foundFlags.Add($key)) {
+                    $findings.Add([PSCustomObject]@{ Type = "ENCODED_INJECTION"; Detail = "URL-encoded shell metacharacters in JVM args — possible command injection"; Severity = "HIGH"; PID = $javaPid })
+                }
+            }
+
+            # Localhost listener (vanilla MC never opens listen sockets)
+            try {
+                $netConn = Get-NetTCPConnection -OwningProcess $javaPid -EA Stop |
+                    Where-Object { $_.LocalAddress -eq '127.0.0.1' -and $_.State -eq 'Listen' }
+                if ($netConn) {
+                    $ports = $netConn.LocalPort -join ', '
+                    $key   = "LOCAL_LISTEN|$javaPid"
+                    if ($foundFlags.Add($key)) {
+                        $findings.Add([PSCustomObject]@{ Type = "LOCAL_LISTEN"; Detail = "Java opened server socket(s) on port(s): $ports — vanilla MC never listens"; Severity = "HIGH"; PID = $javaPid })
+                    }
+                }
+            } catch {}
+
+        } catch {}
+    }
+    return $findings
+}
+
+# ═══════════════════════════════════════════════════════
 #  REPORT HELPERS
 # ═══════════════════════════════════════════════════════
 $W = 72
@@ -704,13 +828,29 @@ if ($mcStatus.Running) {
     Write-Host "Not running" -ForegroundColor DarkGray
 }
 
-# ── Phase 1: String Analysis + Deep Scan + Filename Tokens
+# ── Phase 1: JVM Argument Scan
+Write-Host ""
+Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
+Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
+Write-Host " · JVM Argument Injection Detection" -ForegroundColor DarkGray
+Write-Host "  │" -ForegroundColor DarkMagenta
+Write-Host "  │  scanning... " -ForegroundColor DarkGray -NoNewline
+$jvmResults = Test-JvmArguments
+if ($jvmResults.Count -gt 0) {
+    $jvmHigh = @($jvmResults | Where-Object { $_.Severity -eq "HIGH" }).Count
+    $jvmMed  = @($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" }).Count
+    $parts   = @(); if ($jvmHigh -gt 0) { $parts += "$jvmHigh HIGH" }; if ($jvmMed -gt 0) { $parts += "$jvmMed MEDIUM" }
+    Write-Host "$($jvmResults.Count) issue(s) ($($parts -join ', '))" -ForegroundColor Red
+} else { Write-Host "clean" -ForegroundColor Cyan }
+Write-Host "  └─ done" -ForegroundColor DarkMagenta
+
+# ── Phase 2: String Analysis + Deep Scan + Filename Tokens
 $total   = $jars.Count; $i = 0
 $flagged = [System.Collections.Generic.List[PSObject]]::new()
 $clean   = [System.Collections.Generic.List[string]]::new()
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
-Write-Host "Phase 1" -ForegroundColor Magenta -NoNewline
+Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
 Write-Host " · String Analysis + Deep Scan + Filename Tokens" -ForegroundColor DarkGray
 Write-Host "  │" -ForegroundColor DarkMagenta
 foreach ($jar in $jars) {
@@ -748,7 +888,7 @@ Write-Host "  └─ $($flagged.Count) flagged  /  $($clean.Count) clean" -Foreg
 # ── Phase 2: Advanced Obfuscation Detection
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
-Write-Host "Phase 2" -ForegroundColor Magenta -NoNewline
+Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
 Write-Host " · Advanced Obfuscation Detection" -ForegroundColor DarkGray
 Write-Host "  │" -ForegroundColor DarkMagenta
 $oi = 0
@@ -775,7 +915,7 @@ Write-Host "  └─ $obfHeavy jar(s) with obfuscation flags" -ForegroundColor D
 # ── Phase 3: Disallowed Mods
 Write-Host ""
 Write-Host "  ┌─ " -ForegroundColor DarkMagenta -NoNewline
-Write-Host "Phase 3" -ForegroundColor Magenta -NoNewline
+Write-Host "Phase 4" -ForegroundColor Magenta -NoNewline
 Write-Host " · Disallowed Mods Detection" -ForegroundColor DarkGray
 Write-Host "  │" -ForegroundColor DarkMagenta
 Write-Host "  │  scanning... " -ForegroundColor DarkGray -NoNewline
@@ -814,7 +954,7 @@ foreach ($mod in $flagged) {
 Write-Host ""
 Write-Host "   ┌──────────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor DarkGray
 Write-Host "   │" -ForegroundColor DarkGray -NoNewline
-Write-Host "      NicModAnalyzer " -ForegroundColor Magenta -NoNewline
+Write-Host "      BlablablaModAnalyzer " -ForegroundColor Magenta -NoNewline
 Write-Host "│ " -ForegroundColor DarkGray -NoNewline
 Write-Host "SCAN RESULTS" -ForegroundColor Magenta -NoNewline
 Write-Host "                                   │" -ForegroundColor DarkGray
@@ -829,6 +969,7 @@ Write-Row "  Modules   : " ($activeModules -join "  ·  ") Magenta White DarkGra
 Write-Row "  Path      : " $modsPath DarkGray Gray DarkGray
 Write-Row "  Files     : " "$($jars.Count) scanned" DarkGray White DarkGray
 Write-Row "  Clean     : " "$($clean.Count)" DarkGray Cyan DarkGray
+Write-Row "  JVM Issues: " "$($jvmResults.Count)" DarkGray $(if ($jvmResults.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }) DarkGray
 Write-Row "  Flagged   : " "$($flagged.Count)" DarkGray $fC DarkGray
 Write-Row "  Disallowed: " "$($disallowedFound.Count)" DarkGray $(if ($disallowedFound.Count -gt 0) { [System.ConsoleColor]::Red } else { [System.ConsoleColor]::Cyan }) DarkGray
 if ($mcStatus.Running) {
@@ -837,6 +978,24 @@ if ($mcStatus.Running) {
     Write-Row "  Minecraft : " " not running" DarkGray DarkGray DarkGray
 }
 Write-Border 'bot' DarkGray
+
+# ── JVM Issues
+if ($jvmResults.Count -gt 0) {
+    Write-Host ""
+    Write-Border 'top' Red
+    Write-RowFull "  ⚠  JVM ARGUMENT ISSUES ($($jvmResults.Count) finding(s))" Red Red
+    Write-Border 'sep' Red
+    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "HIGH" })) {
+        Write-Row "  [HIGH]  " "$($j.Type.PadRight(26)) $($j.Detail)" Red DarkGray Red
+    }
+    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "MEDIUM" })) {
+        Write-Row "  [MED]   " "$($j.Type.PadRight(26)) $($j.Detail)" Yellow DarkGray Yellow
+    }
+    foreach ($j in ($jvmResults | Where-Object { $_.Severity -eq "LOW" })) {
+        Write-Row "  [LOW]   " "$($j.Type.PadRight(26)) $($j.Detail)" DarkGray DarkGray DarkGray
+    }
+    Write-Border 'bot' Red
+}
 
 # ── Critical threats
 if ($criticalThreats.Count -gt 0) {
@@ -889,11 +1048,11 @@ if ($disallowedFound.Count -gt 0) {
 }
 
 # ── All clear banner
-$totalIssues = $flagged.Count + $disallowedFound.Count
+$totalIssues = $jvmResults.Count + $flagged.Count + $disallowedFound.Count
 if ($totalIssues -eq 0) {
     Write-Host ""
     Write-Border 'top' Cyan
-    Write-RowFull "  ✅  ALL CLEAR — No issues detected across all 3 phases" Cyan Cyan
+    Write-RowFull "  ✅  ALL CLEAR — No issues detected across all 4 phases" Cyan Cyan
     Write-Border 'bot' Cyan
 }
 
